@@ -1,0 +1,69 @@
+You're building an embeddable widget for HVAC companies that solves a key monetization problem. In most markets (e.g., Austin), HVAC companies offer annual maintenance plans (e.g., $20/month, $225/year) but lack a way to let customers subscribe directly online. This widget fixes that by allowing hands-off subscription flows.
+
+Build a full MVP as a Replit project using the following stack:
+
+Frontend: React (or plain HTML/JS if faster)
+
+Backend: Node.js + Express
+
+Database: Supabase (or SQLite if simpler)
+
+Authentication: Passwordless email auth or magic link (optional)
+
+Payment: Stripe Checkout (Monthly + Yearly options)
+
+Integration Trigger: Webhook to Zapier (simulate Housecall Pro/ServiceTitan CRM ingestion)
+
+Embedding: Must be embeddable via iFrame or JS snippet into any HVAC website (e.g., Webflow, Framer, WordPress)
+
+Admin Dashboard: Minimal—just list subscriptions, customers, and allow CSR to resend subscription links manually if needed
+
+Features to include:
+
+Public Subscription Widget (iFrame-embeddable):
+
+Presents 3 tiers: Basic ($129/visit), Standard ($225/year), Premium ($20/month)
+
+CTA button → opens Stripe Checkout
+
+After successful payment, sends data to backend + fires webhook
+
+Admin Panel:
+
+Secure CSR access to view recent subscriptions
+
+Ability to generate subscription links manually (CSR can guide customers on phone)
+
+Stripe Integration:
+
+Support for both monthly and yearly plans
+
+Save Stripe customer ID + plan type to Supabase
+
+Trigger Zapier webhook with customer data and plan info
+
+CRM Integration (via Zapier Webhook):
+
+Send: customer name, email, phone, subscription plan, date, Stripe ID
+
+Mobile responsive.
+
+Development requirements:
+
+Use .env for all keys (Stripe, Supabase, Zapier)
+
+Include install/setup instructions in README.md
+
+Use dummy/test keys, not live Stripe keys
+
+Comment all code cleanly for extensibility
+
+Output should include:
+
+Full codebase with frontend, backend, and Supabase schema
+
+A public Replit-hosted demo URL of the widget running
+
+A separate HTML page that embeds the widget (to simulate how HVAC sites would use it)
+
+This is not a toy—this is for real HVAC companies to deploy. Prioritize speed to launch and working payment flow. Mock Housecall Pro or ServiceTitan if necessary, but the webhook must fire with full payload after payment.
