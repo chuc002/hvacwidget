@@ -1,0 +1,261 @@
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
+import SubscriptionPlan from "@/components/SubscriptionPlan";
+import BenefitsList from "@/components/BenefitsList";
+import Testimonials from "@/components/Testimonials";
+import FAQ from "@/components/FAQ";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { loadStripe } from '@stripe/stripe-js';
+import { apiRequest } from "@/lib/queryClient";
+import { Plan } from "@/lib/types";
+import { PlanDetails } from "@/lib/constants";
+
+// Initialize Stripe
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || "pk_test_placeholder");
+
+interface SubscriptionWidgetProps {
+  companyName?: string;
+  customerId?: number;
+  preselectedPlanId?: number;
+}
+
+export default function SubscriptionWidget({ 
+  companyName = "Comfort Air Solutions", 
+  customerId,
+  preselectedPlanId
+}: SubscriptionWidgetProps) {
+  const { toast } = useToast();
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [customerInfo, setCustomerInfo] = useState({
+    name: "",
+    email: "",
+    phone: ""
+  });
+  const [loading, setLoading] = useState(false);
+
+  // Fetch plans from the API
+  const { data: plans, isLoading: plansLoading, error: plansError } = useQuery({
+    queryKey: ['/api/plans'],
+    retry: 3,
+  });
+
+  // Handle errors in plans fetching
+  if (plansError) {
+    toast({
+      title: "Error loading plans",
+      description: "Could not load the subscription plans. Please try again later.",
+      variant: "destructive",
+    });
+  }
+
+  const handlePlanSelect = (plan: Plan) => {
+    setSelectedPlan(plan);
+    
+    // If we already have customer info (e.g., from a subscription link), open checkout directly
+    if (customerId) {
+      handleCheckout(plan);
+    } else {
+      setCheckoutOpen(true);
+    }
+  };
+
+  const handleInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCustomerInfo(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckout = async (planToCheckout = selectedPlan) => {
+    if (!planToCheckout) return;
+    
+    setLoading(true);
+    
+    try {
+      // Create a checkout session on the server
+      const response = await apiRequest('POST', '/api/create-subscription', {
+        planId: planToCheckout.id,
+        customerInfo
+      });
+      
+      const data = await response.json();
+      
+      // Redirect to Stripe Checkout
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("No checkout URL returned");
+      }
+    } catch (error) {
+      console.error("Error creating subscription:", error);
+      toast({
+        title: "Checkout Failed",
+        description: "There was a problem setting up the checkout. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+      setCheckoutOpen(false);
+    }
+  };
+
+  const submitCheckout = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleCheckout();
+  };
+
+  return (
+    <div id="hvac-subscription-widget" className="bg-white rounded-xl shadow-md p-4 md:p-6 lg:p-8">
+      {/* Widget Header with Company Logo */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <div className="bg-primary rounded-full p-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <span className="text-xl font-bold text-gray-800">{companyName}</span>
+        </div>
+        <div className="text-sm text-gray-500">Trusted HVAC Service Since 1995</div>
+      </div>
+
+      {/* Plan Selection Section */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {plansLoading ? (
+          // Loading skeleton for plans
+          Array(3).fill(0).map((_, i) => (
+            <Card key={i} className="relative h-96 border border-gray-200 rounded-lg">
+              <CardContent className="p-6 h-full flex flex-col">
+                <div className="h-6 w-24 bg-gray-200 rounded animate-pulse mb-2"></div>
+                <div className="h-8 w-20 bg-gray-200 rounded animate-pulse mb-1"></div>
+                <div className="h-5 w-28 bg-gray-200 rounded animate-pulse mb-4"></div>
+                <div className="space-y-2 mb-6 flex-grow">
+                  {Array(3).fill(0).map((_, j) => (
+                    <div key={j} className="flex items-start">
+                      <div className="h-5 w-5 bg-gray-200 rounded-full mr-2 mt-0.5"></div>
+                      <div className="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                  ))}
+                </div>
+                <div className="h-10 w-full bg-gray-200 rounded animate-pulse"></div>
+              </CardContent>
+            </Card>
+          ))
+        ) : plans ? (
+          // Render actual plans once loaded
+          plans.map((plan: Plan) => (
+            <SubscriptionPlan
+              key={plan.id}
+              plan={plan}
+              onSelect={() => handlePlanSelect(plan)}
+              isHighlighted={plan.isPopular}
+              isSelected={selectedPlan?.id === plan.id}
+              preselected={plan.id === preselectedPlanId}
+            />
+          ))
+        ) : (
+          // Fallback to hardcoded plans if API fails
+          PlanDetails.map((plan, index) => (
+            <SubscriptionPlan
+              key={index}
+              plan={{
+                id: index + 1,
+                name: plan.name,
+                description: plan.description,
+                price: plan.price.toString(),
+                interval: plan.interval,
+                features: plan.features,
+                isPopular: plan.isPopular,
+                order: index + 1,
+                stripePriceId: `price_${plan.name.toLowerCase()}`
+              }}
+              onSelect={() => handlePlanSelect({
+                id: index + 1,
+                name: plan.name,
+                description: plan.description,
+                price: plan.price.toString(),
+                interval: plan.interval,
+                features: plan.features,
+                isPopular: plan.isPopular,
+                order: index + 1,
+                stripePriceId: `price_${plan.name.toLowerCase()}`
+              })}
+              isHighlighted={plan.isPopular}
+              isSelected={selectedPlan?.id === index + 1}
+              preselected={index + 1 === preselectedPlanId}
+            />
+          ))
+        )}
+      </div>
+
+      {/* Benefits, Testimonials, and FAQs sections */}
+      <BenefitsList />
+      <Separator className="my-8" />
+      <Testimonials />
+      <Separator className="my-8" />
+      <FAQ />
+
+      {/* Customer Info Dialog */}
+      <Dialog open={checkoutOpen} onOpenChange={setCheckoutOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Complete Your Information</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={submitCheckout}>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={customerInfo.name}
+                  onChange={handleInfoChange}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={customerInfo.email}
+                  onChange={handleInfoChange}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="phone">Phone Number</Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  value={customerInfo.phone}
+                  onChange={handleInfoChange}
+                  required
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setCheckoutOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? "Processing..." : "Continue to Payment"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

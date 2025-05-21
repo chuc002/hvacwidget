@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HVAC Maintenance Plan Widget - Embedding Example</title>
+  <meta name="description" content="An example of how to embed the HVAC maintenance subscription widget on your website.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    
+    header {
+      background-color: #0F766E;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+    
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    h1 {
+      margin-top: 0;
+    }
+    
+    .content-wrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    
+    @media (min-width: 992px) {
+      .content-wrapper {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+    
+    .widget-container {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      height: 800px;
+      margin-bottom: 2rem;
+    }
+    
+    .example-code {
+      background-color: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .code-block {
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      padding: 1rem;
+      overflow-x: auto;
+      margin-bottom: 1rem;
+    }
+    
+    pre {
+      margin: 0;
+      font-family: monospace;
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+    
+    .integration-options {
+      margin-top: 2rem;
+    }
+    
+    .tab-buttons {
+      display: flex;
+      margin-bottom: 1rem;
+    }
+    
+    .tab-button {
+      padding: 0.5rem 1rem;
+      background-color: #e2e8f0;
+      border: none;
+      cursor: pointer;
+      margin-right: 0.5rem;
+    }
+    
+    .tab-button.active {
+      background-color: #0F766E;
+      color: white;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+    }
+    
+    .iframe-wrapper {
+      height: 100%;
+      width: 100%;
+    }
+    
+    iframe {
+      border: none;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>HVAC Company Website</h1>
+    <p>Example of embedding the maintenance plan subscription widget</p>
+  </header>
+  
+  <main>
+    <h2>Embedding the HVAC Maintenance Plan Widget</h2>
+    <p>This page demonstrates how you can embed the subscription widget into your HVAC company website.</p>
+    
+    <div class="content-wrapper">
+      <div>
+        <h3>Widget Preview</h3>
+        <p>Here's how the widget looks when embedded in your website:</p>
+        
+        <div class="widget-container">
+          <div class="iframe-wrapper">
+            <!-- The iframe embedding the widget -->
+            <iframe src="/widget" title="HVAC Maintenance Plan Subscription Widget"></iframe>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <div class="example-code">
+          <h3>How to Embed the Widget</h3>
+          <p>There are multiple ways to embed the widget into your website:</p>
+          
+          <div class="integration-options">
+            <div class="tab-buttons">
+              <button class="tab-button active" onclick="openTab(event, 'iframe')">iFrame</button>
+              <button class="tab-button" onclick="openTab(event, 'javascript')">JavaScript</button>
+              <button class="tab-button" onclick="openTab(event, 'wordpress')">WordPress</button>
+            </div>
+            
+            <div id="iframe" class="tab-content active">
+              <p>Add this HTML code to your website:</p>
+              <div class="code-block">
+                <pre>&lt;iframe 
+  src="https://hvac-subscription-widget.example.com/widget" 
+  width="100%" 
+  height="800px" 
+  frameborder="0"&gt;
+&lt;/iframe&gt;</pre>
+              </div>
+              <p>This is the simplest way to embed the widget. Just replace the src URL with your actual widget URL.</p>
+            </div>
+            
+            <div id="javascript" class="tab-content">
+              <p>Add this JavaScript code to your website:</p>
+              <div class="code-block">
+                <pre>&lt;div id="hvac-widget-container"&gt;&lt;/div&gt;
+&lt;script src="https://hvac-subscription-widget.example.com/js/embed.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  HVACWidget.init({
+    container: 'hvac-widget-container',
+    companyName: 'Your HVAC Company',
+    primaryColor: '#0F766E'
+  });
+&lt;/script&gt;</pre>
+              </div>
+              <p>This method allows for more customization options like changing colors and company name.</p>
+            </div>
+            
+            <div id="wordpress" class="tab-content">
+              <p>For WordPress sites, install our plugin and use this shortcode:</p>
+              <div class="code-block">
+                <pre>[hvac_subscription_widget company="Your HVAC Company" primary_color="#0F766E"]</pre>
+              </div>
+              <p>You can add this shortcode to any page or post in your WordPress website.</p>
+            </div>
+          </div>
+          
+          <h4>Benefits of Embedding</h4>
+          <ul>
+            <li>Allow customers to subscribe to maintenance plans directly from your website</li>
+            <li>Increase revenue with automated subscription processing</li>
+            <li>Reduce administrative work with digital payment handling</li>
+            <li>Seamlessly integrate with your existing CRM via Zapier</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <footer>
+    <p>&copy; 2023 HVAC Maintenance Plans. All rights reserved.</p>
+  </footer>
+  
+  <script>
+    function openTab(evt, tabName) {
+      // Hide all tab content
+      const tabContents = document.getElementsByClassName("tab-content");
+      for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].classList.remove("active");
+      }
+      
+      // Remove active class from all tab buttons
+      const tabButtons = document.getElementsByClassName("tab-button");
+      for (let i = 0; i < tabButtons.length; i++) {
+        tabButtons[i].classList.remove("active");
+      }
+      
+      // Show the selected tab content and mark the button as active
+      document.getElementById(tabName).classList.add("active");
+      evt.currentTarget.classList.add("active");
+    }
+  </script>
+</body>
+</html>
