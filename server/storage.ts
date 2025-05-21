@@ -8,7 +8,7 @@ import {
 } from "@shared/schema";
 import { eq, and, gt, lt, desc } from "drizzle-orm";
 import { nanoid } from "nanoid";
-import { createClient } from "@neondatabase/serverless";
+import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-serverless";
 
 // Interface for CRUD operations
@@ -343,11 +343,9 @@ export class DbStorage implements IStorage {
       throw new Error("DATABASE_URL environment variable is not set");
     }
 
-    const client = createClient({
-      connectionString: process.env.DATABASE_URL,
-    });
+    const sql = neon(process.env.DATABASE_URL);
     
-    this.db = drizzle(client);
+    this.db = drizzle(sql);
   }
 
   // Customer operations
