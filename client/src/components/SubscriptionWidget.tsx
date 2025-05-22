@@ -36,7 +36,13 @@ export default function SubscriptionWidget({
   const [customerInfo, setCustomerInfo] = useState({
     name: "",
     email: "",
-    phone: ""
+    phone: "",
+    address: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    propertyType: "single-family",
+    preferredContactTime: "morning"
   });
   const [loading, setLoading] = useState(false);
 
@@ -68,7 +74,7 @@ export default function SubscriptionWidget({
     }
   };
 
-  const handleInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setCustomerInfo(prev => ({ ...prev, [name]: value }));
   };
@@ -93,7 +99,13 @@ export default function SubscriptionWidget({
         planId: planToCheckout.stripePriceId || planToCheckout.id?.toString(), // Fallback to ID
         customerEmail: customerInfo.email,
         customerName: customerInfo.name,
-        phone: customerInfo.phone
+        phone: customerInfo.phone,
+        address: customerInfo.address,
+        city: customerInfo.city,
+        state: customerInfo.state,
+        zipCode: customerInfo.zipCode,
+        propertyType: customerInfo.propertyType,
+        preferredContactTime: customerInfo.preferredContactTime
       });
       
       const response = await fetch('/api/create-checkout-session', {
@@ -310,6 +322,57 @@ export default function SubscriptionWidget({
                   onChange={handleInfoChange}
                   required
                 />
+              </div>
+              
+              <div className="grid gap-2">
+                <Label htmlFor="address">Service Address</Label>
+                <Input
+                  id="address"
+                  name="address"
+                  placeholder="123 Main St"
+                  value={customerInfo.address}
+                  onChange={handleInfoChange}
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <Label htmlFor="city">City</Label>
+                  <Input
+                    id="city"
+                    name="city"
+                    value={customerInfo.city}
+                    onChange={handleInfoChange}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="zipCode">ZIP Code</Label>
+                  <Input
+                    id="zipCode"
+                    name="zipCode"
+                    value={customerInfo.zipCode}
+                    onChange={handleInfoChange}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="propertyType">Property Type</Label>
+                <select
+                  id="propertyType"
+                  name="propertyType"
+                  value={customerInfo.propertyType}
+                  onChange={handleInfoChange}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2"
+                >
+                  <option value="single-family">Single Family Home</option>
+                  <option value="condo">Condo/Townhouse</option>
+                  <option value="apartment">Apartment</option>
+                  <option value="business">Commercial/Business</option>
+                </select>
               </div>
             </div>
             <DialogFooter>
