@@ -49,9 +49,8 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid plan ID' });
     }
 
-    // Determine if this is a subscription or a one-time payment
-    // This should be based on the actual plan data from your database
-    const isSubscription = planId === '2' || planId === '3'; // Standard and Premium are subscriptions
+    // All HVAC maintenance plans are recurring subscriptions
+    // Always use subscription mode for all plans
     
     // Create the checkout session
     const session = await stripe.checkout.sessions.create({
@@ -63,7 +62,7 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
           quantity: 1,
         },
       ],
-      mode: isSubscription ? 'subscription' : 'payment',
+      mode: 'subscription', // Always use subscription mode for recurring plans
       success_url: `${req.protocol}://${req.get('host')}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.protocol}://${req.get('host')}/cancel`,
       metadata: {
