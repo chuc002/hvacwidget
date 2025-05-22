@@ -21,22 +21,43 @@ export default function Cancel() {
             Your HVAC maintenance plan subscription process was cancelled. No charges have been made to your account.
           </p>
           
-          <div className="bg-gray-50 rounded-lg p-4 mb-6">
-            <h3 className="font-medium text-gray-800 mb-2">Why subscribe to a maintenance plan?</h3>
-            <ul className="text-left text-gray-600 space-y-2">
+          <div className="bg-blue-50 rounded-lg p-4 mb-6">
+            <h3 className="font-medium text-blue-800 mb-2">Benefits You'll Miss Out On</h3>
+            <ul className="text-left text-blue-700 space-y-2">
               <li className="flex items-start">
-                <span className="text-primary mr-2">•</span>
-                <span>Extend the life of your HVAC system</span>
+                <span className="text-blue-500 mr-2">•</span>
+                <span>Extended equipment life with professional maintenance</span>
               </li>
               <li className="flex items-start">
-                <span className="text-primary mr-2">•</span>
-                <span>Save on energy costs with optimized performance</span>
+                <span className="text-blue-500 mr-2">•</span>
+                <span>Up to 30% savings on utility bills with optimized systems</span>
               </li>
               <li className="flex items-start">
-                <span className="text-primary mr-2">•</span>
-                <span>Avoid unexpected breakdowns with preventive maintenance</span>
+                <span className="text-blue-500 mr-2">•</span>
+                <span>Priority service and discounted repairs</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-blue-500 mr-2">•</span>
+                <span>Peace of mind with preventative maintenance</span>
               </li>
             </ul>
+          </div>
+          
+          <div className="bg-yellow-50 rounded-lg p-4 mb-6">
+            <h3 className="font-medium text-yellow-800 mb-2">Need More Information?</h3>
+            <p className="text-yellow-700 mb-2">
+              If you have questions about our plans or pricing, our team is happy to help.
+            </p>
+            <div className="flex flex-col space-y-2 text-sm">
+              <div className="flex items-center">
+                <span className="font-medium w-16">Email:</span>
+                <a href="mailto:info@comfortairsolutions.com" className="text-primary hover:underline">info@comfortairsolutions.com</a>
+              </div>
+              <div className="flex items-center">
+                <span className="font-medium w-16">Phone:</span>
+                <a href="tel:+18005551234" className="text-primary hover:underline">(800) 555-1234</a>
+              </div>
+            </div>
           </div>
           
           <div className="flex flex-col space-y-3">

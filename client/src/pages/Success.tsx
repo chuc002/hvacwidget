@@ -81,13 +81,28 @@ export default function Success() {
               </li>
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
-                <span>Our team will contact you to schedule your first maintenance visit</span>
+                <span>Our team will contact you within 24 hours to schedule your first maintenance visit</span>
               </li>
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
                 <span>You can manage your subscription through your customer portal</span>
               </li>
             </ul>
+          </div>
+          
+          <div className="bg-gray-50 rounded-lg p-4 mb-6">
+            <h3 className="font-medium text-gray-800 mb-2">Need Help?</h3>
+            <p className="text-gray-600 mb-2">If you have any questions about your subscription:</p>
+            <div className="flex flex-col space-y-2 text-sm">
+              <div className="flex items-center">
+                <span className="font-medium w-16">Email:</span>
+                <a href="mailto:support@comfortairsolutions.com" className="text-primary hover:underline">support@comfortairsolutions.com</a>
+              </div>
+              <div className="flex items-center">
+                <span className="font-medium w-16">Phone:</span>
+                <a href="tel:+18005551234" className="text-primary hover:underline">(800) 555-1234</a>
+              </div>
+            </div>
           </div>
           
           <Button 
