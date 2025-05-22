@@ -49,13 +49,14 @@ export default function SubscriptionPlan({
 
   return (
     <div 
-      className={`plan-card relative h-full flex flex-col bg-white rounded-lg p-6 transition-all duration-300 ${
+      onClick={onSelect}
+      className={`plan-card relative h-full flex flex-col bg-white rounded-lg p-6 transition-all duration-300 cursor-pointer ${
         isHighlighted 
-          ? "border-2 border-primary" 
+          ? "border-2 border-blue-600" 
           : "border border-gray-200"
       } ${
         isSelected 
-          ? "ring-2 ring-primary ring-offset-2" 
+          ? "ring-2 ring-blue-600" 
           : ""
       } hover:shadow-lg hover:-translate-y-1`}
     >
@@ -103,8 +104,7 @@ export default function SubscriptionPlan({
 
       {/* CTA button */}
       <Button
-        onClick={onSelect}
-        className="w-full text-white font-medium shadow-md bg-blue-600 hover:bg-blue-700"
+        className="w-full text-white font-medium shadow-md bg-blue-600 hover:bg-blue-700 mt-2"
         variant="default"
       >
         {plan.interval === 'one-time' ? 'Select Plan' : 'Subscribe Now'}
