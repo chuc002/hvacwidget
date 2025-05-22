@@ -53,7 +53,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
               "10% discount on repairs"
             ],
             isPopular: false,
-            order: 1
+            order: 1,
+            stripePriceId: "price_1RRcnlGxl1XxufT4i2vJmX0m"
           },
           {
             id: 2,
@@ -69,7 +70,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
               "No overtime charges"
             ],
             isPopular: true,
-            order: 2
+            order: 2,
+            stripePriceId: "price_1RRcoYGxl1XxufT4KFZbeJsn"
           },
           {
             id: 3,
@@ -86,7 +88,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
               "Free diagnostic visits"
             ],
             isPopular: false,
-            order: 3
+            order: 3,
+            stripePriceId: "price_1RRcp8Gxl1XxufT4oYuK4HG5"
           }
         ];
         res.status(200).json(fallbackPlans);
