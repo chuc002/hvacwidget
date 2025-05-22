@@ -240,24 +240,16 @@ export default function SubscriptionWidget({
               </CardContent>
             </Card>
           ))
-        ) : plans && Array.isArray(plans) ? (
-          // Render actual plans once loaded, filtered by billing type
-          plans
-            .filter((plan: Plan) => (plan.billingType || (plan.interval === 'month' ? 'monthly' : 'annual')) === billingType)
-            .map((plan: Plan) => (
-              <SubscriptionPlan
-                key={plan.id}
-                plan={plan}
-                onSelect={() => handlePlanSelect(plan)}
-                isHighlighted={plan.isPopular}
-                isSelected={selectedPlan?.id === plan.id}
-                preselected={plan.id === preselectedPlanId}
-              />
-            ))
         ) : (
-          // Fallback to hardcoded plans if API failed, filtered by billing type
+          // Display plans based on current billing type 
           PlanDetails
-            .filter(plan => plan.billingType === billingType)
+            .filter(plan => {
+              if (billingType === 'monthly') {
+                return plan.id >= 4; // Monthly plans have IDs 4, 5, 6
+              } else {
+                return plan.id <= 3; // Annual plans have IDs 1, 2, 3
+              }
+            })
             .map((plan) => (
               <SubscriptionPlan
                 key={plan.id}
