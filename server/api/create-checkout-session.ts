@@ -35,18 +35,12 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
     // Get the plan details from our database
     // In a real app, validate the plan exists in your database
     
-    // Map plan IDs to real Stripe price IDs
-    // Using the actual price IDs you provided
-    const planToStripePriceMap: { [key: string]: string } = {
-      '1': 'price_1RRcnlGxl1XxufT4i2vJmX0m', // Basic plan
-      '2': 'price_1RRcoYGxl1XxufT4KFZbeJsn', // Premium plan
-      '3': 'price_1RRcp8Gxl1XxufT4oYuK4HG5'  // Ultimate plan
-    };
+    // planId is now the actual Stripe Price ID
+    const stripePriceId = planId;
 
-    const stripePriceId = planToStripePriceMap[planId];
-    
-    if (!stripePriceId) {
-      return res.status(400).json({ error: 'Invalid plan ID' });
+    // Validate it's a proper Stripe price ID
+    if (!stripePriceId || !stripePriceId.startsWith('price_')) {
+      return res.status(400).json({ error: 'Invalid Stripe price ID format' });
     }
 
     // All HVAC maintenance plans are recurring subscriptions
