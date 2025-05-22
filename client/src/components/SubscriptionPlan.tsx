@@ -51,13 +51,11 @@ export default function SubscriptionPlan({
     <div 
       onClick={onSelect}
       className={`plan-card relative h-full flex flex-col bg-white rounded-lg p-6 transition-all duration-300 cursor-pointer ${
-        isHighlighted 
-          ? "border-2 border-blue-600" 
-          : "border border-gray-200"
-      } ${
         isSelected 
-          ? "ring-2 ring-blue-600" 
-          : ""
+          ? "border-2 border-blue-600 shadow-lg" 
+          : isHighlighted
+            ? "border-2 border-gray-300"
+            : "border border-gray-200"
       } hover:shadow-lg hover:-translate-y-1`}
     >
       {/* Plan label */}
