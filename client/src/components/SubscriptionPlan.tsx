@@ -54,8 +54,8 @@ export default function SubscriptionPlan({
         isSelected 
           ? "border-2 border-blue-600 shadow-lg" 
           : isHighlighted
-            ? "border-2 border-gray-300"
-            : "border border-gray-200"
+            ? "shadow-md"
+            : "shadow-sm"
       } hover:shadow-lg hover:-translate-y-1`}
     >
       {/* Plan label */}
