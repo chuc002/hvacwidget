@@ -19,26 +19,28 @@ export default function Layout({ children }: LayoutProps) {
     <div className="min-h-screen flex flex-col">
       <header className="bg-primary text-white shadow-md">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/">
-            <a className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
+            <Link href="/">
               <div className="bg-white rounded-full p-1">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
+            </Link>
+            <Link href="/">
               <span className="text-xl font-bold">HVAC Maintenance Plans</span>
-            </a>
-          </Link>
+            </Link>
+          </div>
           <nav>
             <ul className="flex space-x-6">
               <li>
                 <Link href="/">
-                  <a className={location === '/' ? 'font-bold' : ''}>Home</a>
+                  <span className={location === '/' ? 'font-bold' : ''}>Home</span>
                 </Link>
               </li>
               <li>
                 <Link href="/admin">
-                  <a className={location === '/admin' ? 'font-bold' : ''}>Admin</a>
+                  <span className={location === '/admin' ? 'font-bold' : ''}>Admin</span>
                 </Link>
               </li>
             </ul>
