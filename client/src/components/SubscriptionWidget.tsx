@@ -109,10 +109,41 @@ export default function SubscriptionWidget({
       // Redirect to Stripe Checkout
       if (data.url) {
         console.log('Redirecting to Stripe:', data.url);
-        // Use a small timeout to ensure console logs are visible
-        setTimeout(() => {
-          window.location.href = data.url;
-        }, 100);
+        
+        // Try direct location assignment first
+        try {
+          // Force redirect with location.assign instead of location.href
+          window.location.assign(data.url);
+          
+          // Fallback in case the above doesn't trigger a redirect
+          setTimeout(() => {
+            console.log('Fallback redirect attempt');
+            // Open in the same tab with replace to avoid browser history issues
+            window.location.replace(data.url);
+            
+            // Last resort - open in a new tab if nothing else works
+            setTimeout(() => {
+              console.log('Final redirect attempt - opening in new tab');
+              window.open(data.url, '_blank');
+            }, 500);
+          }, 300);
+        } catch (redirectError) {
+          console.error('Redirect error:', redirectError);
+          // Show a manual redirect button
+          toast({
+            title: "Checkout Ready",
+            description: <div>
+              <p>Click the button below to continue to payment:</p>
+              <button 
+                className="bg-primary text-white px-4 py-2 rounded mt-2"
+                onClick={() => window.open(data.url, '_blank')}
+              >
+                Continue to Stripe
+              </button>
+            </div>,
+            duration: 10000,
+          });
+        }
       } else {
         console.error('No checkout URL returned in response:', data);
         throw new Error("No checkout URL returned");
