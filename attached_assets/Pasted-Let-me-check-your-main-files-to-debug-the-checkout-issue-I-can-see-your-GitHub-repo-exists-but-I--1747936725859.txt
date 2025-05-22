@@ -1,0 +1,66 @@
+Let me check your main files to debug the checkout issue:
+
+I can see your GitHub repo exists, but I'm having trouble accessing the specific code files. Let me try a different approach:
+
+I can't access your specific GitHub files directly, but based on your description of getting a blank screen, let me give you a targeted debugging approach:
+
+## Most Likely Issue: Frontend-Backend Communication
+
+**The blank screen suggests the frontend isn't properly calling your API or handling the response.**
+
+## Quick Fix - Use This Replit Prompt:
+
+---
+
+## REPLIT PROMPT - DEBUG BLANK SCREEN ON CHECKOUT
+
+My HVAC widget shows a blank screen when customers try to checkout. The Stripe integration was working before but now customers get a blank screen after clicking "Continue to Payment".
+
+**DEBUGGING STEPS NEEDED:**
+
+1. **Check frontend API call in SubscriptionWidget component:**
+   - Verify the fetch call to `/api/create-checkout-session` is working
+   - Add console.log statements to track the request/response
+   - Ensure proper error handling for failed API calls
+
+2. **Verify API endpoint is responding:**
+   - Test that `/api/create-checkout-session` endpoint exists and works
+   - Check that it's properly imported in the main server file
+   - Ensure it returns the correct JSON response with Stripe URL
+
+3. **Check for JavaScript errors:**
+   - Look for any runtime errors preventing the redirect to Stripe
+   - Verify all imports and dependencies are working
+   - Check for any TypeScript compilation errors
+
+4. **Test the redirect logic:**
+   - Ensure `window.location.href = data.url` is executing
+   - Add logging before and after the redirect attempt
+   - Check if the Stripe URL is being returned correctly
+
+**SPECIFIC DEBUGGING CODE TO ADD:**
+
+```javascript
+// In your subscription handler function
+console.log('Starting checkout process...');
+const response = await fetch('/api/create-checkout-session', { /* your config */ });
+console.log('API Response status:', response.status);
+const data = await response.json();
+console.log('API Response data:', data);
+
+if (data.url) {
+  console.log('Redirecting to:', data.url);
+  window.location.href = data.url;
+} else {
+  console.error('No URL returned from API');
+}
+```
+
+**EXPECTED RESULT:** 
+Customers should be redirected to Stripe checkout instead of seeing a blank screen.
+
+Debug and fix the checkout flow so the Stripe redirect works properly.
+
+---
+
+**Run this prompt to add debugging and fix the blank screen issue!**

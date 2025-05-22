@@ -77,9 +77,17 @@ export default function SubscriptionWidget({
     if (!planToCheckout) return;
     
     setLoading(true);
+    console.log('Starting checkout process...', planToCheckout);
     
     try {
       // Create a checkout session on the server using our new endpoint
+      console.log('Sending checkout request with data:', {
+        planId: planToCheckout.id.toString(),
+        customerEmail: customerInfo.email,
+        customerName: customerInfo.name,
+        phone: customerInfo.phone
+      });
+      
       const response = await apiRequest('POST', '/api/create-checkout-session', {
         planId: planToCheckout.id.toString(),
         customerEmail: customerInfo.email,
@@ -87,12 +95,26 @@ export default function SubscriptionWidget({
         phone: customerInfo.phone
       });
       
+      console.log('API Response status:', response.status);
+      
+      // Check if the response is valid before parsing JSON
+      if (!response.ok) {
+        console.error('API response not OK:', response.status);
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+      
       const data = await response.json();
+      console.log('API Response data:', data);
       
       // Redirect to Stripe Checkout
       if (data.url) {
-        window.location.href = data.url;
+        console.log('Redirecting to Stripe:', data.url);
+        // Use a small timeout to ensure console logs are visible
+        setTimeout(() => {
+          window.location.href = data.url;
+        }, 100);
       } else {
+        console.error('No checkout URL returned in response:', data);
         throw new Error("No checkout URL returned");
       }
     } catch (error) {
