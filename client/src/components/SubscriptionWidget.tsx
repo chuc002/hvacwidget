@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { loadStripe } from '@stripe/stripe-js';
 import { apiRequest } from "@/lib/queryClient";
 import { Plan } from "@/lib/types";
@@ -33,6 +34,7 @@ export default function SubscriptionWidget({
   const { toast } = useToast();
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [billingType, setBillingType] = useState<'monthly' | 'annual'>('monthly'); // Default to monthly for higher conversion
   const [customerInfo, setCustomerInfo] = useState({
     name: "",
     email: "",
@@ -191,9 +193,35 @@ export default function SubscriptionWidget({
       <h1 className="text-3xl font-bold text-center mb-8">
         {companyName} Maintenance Plans
       </h1>
-      <h2 className="text-xl text-center mb-12 text-muted-foreground">
+      <h2 className="text-xl text-center mb-6 text-muted-foreground">
         Choose the perfect maintenance plan for your HVAC system
       </h2>
+      
+      {/* Billing toggle */}
+      <div className="flex flex-col items-center justify-center mb-10">
+        <div className="flex items-center justify-center space-x-4 bg-gray-100 p-2 rounded-full">
+          <span className={`px-4 py-2 rounded-full cursor-pointer ${billingType === 'monthly' ? 'bg-primary text-white font-medium' : 'text-gray-600'}`}
+                onClick={() => setBillingType('monthly')}>
+            Pay Monthly
+          </span>
+          <div className="flex items-center space-x-2">
+            <Switch 
+              checked={billingType === 'annual'} 
+              onCheckedChange={(checked) => setBillingType(checked ? 'annual' : 'monthly')} 
+              className="data-[state=checked]:bg-green-600"
+            />
+          </div>
+          <span className={`px-4 py-2 rounded-full cursor-pointer ${billingType === 'annual' ? 'bg-primary text-white font-medium' : 'text-gray-600'}`}
+                onClick={() => setBillingType('annual')}>
+            Pay Annually
+          </span>
+        </div>
+        {billingType === 'annual' && (
+          <div className="mt-2 text-sm font-medium text-green-600">
+            Save up to 20% with annual plans
+          </div>
+        )}
+      </div>
 
       <div className="grid md:grid-cols-3 gap-8 mb-12">
         {plansLoading ? (
@@ -213,29 +241,33 @@ export default function SubscriptionWidget({
             </Card>
           ))
         ) : plans && Array.isArray(plans) ? (
-          // Render actual plans once loaded
-          plans.map((plan: Plan) => (
-            <SubscriptionPlan
-              key={plan.id}
-              plan={plan}
-              onSelect={() => handlePlanSelect(plan)}
-              isHighlighted={plan.isPopular}
-              isSelected={selectedPlan?.id === plan.id}
-              preselected={plan.id === preselectedPlanId}
-            />
-          ))
+          // Render actual plans once loaded, filtered by billing type
+          plans
+            .filter((plan: Plan) => (plan.billingType || (plan.interval === 'month' ? 'monthly' : 'annual')) === billingType)
+            .map((plan: Plan) => (
+              <SubscriptionPlan
+                key={plan.id}
+                plan={plan}
+                onSelect={() => handlePlanSelect(plan)}
+                isHighlighted={plan.isPopular}
+                isSelected={selectedPlan?.id === plan.id}
+                preselected={plan.id === preselectedPlanId}
+              />
+            ))
         ) : (
-          // Fallback to hardcoded plans if API failed
-          PlanDetails.map((plan) => (
-            <SubscriptionPlan
-              key={plan.id}
-              plan={plan}
-              onSelect={() => handlePlanSelect(plan)}
-              isHighlighted={plan.isPopular}
-              isSelected={selectedPlan?.id === plan.id}
-              preselected={plan.id === preselectedPlanId}
-            />
-          ))
+          // Fallback to hardcoded plans if API failed, filtered by billing type
+          PlanDetails
+            .filter(plan => plan.billingType === billingType)
+            .map((plan) => (
+              <SubscriptionPlan
+                key={plan.id}
+                plan={plan}
+                onSelect={() => handlePlanSelect(plan)}
+                isHighlighted={plan.isPopular}
+                isSelected={selectedPlan?.id === plan.id}
+                preselected={plan.id === preselectedPlanId}
+              />
+            ))
         )}
       </div>
 

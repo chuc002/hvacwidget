@@ -1,52 +1,115 @@
 // Backup plan details in case API fails
 export const PlanDetails = [
+  // Annual Plans
   {
     id: 1,
     name: "Basic",
-    description: "Basic maintenance plan with per-visit pricing",
-    price: "129.00",
-    interval: "one-time",
+    description: "Essential maintenance with annual billing",
+    price: "149.99",
+    interval: "year",
     features: [
-      "Comprehensive system check",
-      "Filter replacement (standard)",
-      "System cleaning"
+      "Annual tune-up", 
+      "Filter replacement", 
+      "Priority scheduling", 
+      "10% discount on repairs"
     ],
     isPopular: false,
     order: 1,
-    stripePriceId: "price_1RRcnlGxl1XxufT4i2vJmX0m"
+    stripePriceId: "price_1RRcnlGxl1XxufT4i2vJmX0m",
+    billingType: "annual"
   },
   {
     id: 2,
-    name: "Standard",
-    description: "Annual maintenance plan with two visits per year",
-    price: "225.00",
+    name: "Premium",
+    description: "Comprehensive maintenance with annual billing",
+    price: "249.99",
     interval: "year",
     features: [
-      "Two maintenance visits per year",
-      "Priority scheduling",
-      "15% discount on repairs",
-      "Filter subscription (4 filters/year)"
+      "Semi-annual tune-ups", 
+      "Filter replacements", 
+      "Priority scheduling", 
+      "15% discount on repairs", 
+      "No overtime charges"
     ],
     isPopular: true,
     order: 2,
-    stripePriceId: "price_1RRcoYGxl1XxufT4KFZbeJsn"
+    stripePriceId: "price_1RRcoYGxl1XxufT4KFZbeJsn",
+    billingType: "annual"
   },
   {
     id: 3,
-    name: "Premium",
-    description: "Premium monthly maintenance plan with 24/7 support",
-    price: "20.00",
-    interval: "month",
+    name: "Ultimate",
+    description: "Complete protection and maximum savings",
+    price: "349.99",
+    interval: "year",
     features: [
-      "Two maintenance visits per year",
-      "24/7 emergency service",
-      "25% discount on repairs",
-      "Premium filter subscription",
-      "Extended parts warranty"
+      "Quarterly tune-ups", 
+      "Filter replacements", 
+      "Same-day service", 
+      "20% discount on repairs", 
+      "No overtime charges", 
+      "Free diagnostic visits"
     ],
     isPopular: false,
     order: 3,
-    stripePriceId: "price_1RRcp8Gxl1XxufT4oYuK4HG5"
+    stripePriceId: "price_1RRcp8Gxl1XxufT4oYuK4HG5",
+    billingType: "annual"
+  },
+  
+  // Monthly Plans
+  {
+    id: 4,
+    name: "Basic Monthly",
+    description: "Essential maintenance with monthly billing",
+    price: "17.99",
+    interval: "month",
+    features: [
+      "Annual tune-up", 
+      "Filter replacement", 
+      "Priority scheduling", 
+      "10% discount on repairs"
+    ],
+    isPopular: false,
+    order: 4,
+    stripePriceId: "price_monthly_basic",
+    billingType: "monthly"
+  },
+  {
+    id: 5, 
+    name: "Premium Monthly",
+    description: "Comprehensive maintenance with monthly billing",
+    price: "24.99", 
+    interval: "month",
+    features: [
+      "Semi-annual tune-ups", 
+      "Filter replacements", 
+      "Priority scheduling", 
+      "15% discount on repairs", 
+      "No overtime charges"
+    ],
+    isPopular: true,
+    order: 5,
+    stripePriceId: "price_monthly_premium",
+    billingType: "monthly"
+  },
+  {
+    id: 6,
+    name: "Ultimate Monthly", 
+    description: "Complete care with monthly billing",
+    price: "34.99",
+    interval: "month", 
+    features: [
+      "Quarterly tune-ups", 
+      "Filter replacements", 
+      "Same-day service", 
+      "20% discount on repairs", 
+      "No overtime charges", 
+      "Free diagnostic visits"
+    ],
+    isPopular: false,
+    order: 6,
+    stripePriceId: "price_monthly_ultimate",
+    billingType: "monthly"
   }
 ];
 

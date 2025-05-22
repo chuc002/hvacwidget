@@ -9,6 +9,7 @@ export interface Plan {
   features?: string[];
   isPopular: boolean;
   order: number;
+  billingType?: 'monthly' | 'annual'; // Added to support billing toggle
 }
 
 // Customer type matching database schema
