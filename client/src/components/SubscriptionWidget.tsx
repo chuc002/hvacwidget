@@ -46,14 +46,16 @@ export default function SubscriptionWidget({
     retry: 3,
   });
 
-  // Handle errors in plans fetching
-  if (plansError) {
-    toast({
-      title: "Error loading plans",
-      description: "Could not load the subscription plans. Please try again later.",
-      variant: "destructive",
-    });
-  }
+  // Handle errors in plans fetching - moved to useEffect to prevent render loop
+  useEffect(() => {
+    if (plansError) {
+      toast({
+        title: "Error loading plans",
+        description: "Could not load the subscription plans. Please try again later.",
+        variant: "destructive",
+      });
+    }
+  }, [plansError, toast]);
 
   const handlePlanSelect = (plan: Plan) => {
     setSelectedPlan(plan);
