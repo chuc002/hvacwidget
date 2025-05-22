@@ -25,9 +25,19 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
 
   const { planId, customerEmail, customerName, phone } = req.body;
 
+  // DEBUG: Log the entire request body
+  console.log('=== CHECKOUT REQUEST DEBUG ===');
+  console.log('Full request body:', req.body);
+  console.log('planId:', planId);
+  console.log('customerEmail:', customerEmail);
+  console.log('customerName:', customerName);
+  console.log('phone:', phone);
+  console.log('=== END DEBUG ===');
+
   if (!planId || !customerEmail || !customerName) {
+    console.log('Validation failed - missing fields');
     return res.status(400).json({ 
-      error: 'Missing required fields: planId, customerEmail, and customerName are required' 
+      error: `Missing required fields. Received: planId=${planId}, customerEmail=${customerEmail}, customerName=${customerName}` 
     });
   }
 
