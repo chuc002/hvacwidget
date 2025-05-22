@@ -73,6 +73,14 @@ export default function SubscriptionPlan({
           <span className="inline-block bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">
             Best Value
           </span>
+        ) : plan.name === "Basic" ? (
+          <span className="inline-block bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">
+            Best Starter
+          </span>
+        ) : plan.name === "Ultimate" ? (
+          <span className="inline-block bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">
+            Complete Care
+          </span>
         ) : null}
       </div>
 
