@@ -88,11 +88,17 @@ export default function SubscriptionWidget({
         phone: customerInfo.phone
       });
       
-      const response = await apiRequest('POST', '/api/create-checkout-session', {
-        planId: planToCheckout.stripePriceId,
-        customerEmail: customerInfo.email,
-        customerName: customerInfo.name,
-        phone: customerInfo.phone
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          planId: planToCheckout.stripePriceId,
+          customerEmail: customerInfo.email,
+          customerName: customerInfo.name,
+          phone: customerInfo.phone
+        }),
       });
       
       console.log('API Response status:', response.status);
