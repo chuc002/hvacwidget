@@ -176,7 +176,7 @@ export default function SubscriptionWidget({
                 features: plan.features,
                 isPopular: plan.isPopular,
                 order: index + 1,
-                stripePriceId: `price_${plan.name.toLowerCase()}`
+                stripePriceId: plan.stripePriceId
               }}
               onSelect={() => handlePlanSelect({
                 id: index + 1,
@@ -187,7 +187,7 @@ export default function SubscriptionWidget({
                 features: plan.features,
                 isPopular: plan.isPopular,
                 order: index + 1,
-                stripePriceId: `price_${plan.name.toLowerCase()}`
+                stripePriceId: plan.stripePriceId
               })}
               isHighlighted={plan.isPopular}
               isSelected={selectedPlan?.id === index + 1}
