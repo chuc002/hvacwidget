@@ -60,17 +60,28 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
     // Get the plan details from our database
     // In a real app, validate the plan exists in your database
     
-    // Temporary test mode mapping - skip actual price validation
+    // Complete price ID mapping for all subscription options
     const planToStripePriceMap: { [key: string]: string } = {
-      // Numeric IDs (fallback)
-      '1': 'price_test_basic', // Basic
-      '2': 'price_test_premium', // Premium  
-      '3': 'price_test_ultimate', // Ultimate
+      // Annual plans
+      '1': 'price_1RRcnlGxl1XxufT4i2vJmX0m', // Basic annual
+      '2': 'price_1RRcoYGxl1XxufT4KFZbeJsn', // Premium annual  
+      '3': 'price_1RRcp8Gxl1XxufT4oYuK4HG5', // Ultimate annual
+      'price_1': 'price_1RRcnlGxl1XxufT4i2vJmX0m', // Basic annual
+      'price_2': 'price_1RRcoYGxl1XxufT4KFZbeJsn', // Premium annual
+      'price_3': 'price_1RRcp8Gxl1XxufT4oYuK4HG5', // Ultimate annual
       
-      // Fake price IDs (current format) - map to test format
-      'price_1': 'price_test_basic', // Basic
-      'price_2': 'price_test_premium', // Premium
-      'price_3': 'price_test_ultimate'  // Ultimate
+      // Monthly plans
+      '4': 'price_1RRfoCGdBJ6HrZFiH1nNPJ2n', // Basic monthly ($17.99/month)
+      '5': 'price_1RRfoZGdBJ6HrZFi1tlrrdUS', // Premium monthly ($24.99/month)
+      '6': 'price_1RRfowGdBJ6HrZFiOeOXyO5P', // Ultimate monthly ($34.99/month)
+      'price_4': 'price_1RRfoCGdBJ6HrZFiH1nNPJ2n', // Basic monthly
+      'price_5': 'price_1RRfoZGdBJ6HrZFi1tlrrdUS', // Premium monthly
+      'price_6': 'price_1RRfowGdBJ6HrZFiOeOXyO5P', // Ultimate monthly
+      
+      // Test mode fallbacks
+      'price_test_basic': 'price_test_basic',
+      'price_test_premium': 'price_test_premium',
+      'price_test_ultimate': 'price_test_ultimate'
     };
 
     // For test mode, create a simple checkout session without real price validation
