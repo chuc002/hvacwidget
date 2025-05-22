@@ -49,10 +49,9 @@ export default function SubscriptionWidget({
   // Fetch plans from the API
   const { data: plans, isLoading: plansLoading, error: plansError } = useQuery({
     queryKey: ['/api/plans'],
-    retry: 3,
+    queryFn: () => apiRequest('GET', '/api/plans', null, { on401: 'returnNull' }),
   });
 
-  // Handle errors in plans fetching - moved to useEffect to prevent render loop
   useEffect(() => {
     if (plansError) {
       toast({
@@ -96,7 +95,7 @@ export default function SubscriptionWidget({
     try {
       // Create a checkout session on the server using our new endpoint
       console.log('Sending checkout request with data:', {
-        planId: planToCheckout.stripePriceId || planToCheckout.id?.toString(), // Fallback to ID
+        planId: planToCheckout.stripePriceId || `price_${planToCheckout.id}`,
         customerEmail: customerInfo.email,
         customerName: customerInfo.name,
         phone: customerInfo.phone,
@@ -117,7 +116,13 @@ export default function SubscriptionWidget({
           planId: planToCheckout.stripePriceId || `price_${planToCheckout.id}`,
           customerEmail: customerInfo.email,
           customerName: customerInfo.name,
-          phone: customerInfo.phone
+          phone: customerInfo.phone,
+          address: customerInfo.address,
+          city: customerInfo.city,
+          state: customerInfo.state,
+          zipCode: customerInfo.zipCode,
+          propertyType: customerInfo.propertyType,
+          preferredContactTime: customerInfo.preferredContactTime
         }),
       });
       
@@ -136,40 +141,23 @@ export default function SubscriptionWidget({
       if (data.url) {
         console.log('Redirecting to Stripe:', data.url);
         
-        // Try direct location assignment first
-        try {
-          // Force redirect with location.assign instead of location.href
-          window.location.assign(data.url);
-          
-          // Fallback in case the above doesn't trigger a redirect
-          setTimeout(() => {
-            console.log('Fallback redirect attempt');
-            // Open in the same tab with replace to avoid browser history issues
-            window.location.replace(data.url);
-            
-            // Last resort - open in a new tab if nothing else works
-            setTimeout(() => {
-              console.log('Final redirect attempt - opening in new tab');
-              window.open(data.url, '_blank');
-            }, 500);
-          }, 300);
-        } catch (redirectError) {
-          console.error('Redirect error:', redirectError);
-          // Show a manual redirect button
-          toast({
-            title: "Checkout Ready",
-            description: <div>
-              <p>Click the button below to continue to payment:</p>
-              <button 
-                className="bg-primary text-white px-4 py-2 rounded mt-2"
-                onClick={() => window.open(data.url, '_blank')}
-              >
-                Continue to Stripe
-              </button>
-            </div>,
-            duration: 10000,
-          });
-        }
+        // Show toast with payment link button
+        toast({
+          title: "Checkout Ready",
+          description: "Click the button below to complete your payment",
+          action: (
+            <button 
+              className="bg-primary text-white px-4 py-2 rounded mt-2"
+              onClick={() => window.open(data.url, '_blank')}
+            >
+              Go to Payment
+            </button>
+          ),
+          duration: 10000,
+        });
+        
+        // Try to open the payment page automatically
+        window.open(data.url, '_blank');
       } else {
         console.error('No checkout URL returned in response:', data);
         throw new Error("No checkout URL returned");
@@ -193,39 +181,28 @@ export default function SubscriptionWidget({
   };
 
   return (
-    <div id="hvac-subscription-widget" className="bg-white rounded-xl shadow-md p-4 md:p-6 lg:p-8">
-      {/* Widget Header with Company Logo */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="bg-primary rounded-full p-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          </div>
-          <span className="text-xl font-bold text-gray-800">{companyName}</span>
-        </div>
-        <div className="text-sm text-gray-500">Trusted HVAC Service Since 1995</div>
-      </div>
+    <div className="container mx-auto py-8 px-4">
+      <h1 className="text-3xl font-bold text-center mb-8">
+        {companyName} Maintenance Plans
+      </h1>
+      <h2 className="text-xl text-center mb-12 text-muted-foreground">
+        Choose the perfect maintenance plan for your HVAC system
+      </h2>
 
-      {/* Plan Selection Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid md:grid-cols-3 gap-8 mb-12">
         {plansLoading ? (
-          // Loading skeleton for plans
-          Array(3).fill(0).map((_, i) => (
-            <Card key={i} className="relative h-96 border border-gray-200 rounded-lg">
-              <CardContent className="p-6 h-full flex flex-col">
-                <div className="h-6 w-24 bg-gray-200 rounded animate-pulse mb-2"></div>
-                <div className="h-8 w-20 bg-gray-200 rounded animate-pulse mb-1"></div>
-                <div className="h-5 w-28 bg-gray-200 rounded animate-pulse mb-4"></div>
-                <div className="space-y-2 mb-6 flex-grow">
-                  {Array(3).fill(0).map((_, j) => (
-                    <div key={j} className="flex items-start">
-                      <div className="h-5 w-5 bg-gray-200 rounded-full mr-2 mt-0.5"></div>
-                      <div className="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
-                    </div>
+          // Loading skeletons
+          [...Array(3)].map((_, index) => (
+            <Card key={index} className="shadow-md">
+              <CardContent className="p-6">
+                <div className="h-8 bg-gray-200 rounded animate-pulse mb-4" />
+                <div className="h-4 bg-gray-200 rounded animate-pulse mb-2 w-3/4" />
+                <div className="h-4 bg-gray-200 rounded animate-pulse mb-6 w-1/2" />
+                <div className="space-y-2">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="h-3 bg-gray-200 rounded animate-pulse w-full" />
                   ))}
                 </div>
-                <div className="h-10 w-full bg-gray-200 rounded animate-pulse"></div>
               </CardContent>
             </Card>
           ))
@@ -242,41 +219,20 @@ export default function SubscriptionWidget({
             />
           ))
         ) : (
-          // Fallback to hardcoded plans if API fails
-          PlanDetails.map((plan, index) => (
+          // Fallback to hardcoded plans if API failed
+          PlanDetails.map((plan) => (
             <SubscriptionPlan
-              key={index}
-              plan={{
-                id: index + 1,
-                name: plan.name,
-                description: plan.description,
-                price: plan.price.toString(),
-                interval: plan.interval,
-                features: plan.features,
-                isPopular: plan.isPopular,
-                order: index + 1,
-                stripePriceId: plan.stripePriceId
-              }}
-              onSelect={() => handlePlanSelect({
-                id: index + 1,
-                name: plan.name,
-                description: plan.description,
-                price: plan.price.toString(),
-                interval: plan.interval,
-                features: plan.features,
-                isPopular: plan.isPopular,
-                order: index + 1,
-                stripePriceId: plan.stripePriceId
-              })}
+              key={plan.id}
+              plan={plan}
+              onSelect={() => handlePlanSelect(plan)}
               isHighlighted={plan.isPopular}
-              isSelected={selectedPlan?.id === index + 1}
-              preselected={index + 1 === preselectedPlanId}
+              isSelected={selectedPlan?.id === plan.id}
+              preselected={plan.id === preselectedPlanId}
             />
           ))
         )}
       </div>
 
-      {/* Benefits, Testimonials, and FAQs sections */}
       <BenefitsList />
       <Separator className="my-8" />
       <Testimonials />
@@ -384,7 +340,7 @@ export default function SubscriptionWidget({
                 Cancel
               </Button>
               <Button type="submit" disabled={loading}>
-                {loading ? "Processing..." : "Continue to Payment"}
+                {loading ? "Processing..." : "Continue to Checkout"}
               </Button>
             </DialogFooter>
           </form>
