@@ -19,9 +19,10 @@ export default function Success() {
       // Fetch subscription details based on the Stripe session ID
       const fetchSubscriptionDetails = async () => {
         try {
-          const response = await apiRequest('GET', `/api/subscription-details?session_id=${sessionId}`);
+          const response = await apiRequest('GET', `/api/get-session-details?session_id=${sessionId}`);
           const data = await response.json();
           setSubscriptionDetails(data);
+          console.log('Subscription details:', data);
         } catch (error) {
           console.error('Error fetching subscription details:', error);
         } finally {

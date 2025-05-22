@@ -11,8 +11,9 @@ import {
 } from "@shared/schema";
 import axios from "axios";
 
-// Import new checkout and webhook routes
+// Import API routes
 import checkoutRoutes from "./api/create-checkout-session";
+import sessionDetailsRoutes from "./api/get-session-details";
 import webhookRoutes from "./api/webhook";
 
 // Initialize Stripe with the secret key from environment variables
@@ -25,9 +26,10 @@ const stripe = process.env.STRIPE_SECRET_KEY
   : null;
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Register the new Stripe routes
+  // Register the Stripe and API routes
   app.use('/api', checkoutRoutes);
   app.use('/api', webhookRoutes);
+  app.use('/api', sessionDetailsRoutes);
   // API endpoint to get all plans
   app.get("/api/plans", async (req, res) => {
     try {
