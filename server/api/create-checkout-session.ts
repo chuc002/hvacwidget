@@ -45,12 +45,28 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
     // Get the plan details from our database
     // In a real app, validate the plan exists in your database
     
-    // planId is now the actual Stripe Price ID
-    const stripePriceId = planId;
+    // Map both old numeric IDs and fake price IDs to real Stripe price IDs
+    const planToStripePriceMap: { [key: string]: string } = {
+      // Numeric IDs (fallback)
+      '1': 'price_1RRcnlGxl1XxufT4i2vJmX0m', // Basic
+      '2': 'price_1RRcoYGxl1XxufT4KFZbeJsn', // Premium  
+      '3': 'price_1RRcp8Gxl1XxufT4oYuK4HG5', // Ultimate
+      
+      // Fake price IDs (current format)
+      'price_1': 'price_1RRcnlGxl1XxufT4i2vJmX0m', // Basic
+      'price_2': 'price_1RRcoYGxl1XxufT4KFZbeJsn', // Premium
+      'price_3': 'price_1RRcp8Gxl1XxufT4oYuK4HG5'  // Ultimate
+    };
+
+    // Check if we need to map the planId
+    let stripePriceId = planId;
+    if (planToStripePriceMap[planId]) {
+      stripePriceId = planToStripePriceMap[planId];
+    }
 
     // Validate it's a proper Stripe price ID
     if (!stripePriceId || !stripePriceId.startsWith('price_')) {
-      return res.status(400).json({ error: 'Invalid Stripe price ID format' });
+      return res.status(400).json({ error: `Invalid Stripe price ID format: ${planId}` });
     }
 
     // All HVAC maintenance plans are recurring subscriptions
