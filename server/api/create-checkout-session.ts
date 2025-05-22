@@ -35,12 +35,12 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
     // Get the plan details from our database
     // In a real app, validate the plan exists in your database
     
-    // For now, we'll use a simple mapping of plan IDs to Stripe price IDs
-    // In a production app, you'd fetch this from your database
+    // Map plan IDs to real Stripe price IDs
+    // Using the actual price IDs you provided
     const planToStripePriceMap: { [key: string]: string } = {
-      '1': process.env.STRIPE_BASIC_PRICE_ID || 'price_basic',
-      '2': process.env.STRIPE_STANDARD_PRICE_ID || 'price_standard',
-      '3': process.env.STRIPE_PREMIUM_PRICE_ID || 'price_premium'
+      '1': 'price_1RRcnlGxl1XxufT4i2vJmX0m', // Basic plan
+      '2': 'price_1RRcoYGxl1XxufT4KFZbeJsn', // Premium plan
+      '3': 'price_1RRcp8Gxl1XxufT4oYuK4HG5'  // Ultimate plan
     };
 
     const stripePriceId = planToStripePriceMap[planId];
