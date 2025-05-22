@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import Stripe from 'stripe';
-import { supabase } from '../lib/supabase';
+import { db } from '../lib/supabase';
 import { storage } from '../storage';
 
 const router = express.Router();
@@ -16,7 +16,7 @@ if (!process.env.STRIPE_WEBHOOK_SECRET) {
 
 const stripe = process.env.STRIPE_SECRET_KEY 
   ? new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: '2023-10-16',
+      apiVersion: '2022-11-15',
     }) 
   : null;
 

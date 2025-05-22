@@ -11,16 +11,23 @@ import {
 } from "@shared/schema";
 import axios from "axios";
 
+// Import new checkout and webhook routes
+import checkoutRoutes from "./api/create-checkout-session";
+import webhookRoutes from "./api/webhook";
+
 // Initialize Stripe with the secret key from environment variables
 if (!process.env.STRIPE_SECRET_KEY) {
   console.warn('Missing STRIPE_SECRET_KEY environment variable. Stripe integration will not work.');
 }
 
 const stripe = process.env.STRIPE_SECRET_KEY 
-  ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2023-10-16" })
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2022-11-15" })
   : null;
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Register the new Stripe routes
+  app.use('/api', checkoutRoutes);
+  app.use('/api', webhookRoutes);
   // API endpoint to get all plans
   app.get("/api/plans", async (req, res) => {
     try {

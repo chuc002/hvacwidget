@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import Stripe from 'stripe';
-import { supabase } from '../lib/supabase';
+import { db } from '../lib/supabase';
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 
 const stripe = process.env.STRIPE_SECRET_KEY 
   ? new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: '2023-10-16', // Using a stable version
+      apiVersion: '2022-11-15', // Using a stable version
     }) 
   : null;
 

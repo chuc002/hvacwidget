@@ -77,10 +77,12 @@ export default function SubscriptionWidget({
     setLoading(true);
     
     try {
-      // Create a checkout session on the server
-      const response = await apiRequest('POST', '/api/create-subscription', {
-        planId: planToCheckout.id,
-        customerInfo
+      // Create a checkout session on the server using our new endpoint
+      const response = await apiRequest('POST', '/api/create-checkout-session', {
+        planId: planToCheckout.id.toString(),
+        customerEmail: customerInfo.email,
+        customerName: customerInfo.name,
+        phone: customerInfo.phone
       });
       
       const data = await response.json();

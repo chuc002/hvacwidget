@@ -7,6 +7,8 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Admin from "@/pages/Admin";
 import Widget from "@/pages/Widget";
+import Success from "@/pages/Success";
+import Cancel from "@/pages/Cancel";
 import Layout from "@/components/Layout";
 
 function Router() {
@@ -16,6 +18,8 @@ function Router() {
       <Route path="/admin" component={Admin} />
       <Route path="/widget" component={Widget} />
       <Route path="/subscribe/:token" component={Widget} />
+      <Route path="/success" component={Success} />
+      <Route path="/cancel" component={Cancel} />
       <Route component={NotFound} />
     </Switch>
   );
