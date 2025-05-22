@@ -1,0 +1,63 @@
+## REPLIT PROMPT - FIX TEST MODE PRICE ID MAPPING
+
+My Stripe is in test mode but I'm getting "No such price" errors because I'm using live Price IDs with test Stripe keys. I need to temporarily map the fake price IDs to work in test mode for demos.
+
+**UPDATE THE MAPPING in `server/api/create-checkout-session.ts`:**
+
+**Replace the existing `planToStripePriceMap` with this temporary test mapping:**
+
+```javascript
+// Temporary test mode mapping - skip actual price validation
+const planToStripePriceMap: { [key: string]: string } = {
+  // Numeric IDs (fallback)
+  '1': 'price_test_basic', // Basic
+  '2': 'price_test_premium', // Premium  
+  '3': 'price_test_ultimate', // Ultimate
+  
+  // Fake price IDs (current format) - map to test format
+  'price_1': 'price_test_basic', // Basic
+  'price_2': 'price_test_premium', // Premium
+  'price_3': 'price_test_ultimate'  // Ultimate
+};
+
+// For test mode, create a simple checkout session without real price validation
+const stripePriceId = planToStripePriceMap[planId] || 'price_test_demo';
+
+// Skip price validation in test mode - just use a dummy price for demo
+if (process.env.NODE_ENV === 'development') {
+  // Use any valid test price ID or create session without line_items for demo
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    customer_email: customerEmail,
+    mode: 'payment', // Use payment mode for test demos
+    success_url: `${req.protocol}://${req.get('host')}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${req.protocol}://${req.get('host')}/cancel`,
+    metadata: {
+      customer_name: customerName,
+      phone: phone || '',
+      plan_id: planId,
+      business_id: 'demo-hvac-company',
+    },
+    // Create a custom amount for demo
+    line_items: [
+      {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: `HVAC Maintenance Plan - ${planId}`,
+          },
+          unit_amount: planId === 'price_3' ? 34999 : (planId === 'price_2' ? 24999 : 14999), // Amount in cents
+        },
+        quantity: 1,
+      },
+    ],
+  });
+} else {
+  // Normal production logic here
+}
+```
+
+**EXPECTED RESULT:** 
+The demo will work with test card `4242 4242 4242 4242` and show a proper Stripe checkout without needing real Price IDs.
+
+Fix the test mode price mapping for immediate demo functionality.
