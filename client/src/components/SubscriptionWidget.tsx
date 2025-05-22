@@ -76,13 +76,21 @@ export default function SubscriptionWidget({
   const handleCheckout = async (planToCheckout = selectedPlan) => {
     if (!planToCheckout) return;
     
+    // DEBUG: Log the plan object
+    console.log('=== PLAN DEBUG ===');
+    console.log('Full plan object:', planToCheckout);
+    console.log('planToCheckout.stripePriceId:', planToCheckout.stripePriceId);
+    console.log('planToCheckout.id:', planToCheckout.id);
+    console.log('Available plan properties:', Object.keys(planToCheckout));
+    console.log('=== END PLAN DEBUG ===');
+    
     setLoading(true);
     console.log('Starting checkout process...', planToCheckout);
     
     try {
       // Create a checkout session on the server using our new endpoint
       console.log('Sending checkout request with data:', {
-        planId: planToCheckout.stripePriceId,
+        planId: planToCheckout.stripePriceId || planToCheckout.id?.toString(), // Fallback to ID
         customerEmail: customerInfo.email,
         customerName: customerInfo.name,
         phone: customerInfo.phone
@@ -94,7 +102,7 @@ export default function SubscriptionWidget({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          planId: planToCheckout.stripePriceId,
+          planId: planToCheckout.stripePriceId || `price_${planToCheckout.id}`,
           customerEmail: customerInfo.email,
           customerName: customerInfo.name,
           phone: customerInfo.phone
