@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, CheckCircle, AlertTriangle } from "lucide-react";
 import { apiRequest } from '@/lib/queryClient';
 
 export default function Success() {
@@ -55,21 +55,60 @@ export default function Success() {
               <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
             </div>
           ) : subscriptionDetails ? (
-            <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
-              <h3 className="font-medium text-gray-800 mb-2">Subscription Details</h3>
-              <div className="space-y-2 text-sm text-gray-600">
-                <p><span className="font-medium">Plan:</span> {subscriptionDetails.plan?.name || 'Standard Plan'}</p>
-                <p><span className="font-medium">Subscription Status:</span> {subscriptionDetails.status || 'Active'}</p>
-                <p><span className="font-medium">Next Billing Date:</span> {
-                  subscriptionDetails.currentPeriodEnd 
-                    ? new Date(subscriptionDetails.currentPeriodEnd * 1000).toLocaleDateString() 
-                    : 'Not available'
-                }</p>
+            <div className="bg-white border border-gray-200 rounded-lg p-5 mb-6 text-left shadow-sm">
+              <h3 className="font-semibold text-gray-800 mb-4 text-lg flex items-center">
+                <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                Subscription Details
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-center border-b border-gray-100 pb-3">
+                  <div className="w-1/3 text-gray-500 text-sm">Plan</div>
+                  <div className="w-2/3 font-medium text-gray-800">{subscriptionDetails.planName}</div>
+                </div>
+                <div className="flex items-center border-b border-gray-100 pb-3">
+                  <div className="w-1/3 text-gray-500 text-sm">Amount</div>
+                  <div className="w-2/3 font-medium text-gray-800">
+                    ${subscriptionDetails.amount}/{subscriptionDetails.interval}
+                  </div>
+                </div>
+                <div className="flex items-center border-b border-gray-100 pb-3">
+                  <div className="w-1/3 text-gray-500 text-sm">Email</div>
+                  <div className="w-2/3 font-medium text-gray-800">{subscriptionDetails.customerEmail}</div>
+                </div>
+                <div className="flex items-center border-b border-gray-100 pb-3">
+                  <div className="w-1/3 text-gray-500 text-sm">Start Date</div>
+                  <div className="w-2/3 font-medium text-gray-800">
+                    {new Date(subscriptionDetails.startDate).toLocaleDateString()}
+                  </div>
+                </div>
+                {subscriptionDetails.customerName && (
+                  <div className="flex items-center border-b border-gray-100 pb-3">
+                    <div className="w-1/3 text-gray-500 text-sm">Name</div>
+                    <div className="w-2/3 font-medium text-gray-800">{subscriptionDetails.customerName}</div>
+                  </div>
+                )}
+                <div className="flex items-center pt-2">
+                  <div className="w-1/3 text-gray-500 text-sm">Status</div>
+                  <div className="w-2/3">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      {subscriptionDetails.paymentStatus === 'paid' ? 'Active' : 'Processing'}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           ) : (
-            <div className="bg-yellow-50 rounded-lg p-4 mb-6">
-              <p className="text-yellow-700">Subscription details could not be loaded. Please check your email for confirmation details.</p>
+            <div className="bg-yellow-50 border border-yellow-100 rounded-lg p-4 mb-6">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <AlertTriangle className="h-5 w-5 text-yellow-400" />
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-yellow-700">
+                    Subscription details could not be loaded. Please check your email for confirmation details.
+                  </p>
+                </div>
+              </div>
             </div>
           )}
           
