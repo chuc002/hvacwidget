@@ -49,7 +49,13 @@ export default function SubscriptionWidget({
   // Fetch plans from the API
   const { data: plans, isLoading: plansLoading, error: plansError } = useQuery({
     queryKey: ['/api/plans'],
-    queryFn: () => apiRequest('GET', '/api/plans', null, { on401: 'returnNull' }),
+    queryFn: async () => {
+      const response = await fetch('/api/plans');
+      if (!response.ok) {
+        throw new Error('Failed to fetch plans');
+      }
+      return response.json();
+    }
   });
 
   useEffect(() => {
@@ -206,7 +212,7 @@ export default function SubscriptionWidget({
               </CardContent>
             </Card>
           ))
-        ) : plans ? (
+        ) : plans && Array.isArray(plans) ? (
           // Render actual plans once loaded
           plans.map((plan: Plan) => (
             <SubscriptionPlan

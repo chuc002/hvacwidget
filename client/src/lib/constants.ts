@@ -1,9 +1,10 @@
 // Backup plan details in case API fails
 export const PlanDetails = [
   {
+    id: 1,
     name: "Basic",
     description: "Basic maintenance plan with per-visit pricing",
-    price: 129,
+    price: "129.00",
     interval: "one-time",
     features: [
       "Comprehensive system check",
@@ -11,12 +12,14 @@ export const PlanDetails = [
       "System cleaning"
     ],
     isPopular: false,
+    order: 1,
     stripePriceId: "price_1RRcnlGxl1XxufT4i2vJmX0m"
   },
   {
+    id: 2,
     name: "Standard",
     description: "Annual maintenance plan with two visits per year",
-    price: 225,
+    price: "225.00",
     interval: "year",
     features: [
       "Two maintenance visits per year",
@@ -25,12 +28,14 @@ export const PlanDetails = [
       "Filter subscription (4 filters/year)"
     ],
     isPopular: true,
+    order: 2,
     stripePriceId: "price_1RRcoYGxl1XxufT4KFZbeJsn"
   },
   {
+    id: 3,
     name: "Premium",
     description: "Premium monthly maintenance plan with 24/7 support",
-    price: 20,
+    price: "20.00",
     interval: "month",
     features: [
       "Two maintenance visits per year",
@@ -40,6 +45,7 @@ export const PlanDetails = [
       "Extended parts warranty"
     ],
     isPopular: false,
+    order: 3,
     stripePriceId: "price_1RRcp8Gxl1XxufT4oYuK4HG5"
   }
 ];
