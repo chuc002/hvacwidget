@@ -82,14 +82,14 @@ export default function SubscriptionWidget({
     try {
       // Create a checkout session on the server using our new endpoint
       console.log('Sending checkout request with data:', {
-        planId: planToCheckout.id.toString(),
+        planId: planToCheckout.stripePriceId,
         customerEmail: customerInfo.email,
         customerName: customerInfo.name,
         phone: customerInfo.phone
       });
       
       const response = await apiRequest('POST', '/api/create-checkout-session', {
-        planId: planToCheckout.id.toString(),
+        planId: planToCheckout.stripePriceId,
         customerEmail: customerInfo.email,
         customerName: customerInfo.name,
         phone: customerInfo.phone
