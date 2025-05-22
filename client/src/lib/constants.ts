@@ -10,7 +10,8 @@ export const PlanDetails = [
       "Filter replacement (standard)",
       "System cleaning"
     ],
-    isPopular: false
+    isPopular: false,
+    stripePriceId: "price_1RRcnlGxl1XxufT4i2vJmX0m"
   },
   {
     name: "Standard",
@@ -23,7 +24,8 @@ export const PlanDetails = [
       "15% discount on repairs",
       "Filter subscription (4 filters/year)"
     ],
-    isPopular: true
+    isPopular: true,
+    stripePriceId: "price_1RRcoYGxl1XxufT4KFZbeJsn"
   },
   {
     name: "Premium",
@@ -37,7 +39,8 @@ export const PlanDetails = [
       "Premium filter subscription",
       "Extended parts warranty"
     ],
-    isPopular: false
+    isPopular: false,
+    stripePriceId: "price_1RRcp8Gxl1XxufT4oYuK4HG5"
   }
 ];
 

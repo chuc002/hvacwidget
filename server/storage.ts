@@ -89,7 +89,7 @@ export class MemStorage implements IStorage {
         ],
         isPopular: false,
         order: 1,
-        stripePriceId: "price_basic"
+        stripePriceId: "price_1RRcnlGxl1XxufT4i2vJmX0m"
       },
       {
         name: "Standard",
@@ -104,7 +104,7 @@ export class MemStorage implements IStorage {
         ],
         isPopular: true,
         order: 2,
-        stripePriceId: "price_standard"
+        stripePriceId: "price_1RRcoYGxl1XxufT4KFZbeJsn"
       },
       {
         name: "Premium",
@@ -120,7 +120,7 @@ export class MemStorage implements IStorage {
         ],
         isPopular: false,
         order: 3,
-        stripePriceId: "price_premium"
+        stripePriceId: "price_1RRcp8Gxl1XxufT4oYuK4HG5"
       }
     ];
 
