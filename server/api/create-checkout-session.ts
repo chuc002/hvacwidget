@@ -23,7 +23,18 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
     });
   }
 
-  const { planId, customerEmail, customerName, phone } = req.body;
+  const { 
+    planId, 
+    customerEmail, 
+    customerName, 
+    phone,
+    address,
+    city,
+    state,
+    zipCode,
+    propertyType,
+    preferredContactTime
+  } = req.body;
 
   // DEBUG: Log the entire request body
   console.log('=== CHECKOUT REQUEST DEBUG ===');
@@ -32,6 +43,10 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
   console.log('customerEmail:', customerEmail);
   console.log('customerName:', customerName);
   console.log('phone:', phone);
+  console.log('address:', address);
+  console.log('city:', city);
+  console.log('zipCode:', zipCode);
+  console.log('propertyType:', propertyType);
   console.log('=== END DEBUG ===');
 
   if (!planId || !customerEmail || !customerName) {
@@ -88,6 +103,12 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
       metadata: {
         customer_name: customerName,
         phone: phone || '',
+        address: address || '',
+        city: city || '',
+        state: state || '',
+        zip_code: zipCode || '',
+        property_type: propertyType || '',
+        preferred_contact_time: preferredContactTime || '',
         plan_id: planId,
         business_id: 'demo-hvac-company', // Will be dynamic in a real app
       },
