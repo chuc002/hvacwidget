@@ -62,15 +62,15 @@ export default function SubscriptionPlan({
       {/* Plan label */}
       <div className="absolute -top-3 right-3">
         {isHighlighted ? (
-          <span className="inline-block bg-primary text-white text-xs px-2 py-1 rounded-full">
+          <span className="inline-block bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">
             Popular
           </span>
         ) : plan.interval === 'one-time' ? (
-          <span className="inline-block bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
+          <span className="inline-block bg-gray-700 text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">
             Per Visit
           </span>
         ) : plan.interval === 'month' ? (
-          <span className="inline-block bg-secondary text-white text-xs px-2 py-1 rounded-full">
+          <span className="inline-block bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">
             Best Value
           </span>
         ) : null}
@@ -96,13 +96,7 @@ export default function SubscriptionPlan({
       {/* CTA button */}
       <Button
         onClick={onSelect}
-        className={`w-full text-white font-medium shadow-md ${
-          isHighlighted 
-            ? "bg-blue-600 hover:bg-blue-700" 
-            : plan.interval === 'month'
-              ? "bg-green-600 hover:bg-green-700"
-              : "bg-blue-500 hover:bg-blue-600"
-        }`}
+        className="w-full text-white font-medium shadow-md bg-blue-600 hover:bg-blue-700"
         variant="default"
       >
         {plan.interval === 'one-time' ? 'Select Plan' : 'Subscribe Now'}
