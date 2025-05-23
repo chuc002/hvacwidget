@@ -28,7 +28,11 @@ import Welcome from "@/pages/Welcome";
 import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 
+// Import the new dashboard pages
+import DashboardOverview from "@/pages/DashboardOverview";
+
 // Protect dashboard and authenticated-only routes
+const ProtectedDashboardOverview = withAuth(DashboardOverview);
 const ProtectedCustomerDashboard = withAuth(CustomerDashboard);
 const ProtectedAnalytics = withAuth(Analytics);
 const ProtectedAdmin = withAuth(Admin);
@@ -158,8 +162,8 @@ function Router() {
       
       {/* Protected Routes */}
       <Route path="/admin" component={ProtectedAdmin} />
-      <Route path="/dashboard" component={ProtectedCustomerDashboard} />
-      <Route path="/customer-dashboard" component={ProtectedCustomerDashboard} />
+      <Route path="/dashboard" component={ProtectedDashboardOverview} />
+      <Route path="/customer-dashboard" component={ProtectedDashboardOverview} />
       <Route path="/analytics" component={ProtectedAnalytics} />
       <Route path="/customize" component={withAuth(() => <div className="container py-8"><h1 className="text-2xl font-bold">Widget Customization</h1></div>)} />
       <Route path="/revenue" component={withAuth(() => <div className="container py-8"><h1 className="text-2xl font-bold">Revenue Streams</h1></div>)} />
