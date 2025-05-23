@@ -1,0 +1,804 @@
+🎯 **ABSOLUTELY! That's the key to charging premium prices!**
+
+Customization is what transforms you from a **$399/month commodity** to a **$999/month premium platform**. Here's why this is CRITICAL:
+
+## 💰 **Why Customization = Higher Revenue:**
+
+### **Without Customization:**
+- "Generic widget that looks the same for everyone"
+- Customers see it as a commodity
+- Hard to justify high prices
+- Churn risk (easy to replace)
+
+### **With Customization:**
+- "Branded solution that's uniquely theirs"
+- Customers feel ownership and investment
+- Justifies premium pricing ($699-999/month)
+- Sticky (hard to leave after customizing)
+
+## 🚀 **REPLIT PROMPT - ADD CONTRACTOR CUSTOMIZATION DASHBOARD**
+
+I need to add a comprehensive customization dashboard for my SaaS customers so they can fully brand and configure their ServicePlan Pro widget. This will justify premium pricing and reduce churn.
+
+**CUSTOMIZATION FEATURES NEEDED:**
+
+**1. Branding Customization**
+```typescript
+// types/customization.ts
+interface BrandingConfig {
+  // Colors
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  backgroundColor: string;
+  textColor: string;
+  
+  // Logo & Images
+  logo?: string;
+  favicon?: string;
+  backgroundImage?: string;
+  
+  // Typography
+  fontFamily: string;
+  headerFont: string;
+  
+  // Custom CSS
+  customCSS?: string;
+}
+```
+
+**2. Content Customization**
+```typescript
+interface ContentConfig {
+  // Company Info
+  companyName: string;
+  tagline: string;
+  description: string;
+  
+  // Contact Info
+  phone: string;
+  email: string;
+  address: string;
+  website: string;
+  
+  // Service Categories
+  serviceType: 'pest-control' | 'lawn-care' | 'hvac' | 'pool-service' | 'cleaning' | 'custom';
+  
+  // Custom Text
+  heroTitle: string;
+  heroSubtitle: string;
+  ctaText: string;
+  thankYouMessage: string;
+  
+  // Legal
+  termsOfService?: string;
+  privacyPolicy?: string;
+}
+```
+
+**3. Pricing & Plans Customization**
+```typescript
+interface PricingConfig {
+  currency: 'USD' | 'CAD' | 'EUR';
+  
+  plans: Array<{
+    id: string;
+    name: string; // "Monthly Treatment", "Quarterly Service", etc.
+    description: string;
+    price: number;
+    interval: 'month' | 'quarter' | 'year';
+    features: string[];
+    isPopular?: boolean;
+    stripePriceId: string; // Their Stripe price ID
+  }>;
+  
+  // Billing Options
+  allowMonthly: boolean;
+  allowAnnual: boolean;
+  annualDiscount?: number; // "Save 15% with annual billing"
+  
+  // Payment Settings
+  stripeAccountId: string; // Their Stripe Connect account
+  acceptsCreditCards: boolean;
+  acceptsACH: boolean;
+}
+```
+
+**4. Lead Collection Customization**
+```typescript
+interface LeadConfig {
+  // Required Fields
+  collectName: boolean;
+  collectEmail: boolean;
+  collectPhone: boolean;
+  collectAddress: boolean;
+  
+  // Optional Fields  
+  collectPropertyType: boolean;
+  collectPropertySize: boolean;
+  collectCurrentProvider: boolean;
+  collectPreferredTime: boolean;
+  collectSpecialInstructions: boolean;
+  
+  // Custom Fields
+  customFields: Array<{
+    id: string;
+    label: string;
+    type: 'text' | 'select' | 'checkbox' | 'textarea';
+    required: boolean;
+    options?: string[]; // for select fields
+  }>;
+  
+  // Lead Routing
+  emailNotifications: string[]; // List of emails to notify
+  webhookUrl?: string; // Send leads to their CRM
+  zapierWebhook?: string;
+}
+```
+
+**5. Create Customization Dashboard**
+
+```typescript
+// pages/Customize.tsx
+import { useState, useEffect } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { ColorPicker } from '@/components/ui/color-picker';
+import { Switch } from '@/components/ui/switch';
+
+export default function Customize() {
+  const [config, setConfig] = useState({
+    branding: {},
+    content: {},
+    pricing: {},
+    leads: {}
+  });
+  
+  const [previewMode, setPreviewMode] = useState(false);
+
+  const handleSave = async () => {
+    try {
+      await fetch('/api/customers/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(config)
+      });
+      
+      toast({ title: 'Settings saved successfully!' });
+    } catch (error) {
+      toast({ title: 'Error saving settings', variant: 'destructive' });
+    }
+  };
+
+  return (
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Customize Your Widget</h1>
+        <div className="space-x-4">
+          <Button 
+            variant="outline" 
+            onClick={() => setPreviewMode(!previewMode)}
+          >
+            {previewMode ? 'Edit Mode' : 'Preview Mode'}
+          </Button>
+          <Button onClick={handleSave}>Save Changes</Button>
+        </div>
+      </div>
+
+      <Tabs defaultValue="branding" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="branding">Branding</TabsTrigger>
+          <TabsTrigger value="content">Content</TabsTrigger>
+          <TabsTrigger value="pricing">Pricing & Plans</TabsTrigger>
+          <TabsTrigger value="leads">Lead Collection</TabsTrigger>
+          <TabsTrigger value="integrations">Integrations</TabsTrigger>
+        </TabsList>
+
+        {/* BRANDING TAB */}
+        <TabsContent value="branding">
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Colors</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>Primary Color</Label>
+                  <ColorPicker 
+                    value={config.branding.primaryColor}
+                    onChange={(color) => setConfig({
+                      ...config,
+                      branding: { ...config.branding, primaryColor: color }
+                    })}
+                  />
+                </div>
+                <div>
+                  <Label>Secondary Color</Label>
+                  <ColorPicker 
+                    value={config.branding.secondaryColor}
+                    onChange={(color) => setConfig({
+                      ...config,
+                      branding: { ...config.branding, secondaryColor: color }
+                    })}
+                  />
+                </div>
+                <div>
+                  <Label>Accent Color</Label>
+                  <ColorPicker 
+                    value={config.branding.accentColor}
+                    onChange={(color) => setConfig({
+                      ...config,
+                      branding: { ...config.branding, accentColor: color }
+                    })}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Logo & Images</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>Company Logo</Label>
+                  <Input type="file" accept="image/*" />
+                  <p className="text-sm text-gray-600">Recommended: 200x60px PNG</p>
+                </div>
+                <div>
+                  <Label>Background Image (Optional)</Label>
+                  <Input type="file" accept="image/*" />
+                  <p className="text-sm text-gray-600">For hero section background</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Typography</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>Font Family</Label>
+                  <select className="w-full p-2 border rounded">
+                    <option value="inter">Inter (Recommended)</option>
+                    <option value="roboto">Roboto</option>
+                    <option value="open-sans">Open Sans</option>
+                    <option value="lato">Lato</option>
+                    <option value="montserrat">Montserrat</option>
+                  </select>
+                </div>
+                <div>
+                  <Label>Custom CSS (Advanced)</Label>
+                  <textarea 
+                    className="w-full p-2 border rounded h-32 font-mono text-sm"
+                    placeholder="/* Add custom CSS here */"
+                    value={config.branding.customCSS}
+                    onChange={(e) => setConfig({
+                      ...config,
+                      branding: { ...config.branding, customCSS: e.target.value }
+                    })}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* CONTENT TAB */}
+        <TabsContent value="content">
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Company Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>Company Name</Label>
+                  <Input 
+                    value={config.content.companyName}
+                    onChange={(e) => setConfig({
+                      ...config,
+                      content: { ...config.content, companyName: e.target.value }
+                    })}
+                    placeholder="ABC Pest Control"
+                  />
+                </div>
+                <div>
+                  <Label>Tagline</Label>
+                  <Input 
+                    value={config.content.tagline}
+                    onChange={(e) => setConfig({
+                      ...config,
+                      content: { ...config.content, tagline: e.target.value }
+                    })}
+                    placeholder="Professional pest protection for your home"
+                  />
+                </div>
+                <div>
+                  <Label>Service Type</Label>
+                  <select 
+                    className="w-full p-2 border rounded"
+                    value={config.content.serviceType}
+                    onChange={(e) => setConfig({
+                      ...config,
+                      content: { ...config.content, serviceType: e.target.value }
+                    })}
+                  >
+                    <option value="pest-control">Pest Control</option>
+                    <option value="lawn-care">Lawn Care</option>
+                    <option value="hvac">HVAC Services</option>
+                    <option value="pool-service">Pool Service</option>
+                    <option value="cleaning">Cleaning Service</option>
+                    <option value="custom">Custom</option>
+                  </select>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Contact Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>Phone Number</Label>
+                  <Input 
+                    value={config.content.phone}
+                    onChange={(e) => setConfig({
+                      ...config,
+                      content: { ...config.content, phone: e.target.value }
+                    })}
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
+                <div>
+                  <Label>Email</Label>
+                  <Input 
+                    type="email"
+                    value={config.content.email}
+                    onChange={(e) => setConfig({
+                      ...config,
+                      content: { ...config.content, email: e.target.value }
+                    })}
+                    placeholder="info@abcpest.com"
+                  />
+                </div>
+                <div>
+                  <Label>Service Address</Label>
+                  <Input 
+                    value={config.content.address}
+                    onChange={(e) => setConfig({
+                      ...config,
+                      content: { ...config.content, address: e.target.value }
+                    })}
+                    placeholder="123 Main St, Kansas City, MO"
+                  />
+                </div>
+                <div>
+                  <Label>Website</Label>
+                  <Input 
+                    value={config.content.website}
+                    onChange={(e) => setConfig({
+                      ...config,
+                      content: { ...config.content, website: e.target.value }
+                    })}
+                    placeholder="https://abcpest.com"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="md:col-span-2">
+              <CardHeader>
+                <CardTitle>Custom Messaging</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>Hero Title</Label>
+                  <Input 
+                    value={config.content.heroTitle}
+                    onChange={(e) => setConfig({
+                      ...config,
+                      content: { ...config.content, heroTitle: e.target.value }
+                    })}
+                    placeholder="Professional Pest Protection Plans"
+                  />
+                </div>
+                <div>
+                  <Label>Hero Subtitle</Label>
+                  <Input 
+                    value={config.content.heroSubtitle}
+                    onChange={(e) => setConfig({
+                      ...config,
+                      content: { ...config.content, heroSubtitle: e.target.value }
+                    })}
+                    placeholder="Choose the perfect protection plan for your home"
+                  />
+                </div>
+                <div>
+                  <Label>Thank You Message</Label>
+                  <textarea 
+                    className="w-full p-2 border rounded h-24"
+                    value={config.content.thankYouMessage}
+                    onChange={(e) => setConfig({
+                      ...config,
+                      content: { ...config.content, thankYouMessage: e.target.value }
+                    })}
+                    placeholder="Thank you for choosing ABC Pest Control! We'll contact you within 24 hours to schedule your first visit."
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* PRICING TAB */}
+        <TabsContent value="pricing">
+          <Card>
+            <CardHeader>
+              <CardTitle>Service Plans & Pricing</CardTitle>
+              <p className="text-gray-600">Configure the subscription plans your customers can choose from</p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {config.pricing.plans?.map((plan, index) => (
+                  <div key={index} className="border rounded-lg p-4">
+                    <div className="grid md:grid-cols-4 gap-4">
+                      <div>
+                        <Label>Plan Name</Label>
+                        <Input 
+                          value={plan.name}
+                          onChange={(e) => {
+                            const newPlans = [...config.pricing.plans];
+                            newPlans[index].name = e.target.value;
+                            setConfig({
+                              ...config,
+                              pricing: { ...config.pricing, plans: newPlans }
+                            });
+                          }}
+                          placeholder="Monthly Treatment"
+                        />
+                      </div>
+                      <div>
+                        <Label>Price</Label>
+                        <Input 
+                          type="number"
+                          value={plan.price}
+                          onChange={(e) => {
+                            const newPlans = [...config.pricing.plans];
+                            newPlans[index].price = parseFloat(e.target.value);
+                            setConfig({
+                              ...config,
+                              pricing: { ...config.pricing, plans: newPlans }
+                            });
+                          }}
+                          placeholder="49.99"
+                        />
+                      </div>
+                      <div>
+                        <Label>Billing Interval</Label>
+                        <select 
+                          className="w-full p-2 border rounded"
+                          value={plan.interval}
+                          onChange={(e) => {
+                            const newPlans = [...config.pricing.plans];
+                            newPlans[index].interval = e.target.value;
+                            setConfig({
+                              ...config,
+                              pricing: { ...config.pricing, plans: newPlans }
+                            });
+                          }}
+                        >
+                          <option value="month">Monthly</option>
+                          <option value="quarter">Quarterly</option>
+                          <option value="year">Annually</option>
+                        </select>
+                      </div>
+                      <div className="flex items-end">
+                        <Button 
+                          variant="outline" 
+                          onClick={() => {
+                            const newPlans = config.pricing.plans.filter((_, i) => i !== index);
+                            setConfig({
+                              ...config,
+                              pricing: { ...config.pricing, plans: newPlans }
+                            });
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <Label>Description</Label>
+                      <Input 
+                        value={plan.description}
+                        onChange={(e) => {
+                          const newPlans = [...config.pricing.plans];
+                          newPlans[index].description = e.target.value;
+                          setConfig({
+                            ...config,
+                            pricing: { ...config.pricing, plans: newPlans }
+                          });
+                        }}
+                        placeholder="Monthly pest treatment with quarterly inspections"
+                      />
+                    </div>
+                    <div className="mt-4">
+                      <Label>Features (one per line)</Label>
+                      <textarea 
+                        className="w-full p-2 border rounded h-24"
+                        value={plan.features?.join('\n')}
+                        onChange={(e) => {
+                          const newPlans = [...config.pricing.plans];
+                          newPlans[index].features = e.target.value.split('\n').filter(f => f.trim());
+                          setConfig({
+                            ...config,
+                            pricing: { ...config.pricing, plans: newPlans }
+                          });
+                        }}
+                        placeholder="Monthly pest treatment&#10;Quarterly inspections&#10;Emergency service calls&#10;Satisfaction guarantee"
+                      />
+                    </div>
+                  </div>
+                ))}
+                
+                <Button 
+                  onClick={() => {
+                    const newPlan = {
+                      id: `plan_${Date.now()}`,
+                      name: '',
+                      description: '',
+                      price: 0,
+                      interval: 'month',
+                      features: [],
+                      stripePriceId: ''
+                    };
+                    setConfig({
+                      ...config,
+                      pricing: { 
+                        ...config.pricing, 
+                        plans: [...(config.pricing.plans || []), newPlan] 
+                      }
+                    });
+                  }}
+                >
+                  Add New Plan
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* LEAD COLLECTION TAB */}
+        <TabsContent value="leads">
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Required Fields</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label>Collect Name</Label>
+                  <Switch 
+                    checked={config.leads.collectName}
+                    onCheckedChange={(checked) => setConfig({
+                      ...config,
+                      leads: { ...config.leads, collectName: checked }
+                    })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label>Collect Email</Label>
+                  <Switch 
+                    checked={config.leads.collectEmail}
+                    onCheckedChange={(checked) => setConfig({
+                      ...config,
+                      leads: { ...config.leads, collectEmail: checked }
+                    })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label>Collect Phone</Label>
+                  <Switch 
+                    checked={config.leads.collectPhone}
+                    onCheckedChange={(checked) => setConfig({
+                      ...config,
+                      leads: { ...config.leads, collectPhone: checked }
+                    })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label>Collect Address</Label>
+                  <Switch 
+                    checked={config.leads.collectAddress}
+                    onCheckedChange={(checked) => setConfig({
+                      ...config,
+                      leads: { ...config.leads, collectAddress: checked }
+                    })}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Optional Fields</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label>Property Type</Label>
+                  <Switch 
+                    checked={config.leads.collectPropertyType}
+                    onCheckedChange={(checked) => setConfig({
+                      ...config,
+                      leads: { ...config.leads, collectPropertyType: checked }
+                    })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label>Property Size</Label>
+                  <Switch 
+                    checked={config.leads.collectPropertySize}
+                    onCheckedChange={(checked) => setConfig({
+                      ...config,
+                      leads: { ...config.leads, collectPropertySize: checked }
+                    })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label>Current Provider</Label>
+                  <Switch 
+                    checked={config.leads.collectCurrentProvider}
+                    onCheckedChange={(checked) => setConfig({
+                      ...config,
+                      leads: { ...config.leads, collectCurrentProvider: checked }
+                    })}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label>Preferred Service Time</Label>
+                  <Switch 
+                    checked={config.leads.collectPreferredTime}
+                    onCheckedChange={(checked) => setConfig({
+                      ...config,
+                      leads: { ...config.leads, collectPreferredTime: checked }
+                    })}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="md:col-span-2">
+              <CardHeader>
+                <CardTitle>Lead Notifications</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>Email Notifications</Label>
+                  <Input 
+                    value={config.leads.emailNotifications?.join(', ')}
+                    onChange={(e) => setConfig({
+                      ...config,
+                      leads: { 
+                        ...config.leads, 
+                        emailNotifications: e.target.value.split(',').map(email => email.trim()).filter(e => e)
+                      }
+                    })}
+                    placeholder="owner@company.com, manager@company.com"
+                  />
+                  <p className="text-sm text-gray-600">Comma-separated list of emails to notify when new customers subscribe</p>
+                </div>
+                <div>
+                  <Label>Webhook URL (Optional)</Label>
+                  <Input 
+                    value={config.leads.webhookUrl}
+                    onChange={(e) => setConfig({
+                      ...config,
+                      leads: { ...config.leads, webhookUrl: e.target.value }
+                    })}
+                    placeholder="https://your-crm.com/webhook"
+                  />
+                  <p className="text-sm text-gray-600">Send lead data to your CRM or other system</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* INTEGRATIONS TAB */}
+        <TabsContent value="integrations">
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Payment Processing</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>Stripe Account Status</Label>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span>Connected</span>
+                  </div>
+                </div>
+                <Button variant="outline">
+                  Reconnect Stripe
+                </Button>
+                <p className="text-sm text-gray-600">
+                  Customer payments go directly to your Stripe account
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>CRM Integration</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>Zapier Webhook</Label>
+                  <Input 
+                    value={config.leads.zapierWebhook}
+                    onChange={(e) => setConfig({
+                      ...config,
+                      leads: { ...config.leads, zapierWebhook: e.target.value }
+                    })}
+                    placeholder="https://hooks.zapier.com/hooks/catch/..."
+                  />
+                </div>
+                <Button variant="outline">
+                  Test Connection
+                </Button>
+                <p className="text-sm text-gray-600">
+                  Automatically send new leads to your CRM via Zapier
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      {/* Live Preview Panel */}
+      {previewMode && (
+        <div className="fixed right-0 top-0 w-1/2 h-screen bg-white shadow-lg z-50 overflow-auto">
+          <div className="p-4 border-b">
+            <h3 className="text-lg font-semibold">Live Preview</h3>
+            <Button 
+              variant="outline" 
+              onClick={() => setPreviewMode(false)}
+            >
+              Close Preview
+            </Button>
+          </div>
+          <div className="p-4">
+            <SubscriptionWidget 
+              config={config}
+              companyName={config.content.companyName}
+              isPreview={true}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+**EXPECTED RESULT:**
+A comprehensive customization system that allows contractors to:
+
+1. **Brand their widget** with colors, logos, fonts
+2. **Customize all text** and messaging  
+3. **Set their own pricing** and service plans
+4. **Configure lead collection** fields
+5. **Set up integrations** with their CRM and payment systems
+6. **Preview changes** in real-time
+
+**VALUE PROPOSITION:**
+This transforms ServicePlan Pro from a generic widget into a **custom-branded solution** that justifies charging $699-999/month because it becomes uniquely theirs.
+
+This level of customization is what separates premium SaaS platforms from commodity tools! 🚀💰
