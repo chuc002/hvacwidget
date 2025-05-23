@@ -52,54 +52,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const fallbackPlans = [
           {
             id: 1,
-            name: "Basic",
-            description: "Essential maintenance for residential systems",
-            price: "149.99",
-            interval: "year",
+            name: "Starter",
+            description: "Perfect for new home service businesses",
+            price: "399",
+            interval: "month",
             features: [
-              "Annual tune-up",
-              "Filter replacement",
-              "Priority scheduling",
-              "10% discount on repairs"
+              "Up to 100 customers/month",
+              "Basic subscription widget",
+              "Email support",
+              "Mobile-optimized checkout",
+              "Stripe payment processing",
+              "Basic analytics"
             ],
             isPopular: false,
             order: 1,
-            stripePriceId: "price_1RRcnlGxl1XxufT4i2vJmX0m"
+            stripePriceId: "price_starter_monthly_399"
           },
           {
             id: 2,
-            name: "Premium",
-            description: "Comprehensive coverage for your HVAC system",
-            price: "249.99",
-            interval: "year",
+            name: "Professional",
+            description: "Most popular for growing home service companies",
+            price: "699",
+            interval: "month",
             features: [
-              "Semi-annual tune-ups",
-              "Filter replacements",
-              "Priority scheduling",
-              "15% discount on repairs",
-              "No overtime charges"
+              "Up to 500 customers/month",
+              "Advanced subscription widget",
+              "Product catalog & sales",
+              "Custom branding",
+              "Priority support",
+              "Advanced analytics dashboard",
+              "API access"
             ],
             isPopular: true,
             order: 2,
-            stripePriceId: "price_1RRcoYGxl1XxufT4KFZbeJsn"
+            stripePriceId: "price_professional_monthly_699"
           },
           {
             id: 3,
-            name: "Ultimate",
-            description: "Complete protection and maximum savings",
-            price: "349.99",
-            interval: "year",
+            name: "Enterprise",
+            description: "For established home service companies",
+            price: "999",
+            interval: "month",
             features: [
-              "Quarterly tune-ups",
-              "Filter replacements",
-              "Same-day service",
-              "20% discount on repairs",
-              "No overtime charges",
-              "Free diagnostic visits"
+              "Unlimited customers",
+              "Full multi-revenue widget",
+              "Invoice payment processing",
+              "Multi-location support",
+              "Dedicated account manager",
+              "White-label solution",
+              "Custom integrations"
             ],
             isPopular: false,
             order: 3,
-            stripePriceId: "price_1RRcp8Gxl1XxufT4oYuK4HG5"
+            stripePriceId: "price_enterprise_monthly_999"
           }
         ];
         res.status(200).json(fallbackPlans);
