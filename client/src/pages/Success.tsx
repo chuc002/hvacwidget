@@ -47,7 +47,7 @@ export default function Success() {
         </CardHeader>
         <CardContent className="text-center">
           <p className="text-gray-600 mb-6">
-            Thank you for subscribing to our HVAC maintenance plan. Your subscription has been successfully processed.
+            Thank you for subscribing to our service plan. Your subscription has been successfully processed.
           </p>
           
           {loading ? (
@@ -121,7 +121,7 @@ export default function Success() {
               </li>
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
-                <span>Our team will contact you within 24 hours to schedule your first maintenance visit</span>
+                <span>Our team will contact you within 24 hours to schedule your first service visit</span>
               </li>
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
@@ -136,7 +136,7 @@ export default function Success() {
             <div className="flex flex-col space-y-2 text-sm">
               <div className="flex items-center">
                 <span className="font-medium w-16">Email:</span>
-                <a href="mailto:support@comfortairsolutions.com" className="text-primary hover:underline">support@comfortairsolutions.com</a>
+                <a href="mailto:support@serviceplanpro.com" className="text-primary hover:underline">support@serviceplanpro.com</a>
               </div>
               <div className="flex items-center">
                 <span className="font-medium w-16">Phone:</span>
