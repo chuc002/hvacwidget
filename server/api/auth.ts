@@ -188,10 +188,91 @@ router.get('/me', async (req, res) => {
  * Middleware to check authentication
  */
 export function requireAuth(req: any, res: any, next: any) {
-  if (!req.session.isAuthenticated || !req.session.customerId) {
+  if (!req.session?.isAuthenticated || !req.session?.customerId) {
     return res.status(401).json({ message: 'Authentication required' });
   }
   next();
 }
+
+/**
+ * Middleware to check if customer has an active subscription
+ */
+export async function requireActiveSubscription(req: any, res: any, next: any) {
+  if (!req.session?.customerId) {
+    return res.status(401).json({ message: 'Authentication required' });
+  }
+
+  try {
+    const customer = await storage.getCustomerById(req.session.customerId);
+    if (!customer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    const subscriptions = await storage.getSubscriptionsByCustomerId(customer.id);
+    const activeSubscription = subscriptions.find(sub => sub.status === 'active');
+
+    if (!activeSubscription) {
+      return res.status(403).json({ 
+        message: 'Active subscription required',
+        customerStatus: 'trial',
+        upgradeMessage: 'Please upgrade to a paid plan to access this feature'
+      });
+    }
+
+    // Add customer and subscription info to request for route handlers
+    req.customer = customer;
+    req.subscription = activeSubscription;
+    next();
+  } catch (error) {
+    console.error('Error checking subscription status:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+/**
+ * Get current customer session with subscription status
+ */
+router.get('/session', async (req, res) => {
+  try {
+    if (!req.session?.isAuthenticated || !req.session?.customerId) {
+      return res.json({ 
+        isAuthenticated: false,
+        customer: null,
+        subscriptionStatus: 'none'
+      });
+    }
+
+    const customer = await storage.getCustomerById(req.session.customerId);
+    if (!customer) {
+      req.session.destroy((err) => {
+        if (err) console.error('Session destroy error:', err);
+      });
+      return res.json({ 
+        isAuthenticated: false,
+        customer: null,
+        subscriptionStatus: 'none'
+      });
+    }
+
+    // Get subscription status
+    const subscriptions = await storage.getSubscriptionsByCustomerId(customer.id);
+    const activeSubscription = subscriptions.find(sub => sub.status === 'active');
+    
+    const subscriptionStatus = activeSubscription ? 'active' : 'trial';
+
+    // Remove sensitive data
+    const { password, ...customerWithoutPassword } = customer;
+
+    res.json({
+      isAuthenticated: true,
+      customer: customerWithoutPassword,
+      subscriptionStatus,
+      subscription: activeSubscription || null
+    });
+  } catch (error) {
+    console.error('Error fetching session:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 export default router;
