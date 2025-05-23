@@ -30,7 +30,7 @@ export default function CustomerJourney() {
             </p>
             
             <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-12">
-              <Link href="/register">
+              <Link href="/trial-registration">
                 <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-4 shadow-lg">
                   Start Free Trial
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -380,7 +380,7 @@ export default function CustomerJourney() {
             Start your free trial today - no credit card required.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <Link href="/register">
+            <Link href="/trial-registration">
               <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-4 shadow-lg">
                 Start Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />

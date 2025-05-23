@@ -7,7 +7,7 @@ export default function SimplePricing() {
   const [, setLocation] = useLocation();
   
   const handleStartTrial = () => {
-    setLocation('/register');
+    setLocation('/trial-registration');
   };
 
   return (

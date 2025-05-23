@@ -1,448 +1,444 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { CheckCircle, ArrowRight, Play, CheckSquare, Coffee, Code, Settings, PenTool } from 'lucide-react';
-import { Link, useLocation } from 'wouter';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
+import { useLocation } from 'wouter';
+import { ArrowRight, CheckCircle, Code, Copy, ExternalLink, Settings, Home } from 'lucide-react';
 import Navigation from '@/components/Navigation';
-
-const WelcomeStep = ({ customer, onNext }: { customer: any; onNext: () => void }) => {
-  return (
-    <div className="space-y-6">
-      <div className="text-center mb-8">
-        <div className="h-20 w-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-          <CheckCircle className="h-10 w-10" />
-        </div>
-        <h2 className="text-2xl font-bold">Welcome to ServicePlan Pro!</h2>
-        <p className="text-gray-600 mt-2">
-          Your account has been created and your 14-day free trial has started.
-        </p>
-      </div>
-
-      <div className="bg-blue-50 p-6 rounded-lg">
-        <h3 className="font-semibold text-lg mb-4">Here's what happens next:</h3>
-        <ul className="space-y-4">
-          <li className="flex items-start">
-            <div className="bg-blue-100 text-blue-600 h-6 w-6 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-              1
-            </div>
-            <div>
-              <p className="font-medium">Customize your subscription widget</p>
-              <p className="text-sm text-gray-600">Brand it to match your company and set your pricing</p>
-            </div>
-          </li>
-          <li className="flex items-start">
-            <div className="bg-blue-100 text-blue-600 h-6 w-6 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-              2
-            </div>
-            <div>
-              <p className="font-medium">Add the widget to your website</p>
-              <p className="text-sm text-gray-600">Simple copy-paste for any website platform</p>
-            </div>
-          </li>
-          <li className="flex items-start">
-            <div className="bg-blue-100 text-blue-600 h-6 w-6 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-              3
-            </div>
-            <div>
-              <p className="font-medium">Start receiving subscriptions</p>
-              <p className="text-sm text-gray-600">Customers can subscribe 24/7 - even while you sleep</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      <div className="bg-green-50 border border-green-100 p-6 rounded-lg">
-        <h3 className="font-semibold text-lg mb-2">Your 14-day free trial includes:</h3>
-        <ul className="space-y-2">
-          <li className="flex items-center">
-            <CheckSquare className="h-5 w-5 text-green-500 mr-2" />
-            <span>Full access to all features and customization options</span>
-          </li>
-          <li className="flex items-center">
-            <CheckSquare className="h-5 w-5 text-green-500 mr-2" />
-            <span>Unlimited subscriber sign-ups during trial period</span>
-          </li>
-          <li className="flex items-center">
-            <CheckSquare className="h-5 w-5 text-green-500 mr-2" />
-            <span>Access to analytics and reporting dashboard</span>
-          </li>
-          <li className="flex items-center">
-            <CheckSquare className="h-5 w-5 text-green-500 mr-2" />
-            <span>Priority implementation support</span>
-          </li>
-        </ul>
-      </div>
-
-      <div className="flex justify-center">
-        <Button size="lg" onClick={onNext}>
-          Get Started <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
-      </div>
-    </div>
-  );
-};
-
-const CustomizeStep = ({ customer, onNext, onBack }: { customer: any; onNext: () => void; onBack: () => void }) => {
-  return (
-    <div className="space-y-6">
-      <div className="text-center mb-8">
-        <div className="h-20 w-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-          <PenTool className="h-10 w-10" />
-        </div>
-        <h2 className="text-2xl font-bold">Customize Your Widget</h2>
-        <p className="text-gray-600 mt-2">
-          Let's set up your subscription widget to match your brand and service plans.
-        </p>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Brand Your Widget</CardTitle>
-            <CardDescription>Match your company colors and style</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              <li className="flex items-center">
-                <div className="h-6 w-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-2 flex-shrink-0">
-                  <CheckSquare className="h-4 w-4" />
-                </div>
-                <span>Set your company name and logo</span>
-              </li>
-              <li className="flex items-center">
-                <div className="h-6 w-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-2 flex-shrink-0">
-                  <CheckSquare className="h-4 w-4" />
-                </div>
-                <span>Choose primary and accent colors</span>
-              </li>
-              <li className="flex items-center">
-                <div className="h-6 w-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-2 flex-shrink-0">
-                  <CheckSquare className="h-4 w-4" />
-                </div>
-                <span>Customize text and descriptions</span>
-              </li>
-            </ul>
-            <Link href="/customize">
-              <Button className="w-full mt-4">Customize Branding</Button>
-            </Link>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Configure Service Plans</CardTitle>
-            <CardDescription>Set up your subscription options</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              <li className="flex items-center">
-                <div className="h-6 w-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-2 flex-shrink-0">
-                  <CheckSquare className="h-4 w-4" />
-                </div>
-                <span>Define your service plans and tiers</span>
-              </li>
-              <li className="flex items-center">
-                <div className="h-6 w-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-2 flex-shrink-0">
-                  <CheckSquare className="h-4 w-4" />
-                </div>
-                <span>Set pricing for monthly/annual options</span>
-              </li>
-              <li className="flex items-center">
-                <div className="h-6 w-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-2 flex-shrink-0">
-                  <CheckSquare className="h-4 w-4" />
-                </div>
-                <span>Add features and benefits for each plan</span>
-              </li>
-            </ul>
-            <Link href="/configure-plans">
-              <Button className="w-full mt-4">Configure Plans</Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="bg-blue-50 p-6 rounded-lg">
-        <h3 className="font-semibold mb-3">Get inspiration from these examples:</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-lg shadow-sm p-3">
-            <div className="aspect-video bg-gray-100 rounded mb-2"></div>
-            <p className="text-sm font-medium">HVAC Example</p>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm p-3">
-            <div className="aspect-video bg-gray-100 rounded mb-2"></div>
-            <p className="text-sm font-medium">Pest Control Example</p>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm p-3">
-            <div className="aspect-video bg-gray-100 rounded mb-2"></div>
-            <p className="text-sm font-medium">Lawn Care Example</p>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm p-3">
-            <div className="aspect-video bg-gray-100 rounded mb-2"></div>
-            <p className="text-sm font-medium">Pool Service Example</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>
-          Back
-        </Button>
-        <Button onClick={onNext}>
-          Continue <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
-      </div>
-    </div>
-  );
-};
-
-const EmbedStep = ({ customer, onNext, onBack }: { customer: any; onNext: () => void; onBack: () => void }) => {
-  return (
-    <div className="space-y-6">
-      <div className="text-center mb-8">
-        <div className="h-20 w-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Code className="h-10 w-10" />
-        </div>
-        <h2 className="text-2xl font-bold">Add Widget to Your Website</h2>
-        <p className="text-gray-600 mt-2">
-          Now let's add the widget to your website so customers can start subscribing.
-        </p>
-      </div>
-
-      <div className="bg-gray-50 p-6 rounded-lg">
-        <h3 className="font-semibold text-lg mb-4">Choose your installation method:</h3>
-        
-        <div className="space-y-6">
-          <div className="bg-white border rounded-lg p-4">
-            <h4 className="font-semibold mb-2">Option 1: JavaScript Snippet (Recommended)</h4>
-            <p className="text-sm text-gray-600 mb-3">
-              Add this code to your website where you want the widget to appear.
-            </p>
-            <div className="bg-gray-100 p-4 rounded-md font-mono text-sm overflow-x-auto">
-              {`<script 
-  src="https://app.serviceplanpro.com/embed.js" 
-  data-company="${customer?.companyName || 'Your Company Name'}"
-  data-width="100%"
-  data-height="800px">
-</script>`}
-            </div>
-            <Button className="mt-4" variant="outline">
-              Copy Code
-            </Button>
-          </div>
-          
-          <div className="bg-white border rounded-lg p-4">
-            <h4 className="font-semibold mb-2">Option 2: iFrame Embed</h4>
-            <p className="text-sm text-gray-600 mb-3">
-              Alternative method if you prefer to use an iframe.
-            </p>
-            <div className="bg-gray-100 p-4 rounded-md font-mono text-sm overflow-x-auto">
-              {`<iframe
-  src="https://app.serviceplanpro.com/embed?company=${encodeURIComponent(customer?.companyName || 'Your Company Name')}"
-  width="100%"
-  height="800px"
-  frameborder="0">
-</iframe>`}
-            </div>
-            <Button className="mt-4" variant="outline">
-              Copy Code
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
-        <h4 className="font-semibold mb-1 flex items-center">
-          <Coffee className="h-4 w-4 mr-2" />
-          Need help with installation?
-        </h4>
-        <p className="text-sm text-gray-700">
-          Our implementation team can help you add the widget to your website. 
-          <Link href="/implementation-help">
-            <span className="text-blue-600 ml-1 hover:underline">Schedule assistance</span>
-          </Link>
-        </p>
-      </div>
-
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>
-          Back
-        </Button>
-        <Button onClick={onNext}>
-          Continue <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
-      </div>
-    </div>
-  );
-};
-
-const LaunchStep = ({ customer, onComplete, onBack }: { customer: any; onComplete: () => void; onBack: () => void }) => {
-  return (
-    <div className="space-y-6">
-      <div className="text-center mb-8">
-        <div className="h-20 w-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-          <CheckCircle className="h-10 w-10" />
-        </div>
-        <h2 className="text-2xl font-bold">You're Ready to Launch!</h2>
-        <p className="text-gray-600 mt-2">
-          Your ServicePlan Pro widget is configured and ready to start accepting subscriptions.
-        </p>
-      </div>
-
-      <div className="bg-green-50 p-6 rounded-lg">
-        <h3 className="font-semibold text-lg mb-4">Your Launch Checklist:</h3>
-        <ul className="space-y-4">
-          <li className="flex items-start">
-            <CheckSquare className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
-            <div>
-              <p className="font-medium">Widget is customized with your branding</p>
-              <p className="text-sm text-gray-600">Colors, logos, and text match your brand identity</p>
-            </div>
-          </li>
-          <li className="flex items-start">
-            <CheckSquare className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
-            <div>
-              <p className="font-medium">Service plans configured with pricing</p>
-              <p className="text-sm text-gray-600">Plans and pricing set to match your service offerings</p>
-            </div>
-          </li>
-          <li className="flex items-start">
-            <CheckSquare className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
-            <div>
-              <p className="font-medium">Widget added to your website</p>
-              <p className="text-sm text-gray-600">Embed code installed where customers can see it</p>
-            </div>
-          </li>
-          <li className="flex items-start">
-            <CheckSquare className="h-5 w-5 text-green-600 mr-3 mt-0.5" />
-            <div>
-              <p className="font-medium">Payment processing connected</p>
-              <p className="text-sm text-gray-600">Stripe integration ready to handle customer payments</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Monitor Your Dashboard</CardTitle>
-            <CardDescription>Track subscriptions and analytics</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-gray-600 mb-4">
-              Your dashboard gives you real-time insights into subscriptions, revenue, and customer data.
-            </p>
-            <Link href="/analytics">
-              <Button className="w-full">Go to Dashboard</Button>
-            </Link>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Get Customer Support</CardTitle>
-            <CardDescription>We're here to help you succeed</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-gray-600 mb-4">
-              Have questions or need help? Our customer success team is ready to assist.
-            </p>
-            <Link href="/support">
-              <Button variant="outline" className="w-full">Contact Support</Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={onBack}>
-          Back
-        </Button>
-        <Button onClick={onComplete} className="bg-green-600 hover:bg-green-700">
-          Complete Setup
-        </Button>
-      </div>
-    </div>
-  );
-};
 
 export default function WelcomeFlow() {
   const [, setLocation] = useLocation();
-  const [customer, setCustomer] = useState({
-    companyName: 'Premium Home Services',
-    email: 'admin@premiumhomeservices.com',
-    industry: 'HVAC'
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState('welcome');
+  const [widgetSettings, setWidgetSettings] = useState({
+    companyName: '',
+    primaryColor: '#2563eb',
+    companyLogo: '',
+    defaultPlan: 'premium',
+    showPrices: true,
+    collectAddress: true,
+    allowAnnual: true
   });
-  const [currentStep, setCurrentStep] = useState(1);
   
-  const steps = [
-    { title: "Welcome", progress: 25 },
-    { title: "Customize Widget", progress: 50 },
-    { title: "Embed Widget", progress: 75 },
-    { title: "Launch", progress: 100 }
-  ];
-  
-  const handleNext = () => {
-    if (currentStep < steps.length) {
-      setCurrentStep(currentStep + 1);
-      window.scrollTo(0, 0);
-    }
+  const embedOptions = {
+    iframe: `<iframe src="https://service-plan-pro.replit.app/widget?company=${encodeURIComponent(widgetSettings.companyName)}" width="100%" height="600" frameborder="0"></iframe>`,
+    javascript: `<script src="https://service-plan-pro.replit.app/embed.js" data-company="${widgetSettings.companyName}" data-color="${widgetSettings.primaryColor.replace('#', '')}"></script>`,
   };
-  
-  const handleBack = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-      window.scrollTo(0, 0);
-    }
+
+  const handleNextTab = () => {
+    if (activeTab === 'welcome') setActiveTab('customize');
+    else if (activeTab === 'customize') setActiveTab('embed');
+    else if (activeTab === 'embed') setActiveTab('launch');
   };
-  
+
+  const handleCopyCode = (code: string) => {
+    navigator.clipboard.writeText(code);
+    toast({ 
+      title: "Code copied!",
+      description: "The embed code has been copied to your clipboard.",
+    });
+  };
+
   const handleComplete = () => {
-    // Redirect to dashboard after completion
-    setLocation('/dashboard');
+    toast({
+      title: "Congratulations!",
+      description: "Your widget is now live and ready to accept subscriptions!",
+    });
+    setTimeout(() => setLocation('/dashboard'), 1500);
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
       
-      <div className="max-w-4xl mx-auto py-12 px-4">
-        {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex justify-between mb-2">
-            {steps.map((step, index) => (
-              <div 
-                key={index} 
-                className={`text-sm font-medium ${
-                  currentStep >= index + 1 ? 'text-blue-600' : 'text-gray-400'
-                }`}
-              >
-                {step.title}
-              </div>
-            ))}
-          </div>
-          <Progress value={steps[currentStep - 1].progress} className="h-2" />
+      <div className="max-w-5xl mx-auto px-4 py-12">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold mb-2">Welcome to ServicePlan Pro</h1>
+          <p className="text-gray-600">Let's set up your subscription widget in just a few steps</p>
         </div>
-        
-        <Card>
-          <CardContent className="p-6 md:p-8">
-            {currentStep === 1 && (
-              <WelcomeStep customer={customer} onNext={handleNext} />
-            )}
-            
-            {currentStep === 2 && (
-              <CustomizeStep customer={customer} onNext={handleNext} onBack={handleBack} />
-            )}
-            
-            {currentStep === 3 && (
-              <EmbedStep customer={customer} onNext={handleNext} onBack={handleBack} />
-            )}
-            
-            {currentStep === 4 && (
-              <LaunchStep customer={customer} onComplete={handleComplete} onBack={handleBack} />
-            )}
-          </CardContent>
-        </Card>
+
+        <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+          <div className="p-4 flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Setup Progress</h2>
+            <div className="flex items-center space-x-2">
+              <div className={`h-3 w-3 rounded-full ${activeTab === 'welcome' || activeTab === 'customize' || activeTab === 'embed' || activeTab === 'launch' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+              <div className={`h-3 w-3 rounded-full ${activeTab === 'customize' || activeTab === 'embed' || activeTab === 'launch' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+              <div className={`h-3 w-3 rounded-full ${activeTab === 'embed' || activeTab === 'launch' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+              <div className={`h-3 w-3 rounded-full ${activeTab === 'launch' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+            </div>
+          </div>
+        </div>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+          <TabsList className="grid grid-cols-4 gap-2">
+            <TabsTrigger value="welcome" className="py-3">
+              <CheckCircle className={`h-5 w-5 mr-2 ${activeTab === 'welcome' || activeTab === 'customize' || activeTab === 'embed' || activeTab === 'launch' ? 'text-green-500' : 'text-gray-400'}`} />
+              Welcome
+            </TabsTrigger>
+            <TabsTrigger value="customize" className="py-3">
+              <Settings className={`h-5 w-5 mr-2 ${activeTab === 'customize' || activeTab === 'embed' || activeTab === 'launch' ? 'text-green-500' : 'text-gray-400'}`} />
+              Customize
+            </TabsTrigger>
+            <TabsTrigger value="embed" className="py-3">
+              <Code className={`h-5 w-5 mr-2 ${activeTab === 'embed' || activeTab === 'launch' ? 'text-green-500' : 'text-gray-400'}`} />
+              Embed
+            </TabsTrigger>
+            <TabsTrigger value="launch" className="py-3">
+              <ExternalLink className={`h-5 w-5 mr-2 ${activeTab === 'launch' ? 'text-green-500' : 'text-gray-400'}`} />
+              Launch
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="welcome" className="p-6 bg-white rounded-lg shadow">
+            <div className="max-w-3xl mx-auto space-y-6">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold mb-4">Welcome to ServicePlan Pro!</h2>
+                <p className="text-gray-600">We're excited to help you add subscription revenue to your service business.</p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-6">
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="text-center mb-4">
+                      <div className="bg-blue-100 text-blue-600 rounded-full w-12 h-12 mx-auto flex items-center justify-center mb-4">
+                        <Settings className="h-6 w-6" />
+                      </div>
+                      <h3 className="text-lg font-semibold">Customize</h3>
+                      <p className="text-sm text-gray-500">Configure your widget to match your brand</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="text-center mb-4">
+                      <div className="bg-blue-100 text-blue-600 rounded-full w-12 h-12 mx-auto flex items-center justify-center mb-4">
+                        <Code className="h-6 w-6" />
+                      </div>
+                      <h3 className="text-lg font-semibold">Embed</h3>
+                      <p className="text-sm text-gray-500">Add the widget to your website</p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="text-center mb-4">
+                      <div className="bg-blue-100 text-blue-600 rounded-full w-12 h-12 mx-auto flex items-center justify-center mb-4">
+                        <Home className="h-6 w-6" />
+                      </div>
+                      <h3 className="text-lg font-semibold">Launch</h3>
+                      <p className="text-sm text-gray-500">Start accepting subscription payments</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="bg-blue-50 p-6 rounded-lg mt-8">
+                <h3 className="text-lg font-semibold mb-2">Your trial includes:</h3>
+                <ul className="space-y-2">
+                  <li className="flex items-center">
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                    Full access to the subscription widget
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                    Unlimited customer signups (during trial)
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                    Analytics dashboard
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                    Email support
+                  </li>
+                </ul>
+              </div>
+
+              <div className="text-center mt-8">
+                <Button onClick={handleNextTab} className="px-8 py-6 text-lg">
+                  Let's Get Started
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="customize" className="p-6 bg-white rounded-lg shadow">
+            <div className="max-w-3xl mx-auto space-y-6">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold mb-4">Customize Your Widget</h2>
+                <p className="text-gray-600">Make the widget your own by customizing it to match your brand.</p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Company Name</label>
+                    <input 
+                      type="text" 
+                      value={widgetSettings.companyName} 
+                      onChange={(e) => setWidgetSettings({...widgetSettings, companyName: e.target.value})}
+                      className="w-full p-2 border rounded-md"
+                      placeholder="ABC Pest Control"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Primary Color</label>
+                    <div className="flex space-x-2">
+                      <input 
+                        type="color" 
+                        value={widgetSettings.primaryColor} 
+                        onChange={(e) => setWidgetSettings({...widgetSettings, primaryColor: e.target.value})}
+                        className="h-10 w-10"
+                      />
+                      <input 
+                        type="text" 
+                        value={widgetSettings.primaryColor} 
+                        onChange={(e) => setWidgetSettings({...widgetSettings, primaryColor: e.target.value})}
+                        className="flex-1 p-2 border rounded-md"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Company Logo URL</label>
+                    <input 
+                      type="text" 
+                      value={widgetSettings.companyLogo} 
+                      onChange={(e) => setWidgetSettings({...widgetSettings, companyLogo: e.target.value})}
+                      className="w-full p-2 border rounded-md"
+                      placeholder="https://yourcompany.com/logo.png"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Default Selected Plan</label>
+                      <select 
+                        value={widgetSettings.defaultPlan} 
+                        onChange={(e) => setWidgetSettings({...widgetSettings, defaultPlan: e.target.value})}
+                        className="w-full p-2 border rounded-md"
+                      >
+                        <option value="basic">Basic Plan</option>
+                        <option value="premium">Premium Plan</option>
+                        <option value="ultimate">Ultimate Plan</option>
+                      </select>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <label className="flex items-center">
+                        <input 
+                          type="checkbox" 
+                          checked={widgetSettings.showPrices} 
+                          onChange={(e) => setWidgetSettings({...widgetSettings, showPrices: e.target.checked})}
+                          className="mr-2"
+                        />
+                        Show prices on widget
+                      </label>
+                      
+                      <label className="flex items-center">
+                        <input 
+                          type="checkbox" 
+                          checked={widgetSettings.collectAddress} 
+                          onChange={(e) => setWidgetSettings({...widgetSettings, collectAddress: e.target.checked})}
+                          className="mr-2"
+                        />
+                        Collect customer address
+                      </label>
+                      
+                      <label className="flex items-center">
+                        <input 
+                          type="checkbox" 
+                          checked={widgetSettings.allowAnnual} 
+                          onChange={(e) => setWidgetSettings({...widgetSettings, allowAnnual: e.target.checked})}
+                          className="mr-2"
+                        />
+                        Allow annual subscriptions
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 p-6 rounded-lg mt-8">
+                <h3 className="text-lg font-semibold mb-4">Widget Preview</h3>
+                <div className="border rounded-lg bg-white p-4 h-64 flex items-center justify-center">
+                  <div className="text-center">
+                    <p className="text-sm text-gray-500 mb-2">Preview will reflect your customizations</p>
+                    <div 
+                      className="py-2 px-4 rounded-md" 
+                      style={{backgroundColor: widgetSettings.primaryColor, color: '#fff'}}
+                    >
+                      {widgetSettings.companyName || 'Your Company'} Maintenance Plans
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-center mt-8">
+                <Button onClick={handleNextTab} className="px-8 py-6 text-lg">
+                  Continue to Embed
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="embed" className="p-6 bg-white rounded-lg shadow">
+            <div className="max-w-3xl mx-auto space-y-6">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold mb-4">Add Widget to Your Website</h2>
+                <p className="text-gray-600">Choose how you want to embed the widget on your website.</p>
+              </div>
+
+              <div className="space-y-6">
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold">Option 1: Embed with iframe</h3>
+                    <Button variant="outline" size="sm" onClick={() => handleCopyCode(embedOptions.iframe)}>
+                      <Copy className="h-4 w-4 mr-2" />
+                      Copy Code
+                    </Button>
+                  </div>
+                  <div className="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto">
+                    <pre className="text-sm"><code>{embedOptions.iframe}</code></pre>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Simple to use. Just copy and paste this code where you want the widget to appear.
+                  </p>
+                </div>
+
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold">Option 2: JavaScript Embed (Recommended)</h3>
+                    <Button variant="outline" size="sm" onClick={() => handleCopyCode(embedOptions.javascript)}>
+                      <Copy className="h-4 w-4 mr-2" />
+                      Copy Code
+                    </Button>
+                  </div>
+                  <div className="bg-gray-900 text-gray-100 p-4 rounded-md overflow-x-auto">
+                    <pre className="text-sm"><code>{embedOptions.javascript}</code></pre>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Our recommended option. Add this code before the closing &lt;/body&gt; tag.
+                  </p>
+                </div>
+
+                <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
+                  <h3 className="text-lg font-semibold text-blue-800 mb-2">Need help embedding?</h3>
+                  <p className="text-blue-700 mb-4">
+                    We can help you embed the widget on your website. Schedule a call with our team for assistance.
+                  </p>
+                  <Button variant="outline" className="bg-white border-blue-500 text-blue-600 hover:bg-blue-50">
+                    Schedule Implementation Call
+                  </Button>
+                </div>
+              </div>
+
+              <div className="text-center mt-8">
+                <Button onClick={handleNextTab} className="px-8 py-6 text-lg">
+                  Continue to Launch
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="launch" className="p-6 bg-white rounded-lg shadow">
+            <div className="max-w-3xl mx-auto space-y-6">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold mb-4">Ready to Launch!</h2>
+                <p className="text-gray-600">Your widget is ready to go. Here's your final launch checklist.</p>
+              </div>
+
+              <div className="bg-green-50 p-6 rounded-lg border border-green-100">
+                <h3 className="text-lg font-semibold text-green-800 mb-4">Launch Checklist</h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5" />
+                    <div>
+                      <p className="font-medium">Widget Customization</p>
+                      <p className="text-sm text-green-700">Your widget is customized with your branding.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5" />
+                    <div>
+                      <p className="font-medium">Embed Code Generated</p>
+                      <p className="text-sm text-green-700">Your embed code is ready to be added to your website.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5" />
+                    <div>
+                      <p className="font-medium">Stripe Integration</p>
+                      <p className="text-sm text-green-700">Your account is connected to Stripe for payment processing.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5" />
+                    <div>
+                      <p className="font-medium">Free Trial Active</p>
+                      <p className="text-sm text-green-700">Your 14-day trial is active. No credit card required during trial.</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-gray-50 p-6 rounded-lg mt-4">
+                <h3 className="text-lg font-semibold mb-4">Next Steps</h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-medium mb-2">Technical Setup</h4>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center">
+                        <ArrowRight className="h-4 w-4 text-blue-500 mr-2" />
+                        Add the widget to your website
+                      </li>
+                      <li className="flex items-center">
+                        <ArrowRight className="h-4 w-4 text-blue-500 mr-2" />
+                        Test a subscription purchase
+                      </li>
+                      <li className="flex items-center">
+                        <ArrowRight className="h-4 w-4 text-blue-500 mr-2" />
+                        Verify webhook notifications
+                      </li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-medium mb-2">Marketing</h4>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center">
+                        <ArrowRight className="h-4 w-4 text-blue-500 mr-2" />
+                        Announce maintenance plans to customers
+                      </li>
+                      <li className="flex items-center">
+                        <ArrowRight className="h-4 w-4 text-blue-500 mr-2" />
+                        Highlight benefits on service pages
+                      </li>
+                      <li className="flex items-center">
+                        <ArrowRight className="h-4 w-4 text-blue-500 mr-2" />
+                        Add a dedicated maintenance plan page
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-center mt-8">
+                <Button onClick={handleComplete} className="px-8 py-6 text-lg bg-green-600 hover:bg-green-700">
+                  Complete Setup
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

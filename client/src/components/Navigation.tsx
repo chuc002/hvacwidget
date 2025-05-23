@@ -96,7 +96,7 @@ export default function Navigation() {
                   Book Demo
                 </Button>
               </Link>
-              <Link href="/register">
+              <Link href="/trial-registration">
                 <Button className="bg-blue-600 hover:bg-blue-700">
                   Start Free Trial
                 </Button>
@@ -146,7 +146,7 @@ export default function Navigation() {
                   <Link href="/book-demo">
                     <Button variant="outline" className="w-full">Book Demo</Button>
                   </Link>
-                  <Link href="/register">
+                  <Link href="/trial-registration">
                     <Button className="w-full bg-blue-600 hover:bg-blue-700">Start Free Trial</Button>
                   </Link>
                 </div>
