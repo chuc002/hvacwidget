@@ -1,0 +1,88 @@
+REPLIT PROMPT - CREATE COMPLETE DUAL NAVIGATION SYSTEM
+My ServicePlan Pro site has no proper navigation structure. I need a dual system: public marketing site for prospects + private customer portal for paying customers.
+
+PROBLEM: 
+- No way for prospects to navigate and learn about ServicePlan Pro
+- No separation between marketing pages and customer dashboard
+- Missing critical conversion pages (pricing, features, demo)
+- Poor user experience for both prospects and customers
+
+CREATE DUAL NAVIGATION SYSTEM:
+
+1. PUBLIC SITE NAVIGATION (components/PublicNavigation.tsx):
+TOP BAR:
+- Logo: "ServicePlan Pro" 
+- Nav Links: How It Works | Features | Pricing | Demo | Industries | Case Studies
+- CTAs: "Login" (outline button) | "Start Free Trial" (primary button)
+
+MOBILE RESPONSIVE:
+- Hamburger menu for mobile
+- Collapsible navigation
+- Touch-friendly buttons
+
+2. CUSTOMER PORTAL NAVIGATION (components/CustomerNavigation.tsx):
+TOP BAR:
+- Logo: "ServicePlan Pro" 
+- Company Name: "Premium Home Services" (from customer data)
+- User Menu: Settings | Support | Logout
+
+SIDEBAR OR TABS:
+- Overview (dashboard home)
+- Customize Widget  
+- Revenue Streams
+- Customer Management
+- Analytics
+- Billing & Plan
+- Support
+
+3. ROUTING STRUCTURE (App.tsx):
+PUBLIC ROUTES (no auth required):
+- / → Landing page for HVAC companies
+- /how-it-works → Process explanation
+- /features → Widget capabilities  
+- /pricing → B2B SaaS pricing
+- /demo → Live widget demo
+- /industries → Industry-specific pages
+- /case-studies → Success stories
+- /register → B2B signup
+- /login → Customer login
+
+PROTECTED ROUTES (auth required):
+- /dashboard → Customer portal home
+- /customize → Widget customization
+- /analytics → Performance metrics
+- /billing → Subscription management
+- /customers → Their subscriber list
+- /support → Help center
+
+4. NAVIGATION LOGIC:
+- If user NOT logged in → Show PublicNavigation
+- If user IS logged in → Show CustomerNavigation  
+- Automatic redirects based on auth state
+- Clear login/logout flows
+
+5. UPDATE EXISTING PAGES:
+- Home.tsx → B2B landing page (target HVAC companies)
+- Pricing.tsx → B2B SaaS plans with clear CTAs
+- Add missing pages: HowItWorks.tsx, Features.tsx, Demo.tsx
+
+6. AUTHENTICATION STATE MANAGEMENT:
+- Login/logout functionality
+- Protected route guards
+- User session management
+- Trial vs paid customer states
+
+EXPECTED RESULT:
+- Clean separation between marketing site and customer portal
+- Easy navigation for prospects to learn and convert
+- Professional customer dashboard experience
+- Mobile-responsive throughout
+- Clear conversion funnels from prospect to customer
+
+MOBILE CONSIDERATIONS:
+- Touch-friendly navigation
+- Readable text sizes
+- Proper spacing for mobile interaction
+- Fast loading times
+
+The site should feel like two distinct but connected experiences: a professional marketing site that converts prospects, and a powerful customer portal that retains and serves paying customers.
