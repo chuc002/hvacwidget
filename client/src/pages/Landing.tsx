@@ -60,7 +60,7 @@ export default function Landing() {
                 </div>
                 <h3 className="text-xl font-semibold mb-4 text-gray-800 text-center">Lost Opportunities</h3>
                 <p className="text-gray-600 text-center">
-                  Most HVAC companies lose 70% of potential maintenance customers because they can't sign up online
+                  Most service companies lose 70% of potential subscription customers because they can't sign up online
                 </p>
               </CardContent>
             </Card>
@@ -100,7 +100,7 @@ export default function Landing() {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-gray-800">
-            The Modern Solution For HVAC Companies
+            The Modern Solution For Home Service Companies
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Card className="shadow-md hover:shadow-lg transition-shadow duration-300">
@@ -164,10 +164,10 @@ export default function Landing() {
           <Card className="shadow-xl">
             <CardContent className="p-8">
               <div className="inline-block bg-blue-100 text-blue-800 px-4 py-1 rounded-full mb-4 font-medium">
-                HVAC Widget Pro
+                ServicePlan Pro
               </div>
               <h3 className="text-4xl font-bold mb-2">$200<span className="text-xl text-gray-600 font-normal">/month</span></h3>
-              <p className="text-gray-600 mb-8">Everything you need to sell maintenance plans online</p>
+              <p className="text-gray-600 mb-8">Everything you need to sell service plans online</p>
               
               <Separator className="my-6" />
               
@@ -219,7 +219,7 @@ export default function Landing() {
           </div>
           
           <div className="bg-white rounded-xl shadow-xl p-4 md:p-8 border border-gray-200">
-            <SubscriptionWidget companyName="Your HVAC Company" />
+            <SubscriptionWidget companyName="Your Home Services Company" />
           </div>
         </div>
       </section>
@@ -228,10 +228,10 @@ export default function Landing() {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-blue-600 text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-8">
-            Ready to Modernize Your HVAC Business?
+            Ready to Modernize Your Service Business?
           </h2>
           <p className="text-xl mb-12 opacity-90">
-            Get started today and start seeing more maintenance plan subscriptions immediately.
+            Get started today and start seeing more service plan subscriptions immediately.
           </p>
           
           <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
@@ -248,7 +248,7 @@ export default function Landing() {
                 <Mail className="h-8 w-8" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Email Us</h3>
-              <p className="text-lg">sales@hvacwidgetpro.com</p>
+              <p className="text-lg">sales@serviceplanpro.com</p>
             </div>
           </div>
           
