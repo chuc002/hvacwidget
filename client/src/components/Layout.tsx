@@ -28,7 +28,7 @@ export default function Layout({ children }: LayoutProps) {
               </div>
             </Link>
             <Link href="/">
-              <span className="text-xl font-bold">HVAC Maintenance Plans</span>
+              <span className="text-xl font-bold">ServicePlan Pro</span>
             </Link>
           </div>
           <nav>
@@ -54,16 +54,16 @@ export default function Layout({ children }: LayoutProps) {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <h3 className="text-lg font-semibold mb-4">HVAC Maintenance Plans</h3>
+              <h3 className="text-lg font-semibold mb-4">ServicePlan Pro</h3>
               <p className="text-gray-300">
-                Subscribe to regular maintenance to keep your system running efficiently and prevent costly breakdowns.
+                Subscribe to regular service plans to keep your home systems running efficiently and prevent costly breakdowns.
               </p>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
               <p className="text-gray-300">
                 Phone: (555) 123-4567<br />
-                Email: info@example.com<br />
+                Email: info@serviceplanpro.com<br />
                 Address: 123 Main St, Austin, TX
               </p>
             </div>
@@ -77,7 +77,7 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </div>
           <div className="border-t border-gray-700 mt-8 pt-6 text-sm text-gray-400 text-center">
-            &copy; {new Date().getFullYear()} HVAC Maintenance Plans. All rights reserved.
+            &copy; {new Date().getFullYear()} ServicePlan Pro. All rights reserved.
           </div>
         </div>
       </footer>

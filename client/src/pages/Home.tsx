@@ -7,9 +7,9 @@ export default function Home() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       <section className="text-center mb-16">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">HVAC Maintenance Plans</h1>
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">Service Subscription Plans</h1>
         <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          Subscribe to regular maintenance to keep your system running efficiently and prevent costly breakdowns.
+          Subscribe to regular service to keep your home systems running efficiently and prevent costly breakdowns.
         </p>
         <div className="mt-8">
           <Link href="/widget">
@@ -66,12 +66,12 @@ export default function Home() {
       </section>
 
       <section className="mb-16">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Why Choose Our Maintenance Plans</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Why Choose Our Service Plans</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-xl font-semibold mb-4">Extended Equipment Life</h3>
             <p className="text-gray-600 mb-4">
-              Regular maintenance helps your HVAC system last longer by keeping components clean and identifying potential issues before they cause damage.
+              Regular service helps your home systems last longer by keeping components in optimal condition and identifying potential issues before they cause damage.
             </p>
             <ul className="space-y-2">
               <li className="flex items-start">
@@ -97,7 +97,7 @@ export default function Home() {
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-xl font-semibold mb-4">Energy Efficiency</h3>
             <p className="text-gray-600 mb-4">
-              A well-maintained HVAC system runs more efficiently, using less energy and saving you money on your utility bills.
+              Well-maintained home systems run more efficiently, using less energy and saving you money on your utility bills.
             </p>
             <ul className="space-y-2">
               <li className="flex items-start">
@@ -128,7 +128,7 @@ export default function Home() {
         <Card>
           <CardContent className="pt-6">
             <p className="text-gray-600 mb-4 text-center">
-              Our maintenance plan subscription widget can be easily embedded into any HVAC company website.
+              Our service plan subscription widget can be easily embedded into any home service company website.
             </p>
             <div className="bg-gray-100 p-4 rounded-lg">
               <h3 className="text-lg font-medium text-gray-800 mb-2">iFrame Embedding</h3>
