@@ -92,7 +92,7 @@ export class MemStorage implements IStorage {
         ],
         isPopular: false,
         order: 1,
-        stripePriceId: "price_starter_monthly_399"
+        stripePriceId: "price_1RS13JGdBJ6HrZFiK5NRUrCs"
       },
       {
         name: "Professional",
