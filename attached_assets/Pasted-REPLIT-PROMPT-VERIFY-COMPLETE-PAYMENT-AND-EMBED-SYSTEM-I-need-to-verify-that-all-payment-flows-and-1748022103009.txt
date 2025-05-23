@@ -1,0 +1,80 @@
+REPLIT PROMPT - VERIFY COMPLETE PAYMENT AND EMBED SYSTEM
+I need to verify that all payment flows and core SaaS functionality work correctly before launching ServicePlan Pro to real customers.
+
+VERIFICATION CHECKLIST:
+
+1. SAAS SUBSCRIPTION PAYMENTS (Companies pay ME):
+TEST FLOW:
+- Go to /register 
+- Sign up as business
+- Should prompt for payment method (Stripe)
+- Subscribe to Starter/Professional/Enterprise plan
+- Payment should go to MY Stripe account
+- Customer should get access to dashboard
+
+VERIFY:
+- Are SaaS plans configured in Stripe? ($399, $699, $999/month)
+- Does registration flow collect payment?
+- Do I see subscriptions in MY Stripe dashboard?
+- Are webhooks updating customer status?
+
+2. CUSTOMER WIDGET PAYMENTS (Homeowners pay HVAC companies):
+TEST FLOW:
+- Create test customer account
+- Get embed code from their dashboard
+- Visit embedded widget
+- Subscribe to maintenance plan
+- Payment should go to THEIR Stripe account (NOT mine)
+
+VERIFY:
+- Does embed system work?
+- Can end customers complete purchases?
+- Where do these payments go?
+- Is Stripe Connect configured for multi-party payments?
+
+3. EMBED CODE GENERATION:
+VERIFY EXISTS:
+- Customer dashboard has "Embed Code" section
+- Generates unique URL: /embed/CUSTOMER_ID
+- Provides iframe code
+- Shows implementation instructions
+- Has customization options
+
+4. CUSTOMER ONBOARDING:
+VERIFY COMPLETE FLOW:
+- Registration → Payment → Dashboard → Customize → Embed → Test → Go Live
+- Each step has clear instructions
+- No broken links or missing pages
+- Professional appearance throughout
+
+5. MONEY FLOW VERIFICATION:
+DOCUMENT EXACTLY:
+- SaaS subscriptions: Companies pay ME monthly
+- Widget transactions: End customers pay HVAC companies
+- Transaction fees: Do I take a cut or flat SaaS fee?
+- Stripe accounts: Do I need Stripe Connect for multi-party?
+
+6. ADMIN CONTROLS:
+VERIFY I CAN:
+- See all customers and their plans
+- Track subscription revenue
+- Manage customer accounts
+- Handle support requests
+- Monitor system usage
+
+FIX ANY ISSUES FOUND:
+- Missing payment flows
+- Broken embed generation
+- Incorrect money routing
+- Incomplete onboarding
+- Missing admin controls
+
+EXPECTED RESULT:
+Complete verification that:
+1. HVAC companies can sign up and pay me monthly
+2. Their customers can pay them through the widget
+3. Embed codes work perfectly
+4. Money flows to correct accounts
+5. System is ready for real customers
+
+Test every critical path and document any issues that need fixing before launch.

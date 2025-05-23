@@ -1,0 +1,112 @@
+REPLIT PROMPT - COMPLETE SYSTEM AUDIT AND PRICING ALIGNMENT
+My ServicePlan Pro system has been built over time with multiple iterations. I need a comprehensive audit to verify everything works consistently and pricing is aligned across all pages.
+
+PRICING CONSISTENCY AUDIT:
+
+1. FIND ALL PRICING REFERENCES:
+Search entire codebase for:
+- Any mention of "$200", "$299", "$399", "$499", "$699", "$999"
+- Files to check: Pricing.tsx, constants.ts, saas-plans.ts, widget pricing
+- Stripe Price IDs that might reference old pricing
+- Database schemas with pricing data
+
+2. STANDARDIZE B2B SAAS PRICING:
+CORRECT PRICING STRUCTURE:
+- Starter: $399/month (subscriptions only)
+- Professional: $699/month (+ products, custom branding)  
+- Enterprise: $999/month (+ invoices, multi-location, API)
+
+UPDATE ALL INSTANCES:
+- pages/Pricing.tsx
+- lib/saas-plans.ts
+- Any constants files
+- Marketing copy throughout site
+- Stripe product catalog
+- Customer dashboard displays
+
+3. VERIFY STRIPE CONFIGURATION:
+CHECK STRIPE DASHBOARD:
+- Do I have 3 products at $399, $699, $999?
+- Are Price IDs correctly mapped in code?
+- Test mode vs Live mode consistency
+- Webhook endpoints configured
+
+4. COMPLETE FLOW TESTING:
+
+TEST CUSTOMER ACQUISITION:
+- Visit homepage → Navigate to pricing → Sign up for plan
+- Does pricing match throughout journey?
+- Does Stripe checkout show correct amount?
+- Does customer dashboard show correct plan?
+
+TEST WIDGET FUNCTIONALITY:
+- Customer signs up → Gets dashboard → Generates embed code
+- Test embed code on sample page
+- Customer subscribes through widget
+- Verify payment goes to correct account
+
+TEST MONEY FLOWS:
+Path A: HVAC Company pays ME for platform access
+- Sign up → Choose plan → Pay $399-999/month → Get dashboard access
+
+Path B: Homeowner pays HVAC Company through widget  
+- Use embed widget → Subscribe to maintenance → Payment goes to HVAC company
+
+5. NAVIGATION VERIFICATION:
+TEST ALL LINKS:
+- Public site navigation (Home, Features, Pricing, Demo, etc.)
+- Customer portal navigation (Overview, Customize, Analytics, etc.)
+- Mobile navigation
+- Footer links
+- CTA buttons throughout site
+
+6. CONTENT COMPLETENESS CHECK:
+VERIFY EVERY PAGE HAS REAL CONTENT:
+- /how-it-works → Step-by-step process
+- /features → Feature list with descriptions
+- /pricing → Consistent B2B SaaS pricing
+- /demo → Working widget demo
+- /industries → Industry-specific content
+- /case-studies → Customer success stories
+- Dashboard tabs → Functional customer tools
+
+7. STRIPE INTEGRATION AUDIT:
+VERIFY CONFIGURATION:
+- Public key: pk_test_ or pk_live_
+- Secret key: sk_test_ or sk_live_  
+- Webhook secret: whsec_
+- Price IDs match code references
+- Test payments work end-to-end
+
+8. CUSTOMER ONBOARDING FLOW:
+TEST COMPLETE JOURNEY:
+- Registration → Payment → Welcome → Dashboard → Customize → Embed → Test
+- Each step works without errors
+- Professional appearance throughout
+- Clear next steps at each stage
+
+9. ADMIN/BUSINESS CONTROLS:
+VERIFY I CAN:
+- See all customers and their plans
+- Track my SaaS revenue
+- Manage customer subscriptions
+- Access analytics and reporting
+- Handle customer support
+
+10. MOBILE RESPONSIVENESS:
+TEST ON MOBILE:
+- All pages load correctly
+- Navigation works on mobile
+- Widget works on mobile devices
+- Payment flows work on mobile
+
+CONSOLIDATION REQUIREMENTS:
+
+SINGLE SOURCE OF TRUTH FOR PRICING:
+Create lib/pricing-config.ts with:
+```typescript
+export const SaaSPlans = {
+  starter: { price: 399, name: "Starter" },
+  professional: { price: 699, name: "Professional" },
+  enterprise: { price: 999, name: "Enterprise" }
+};
