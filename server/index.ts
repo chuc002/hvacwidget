@@ -3,6 +3,8 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import cookieParser from "cookie-parser";
 import csrf from "csurf";
+import session from "express-session";
+import createMemoryStore from "memorystore";
 
 const app = express();
 
@@ -11,6 +13,24 @@ app.set('trust proxy', 1);
 
 // Cookie parser middleware (required for CSRF)
 app.use(cookieParser());
+
+// Configure session management with memory store
+const MemoryStore = createMemoryStore(session);
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
+  store: new MemoryStore({
+    checkPeriod: 86400000 // Prune expired entries every 24h
+  }),
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    sameSite: 'strict'
+  }
+}));
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
