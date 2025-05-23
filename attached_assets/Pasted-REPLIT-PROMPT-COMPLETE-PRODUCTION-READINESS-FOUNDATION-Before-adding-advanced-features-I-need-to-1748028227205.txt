@@ -1,0 +1,151 @@
+REPLIT PROMPT - COMPLETE PRODUCTION READINESS FOUNDATION
+
+Before adding advanced features, I need to fix foundational issues that will break my business. Focus on pricing integrity, production deployment, code quality, and testing.
+
+SECTION A - PRICING INTEGRITY (CRITICAL):
+
+1. SINGLE SOURCE OF TRUTH:
+- Create shared/pricing.ts with definitive pricing:
+  * Starter: $399/month, $3,990/year (save $1,000)
+  * Professional: $699/month, $6,990/year (save $1,400) 
+  * Enterprise: $999/month, $9,990/year (save $2,000)
+- Delete update_subscription_widget.js completely
+- Remove ALL hardcoded pricing from components
+- Import pricing from shared/pricing.ts everywhere
+
+2. STRIPE ALIGNMENT:
+- Create 6 Price IDs in Stripe: monthly + annual for each tier
+- Map in .env: STARTER_MONTHLY_PRICE_ID, STARTER_ANNUAL_PRICE_ID, etc.
+- Server validates plan selection against env map
+- Client never sees raw Stripe Price IDs
+
+3. UI PRICING DISPLAY:
+- Widget shows monthly price with annual toggle
+- Annual shows monthly equivalent + savings
+- Dashboard mirrors exact same pricing file
+- No manual price editing anywhere
+
+SECTION B - BACKEND PRODUCTION FIXES:
+
+1. BUILD SYSTEM:
+- Fix esbuild to output dist/index.js
+- Ensure npm start runs node dist/index.js successfully
+- Test build works outside Replit environment
+
+2. ROUTE ORGANIZATION:
+- Create server/routes/stripe.ts with proper route handlers
+- POST /api/checkout → create Stripe session
+- POST /api/webhook → verify signature, process events
+- Import and register routes in server/index.ts
+
+3. SECURITY HARDENING:
+- Add helmet() with default security headers
+- Set frame-ancestors to 'self' + customer domains
+- Add express-rate-limit: 100 requests per 5 minutes
+- Remove X-Frame-Options: ALLOWALL completely
+
+4. SESSION MANAGEMENT:
+- Configure express-session with memorystore for dev
+- Add connect-pg-simple for production
+- Require SESSION_SECRET environment variable
+- Proper session-based authentication
+
+5. DATABASE MIGRATIONS:
+- Auto-run drizzle-kit push on container start
+- Ensure migrations work in production environment
+
+SECTION C - FRONTEND REFACTOR:
+
+1. COMPONENT SPLITTING:
+- Split SubscriptionWidget.tsx into:
+  * PlanGrid.tsx (plan selection)
+  * CustomerForm.tsx (contact info)
+  * CheckoutRedirect.tsx (payment processing)
+- Each component <150 lines, single responsibility
+
+2. REACT QUERY INTEGRATION:
+- Add @tanstack/react-query for API calls
+- Create mutation for checkout process
+- Show loading spinners during API calls
+- Handle errors gracefully
+
+3. MOBILE OPTIMIZATION:
+- Wrap widget in max-w-[420px] container
+- Single-column layout on ≤640px screens
+- All buttons minimum 44px touch targets
+- Test on actual mobile devices
+
+4. FORM ENHANCEMENTS:
+- Real-time inline validation
+- Phone number masking: (xxx) xxx-xxxx
+- ZIP code → auto-fill city/state
+- Prevent submission until valid
+
+5. UI IMPROVEMENTS:
+- Add Radix Accordion for "More Features"
+- Remove unused Radix imports for bundle size
+- Optimize for Lighthouse score ≥90 mobile
+
+SECTION D - DEVOPS SETUP:
+
+1. ENVIRONMENT CONFIGURATION:
+- Create comprehensive .env.example
+- List all required environment variables
+- Remove all fallback values from code
+
+2. CONTAINERIZATION:
+- Create production Dockerfile
+- Build process, expose PORT variable
+- Run node dist/index.js in container
+
+3. CI/CD PIPELINE:
+- GitHub Actions workflow
+- Steps: lint → test → build → docker push
+- Deploy to Railway/Vercel automatically
+
+4. TESTING FRAMEWORK:
+- Add Vitest for frontend testing
+- Add Supertest for API testing
+- Minimum 80% test coverage
+
+SECTION E - QUALITY GATES:
+
+1. CODE QUALITY:
+- Add ESLint + Prettier configuration
+- Husky pre-commit hooks
+- Enforce consistent code style
+
+2. TESTING COVERAGE:
+- Unit tests for all components
+- API endpoint testing
+- E2E test: select plan → pay → success
+
+SECTION F - BASIC FEATURE PARITY:
+
+1. ESSENTIAL FEATURES:
+- Annual/monthly pricing toggle
+- Collapsible feature lists (accordion)
+- Professional checkout flow
+- "No contracts" messaging
+- Mobile-optimized experience
+
+SECTION G - DEPLOYMENT VERIFICATION:
+
+1. PRODUCTION SETUP:
+- Provision production database
+- Seed demo tenant for testing
+- Verify build passes completely
+- Test Docker container runs successfully
+- Confirm widget loads and checkout works
+
+EXPECTED RESULT:
+A production-ready SaaS platform with:
+- Consistent pricing across all pages
+- Reliable deployment independent of Replit
+- Professional code organization
+- Comprehensive testing coverage
+- Enterprise-level security and performance
+
+This foundation enables confident scaling to 100+ customers without technical debt or reliability issues.
+
+FOCUS: Fix foundation before adding advanced features. A solid base enables rapid feature development later.
