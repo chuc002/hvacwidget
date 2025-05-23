@@ -86,9 +86,104 @@ export default function SubscriptionWidget({
     }
   };
 
+  const formatPhoneNumber = (value: string) => {
+    // Remove all non-digit characters
+    const digits = value.replace(/\D/g, '');
+    
+    // Format as (xxx) xxx-xxxx
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+  };
+
+  const validateField = (name: string, value: string) => {
+    const errors = { ...formErrors };
+    
+    switch (name) {
+      case 'name':
+        if (!value.trim()) {
+          errors.name = "Full name is required";
+        } else if (value.trim().length < 2) {
+          errors.name = "Name must be at least 2 characters";
+        } else {
+          delete errors.name;
+        }
+        break;
+        
+      case 'email':
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!value.trim()) {
+          errors.email = "Email is required";
+        } else if (!emailRegex.test(value)) {
+          errors.email = "Please enter a valid email address";
+        } else {
+          delete errors.email;
+        }
+        break;
+        
+      case 'phone':
+        const phoneDigits = value.replace(/\D/g, '');
+        if (!phoneDigits) {
+          errors.phone = "Phone number is required";
+        } else if (phoneDigits.length < 10) {
+          errors.phone = "Phone number must be 10 digits";
+        } else {
+          delete errors.phone;
+        }
+        break;
+        
+      case 'zipCode':
+        if (value && (value.length < 5 || !/^\d{5}(-\d{4})?$/.test(value))) {
+          errors.zipCode = "Please enter a valid ZIP code";
+        } else {
+          delete errors.zipCode;
+        }
+        break;
+    }
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setCustomerInfo(prev => ({ ...prev, [name]: value }));
+    let formattedValue = value;
+    
+    // Apply phone number formatting
+    if (name === 'phone') {
+      formattedValue = formatPhoneNumber(value);
+    }
+    
+    setCustomerInfo(prev => ({ ...prev, [name]: formattedValue }));
+    
+    // Real-time validation
+    validateField(name, formattedValue);
+    
+    // Auto-suggest city/state from ZIP code
+    if (name === 'zipCode' && value.length === 5) {
+      lookupCityState(value);
+    }
+  };
+
+  const lookupCityState = async (zipCode: string) => {
+    try {
+      // Using a free ZIP code API for city/state lookup
+      const response = await fetch(`https://api.zippopotam.us/us/${zipCode}`);
+      if (response.ok) {
+        const data = await response.json();
+        const place = data.places[0];
+        if (place) {
+          setCustomerInfo(prev => ({
+            ...prev,
+            city: place['place name'],
+            state: place['state abbreviation']
+          }));
+        }
+      }
+    } catch (error) {
+      // Silently handle API errors - user can still enter manually
+      console.log('ZIP lookup failed, user can enter manually');
+    }
   };
 
   const validateForm = () => {
@@ -332,36 +427,74 @@ export default function SubscriptionWidget({
           <form onSubmit={submitCheckout}>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="name">Full Name *</Label>
                 <Input
                   id="name"
                   name="name"
                   value={customerInfo.name}
                   onChange={handleInfoChange}
+                  placeholder="Enter your full name"
+                  className={formErrors.name ? "border-red-500 focus:border-red-500" : customerInfo.name && !formErrors.name ? "border-green-500" : ""}
                   required
                 />
+                {formErrors.name && (
+                  <p className="text-sm text-red-600 flex items-center">
+                    <span className="mr-1">⚠</span> {formErrors.name}
+                  </p>
+                )}
+                {customerInfo.name && !formErrors.name && (
+                  <p className="text-sm text-green-600 flex items-center">
+                    <span className="mr-1">✓</span> Looks good!
+                  </p>
+                )}
               </div>
+              
               <div className="grid gap-2">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="email">Email Address *</Label>
                 <Input
                   id="email"
                   name="email"
                   type="email"
                   value={customerInfo.email}
                   onChange={handleInfoChange}
+                  placeholder="your.email@example.com"
+                  className={formErrors.email ? "border-red-500 focus:border-red-500" : customerInfo.email && !formErrors.email ? "border-green-500" : ""}
                   required
                 />
+                {formErrors.email && (
+                  <p className="text-sm text-red-600 flex items-center">
+                    <span className="mr-1">⚠</span> {formErrors.email}
+                  </p>
+                )}
+                {customerInfo.email && !formErrors.email && (
+                  <p className="text-sm text-green-600 flex items-center">
+                    <span className="mr-1">✓</span> Valid email format
+                  </p>
+                )}
               </div>
+              
               <div className="grid gap-2">
-                <Label htmlFor="phone">Phone Number</Label>
+                <Label htmlFor="phone">Phone Number *</Label>
                 <Input
                   id="phone"
                   name="phone"
                   type="tel"
                   value={customerInfo.phone}
                   onChange={handleInfoChange}
+                  placeholder="(555) 123-4567"
+                  className={formErrors.phone ? "border-red-500 focus:border-red-500" : customerInfo.phone && !formErrors.phone ? "border-green-500" : ""}
                   required
                 />
+                {formErrors.phone && (
+                  <p className="text-sm text-red-600 flex items-center">
+                    <span className="mr-1">⚠</span> {formErrors.phone}
+                  </p>
+                )}
+                {customerInfo.phone && !formErrors.phone && (
+                  <p className="text-sm text-green-600 flex items-center">
+                    <span className="mr-1">✓</span> Valid phone number
+                  </p>
+                )}
               </div>
               
               <div className="grid gap-2">
@@ -376,26 +509,65 @@ export default function SubscriptionWidget({
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                <div>
+              <div className="grid gap-2">
+                <Label htmlFor="zipCode">ZIP Code</Label>
+                <Input
+                  id="zipCode"
+                  name="zipCode"
+                  value={customerInfo.zipCode}
+                  onChange={handleInfoChange}
+                  placeholder="12345"
+                  maxLength={5}
+                  className={formErrors.zipCode ? "border-red-500 focus:border-red-500" : customerInfo.zipCode && !formErrors.zipCode ? "border-green-500" : ""}
+                />
+                {formErrors.zipCode && (
+                  <p className="text-sm text-red-600 flex items-center">
+                    <span className="mr-1">⚠</span> {formErrors.zipCode}
+                  </p>
+                )}
+                {customerInfo.zipCode && !formErrors.zipCode && customerInfo.zipCode.length === 5 && (
+                  <p className="text-sm text-blue-600 flex items-center">
+                    <span className="mr-1">🔍</span> Auto-filling city and state...
+                  </p>
+                )}
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
                   <Label htmlFor="city">City</Label>
                   <Input
                     id="city"
                     name="city"
                     value={customerInfo.city}
                     onChange={handleInfoChange}
+                    placeholder="City name"
+                    className={customerInfo.city ? "border-green-500 bg-green-50" : ""}
                     required
                   />
+                  {customerInfo.city && (
+                    <p className="text-sm text-green-600 flex items-center">
+                      <span className="mr-1">✓</span> City confirmed
+                    </p>
+                  )}
                 </div>
-                <div>
-                  <Label htmlFor="zipCode">ZIP Code</Label>
+                
+                <div className="grid gap-2">
+                  <Label htmlFor="state">State</Label>
                   <Input
-                    id="zipCode"
-                    name="zipCode"
-                    value={customerInfo.zipCode}
+                    id="state"
+                    name="state"
+                    value={customerInfo.state}
                     onChange={handleInfoChange}
+                    placeholder="State"
+                    maxLength={2}
+                    className={customerInfo.state ? "border-green-500 bg-green-50" : ""}
                     required
                   />
+                  {customerInfo.state && (
+                    <p className="text-sm text-green-600 flex items-center">
+                      <span className="mr-1">✓</span> State confirmed
+                    </p>
+                  )}
                 </div>
               </div>
 
