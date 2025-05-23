@@ -311,7 +311,7 @@ export default function SubscriptionWidget({
               </div>
               
               <div className="grid gap-2">
-                <Label htmlFor="address">Service Address</Label>
+                <Label htmlFor="address">Property Address</Label>
                 <Input
                   id="address"
                   name="address"

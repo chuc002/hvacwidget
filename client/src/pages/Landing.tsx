@@ -17,10 +17,10 @@ export default function Landing() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
-                Sell HVAC Maintenance Plans Online - Get 300% More Customers
+                Sell Service Subscription Plans Online - Get 300% More Customers
               </h1>
               <p className="text-xl md:text-2xl mb-8 opacity-90">
-                Professional subscription widget that embeds on your website. Customers sign up instantly, you get paid automatically.
+                Professional subscription widget that embeds on your website. Perfect for home services: HVAC, pest control, lawn care, pool maintenance, and more.
               </p>
               <Button 
                 onClick={() => setDemoOpen(true)}
@@ -33,8 +33,8 @@ export default function Landing() {
             <div className="hidden lg:block">
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 shadow-xl border border-white/20">
                 <img 
-                  src="https://placehold.co/600x400/2563eb/FFFFFF/png?text=HVAC+Widget+Pro" 
-                  alt="HVAC Widget Demo" 
+                  src="https://placehold.co/600x400/2563eb/FFFFFF/png?text=ServicePlan+Pro" 
+                  alt="ServicePlan Pro Demo" 
                   className="rounded-lg shadow-lg"
                 />
               </div>
@@ -48,7 +48,7 @@ export default function Landing() {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-gray-800">
-            The Problem With Traditional HVAC Plan Sales
+            The Problem With Traditional Service Plan Sales
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
