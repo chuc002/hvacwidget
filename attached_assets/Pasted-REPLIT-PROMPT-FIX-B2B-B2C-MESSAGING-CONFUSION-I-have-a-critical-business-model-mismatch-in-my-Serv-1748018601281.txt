@@ -1,0 +1,94 @@
+REPLIT PROMPT - FIX B2B/B2C MESSAGING CONFUSION
+I have a critical business model mismatch in my ServicePlan Pro platform. My landing page targets homeowners (B2C) but my pricing targets businesses (B2B). I need to align everything as a B2B SaaS platform that sells to HVAC companies, not homeowners.
+
+CURRENT PROBLEM:
+- Home.tsx talks to homeowners: "Subscribe to regular service to keep your home systems running"
+- Pricing.tsx talks to businesses: "$399-999/month for home service businesses"
+- This confuses both audiences and kills conversions
+
+BUSINESS MODEL CLARIFICATION:
+I am building a B2B SaaS platform where:
+- TARGET CUSTOMERS: HVAC companies, pest control, lawn care businesses
+- WHAT THEY PAY ME: $399-999/month to use my widget platform
+- WHAT THEIR CUSTOMERS GET: Ability to subscribe to maintenance plans online
+- MY REVENUE: Monthly SaaS subscriptions from businesses
+
+COMPLETE HOME.TX REWRITE NEEDED:
+Transform from homeowner-focused to business-owner-focused:
+
+WRONG (current):
+- "Service Subscription Plans"
+- "Subscribe to regular service to keep your home systems running"
+- "Choose a Plan" (talking to homeowners)
+
+RIGHT (needed):
+- "Turn Your Website Visitors Into Recurring Subscribers"
+- "Help your customers subscribe to your services online - no more manual processes"
+- "Get More Maintenance Customers" (talking to business owners)
+
+NEW HOME.TSX STRUCTURE NEEDED:
+
+Hero Section:
+- Headline: "Turn Your Home Service Business Into a Recurring Revenue Machine"
+- Subheadline: "Professional subscription widgets that let customers sign up for your maintenance plans online 24/7"
+- CTA: "Start Free Trial" and "Book Demo"
+
+Problem Section:
+- "Stop Losing Customers to Manual Processes"
+- "70% of potential maintenance customers never sign up because they can't do it online"
+- "Phone tag and manual processes are costing you revenue"
+
+Solution Section:
+- "Professional Subscription Widgets That Convert"
+- "5-minute setup on your website"
+- "Customers subscribe instantly with 3 clicks"
+- "You get complete customer data automatically"
+
+Social Proof Section:
+- "Trusted by 500+ Home Service Businesses"
+- Customer testimonials from HVAC company owners
+- "Average customer sees 300% increase in subscriptions"
+
+Competitive Section:
+- "The Simple Alternative to Contractor Commerce"
+- "Same results at 65% lower cost"
+- "No contracts, no setup fees, no transaction fees"
+
+Features Section:
+- Custom branding to match your company
+- Mobile-responsive for all devices
+- Stripe payment processing
+- Customer data collection
+- Analytics dashboard
+
+Industries Section:
+- HVAC Services, Pest Control, Lawn Care, Pool Service
+- "Works for any recurring home service"
+
+Pricing CTA:
+- "Choose Your Plan" → redirect to /pricing
+- "See Live Demo" → redirect to /demo
+- "Book Personal Demo" → redirect to /book-demo
+
+ALSO UPDATE:
+- Remove all homeowner language throughout the site
+- Change "your home" to "your business" or "your customers"
+- Update navigation to be business-focused
+- Ensure consistent B2B messaging across all pages
+
+TARGET AUDIENCE LANGUAGE:
+- Speak to business owners, not homeowners
+- Focus on business benefits: more customers, recurring revenue, automation
+- Use business terminology: leads, conversion, ROI, efficiency
+- Address business pain points: manual processes, lost opportunities, staff time
+
+COMPETITIVE POSITIONING:
+- Position against Contractor Commerce directly
+- Emphasize simplicity over complexity
+- Highlight cost savings and faster setup
+- Show ROI and business growth benefits
+
+EXPECTED RESULT:
+A professional B2B SaaS landing page that speaks directly to HVAC company owners and positions ServicePlan Pro as the affordable, simple alternative to Contractor Commerce.
+
+Fix the messaging confusion and align everything as a B2B platform targeting home service businesses, not homeowners.
