@@ -23,6 +23,7 @@ import TrialRegistration from "@/pages/TrialRegistration";
 import WelcomeFlow from "@/pages/WelcomeFlow";
 import EnhancedWidgetDemo from "@/pages/EnhancedWidgetDemo";
 import CustomerDashboard from "@/pages/CustomerDashboard";
+import Welcome from "@/pages/Welcome";
 
 function Router() {
   return (
@@ -46,6 +47,7 @@ function Router() {
       <Route path="/welcome-flow" component={WelcomeFlow} />
       <Route path="/enhanced-widget-demo" component={EnhancedWidgetDemo} />
       <Route path="/customer-dashboard" component={CustomerDashboard} />
+      <Route path="/welcome" component={Welcome} />
       <Route component={NotFound} />
     </Switch>
   );
