@@ -195,7 +195,10 @@ export default function Landing() {
               </ul>
               
               <div className="flex flex-col gap-4">
-                <Button className="w-full py-6 text-lg">
+                <Button 
+                  className="w-full py-6 text-lg"
+                  onClick={() => window.location.href = '/register'}
+                >
                   Start 30-Day Free Trial
                 </Button>
                 <p className="text-sm text-gray-500">No credit card required. Cancel anytime.</p>

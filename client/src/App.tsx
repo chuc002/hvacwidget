@@ -13,6 +13,7 @@ import Landing from "@/pages/Landing";
 import Embed from "@/pages/Embed";
 import Layout from "@/components/Layout";
 import Pricing from "@/pages/Pricing";
+import SimplePricing from "@/pages/SimplePricing";
 import Register from "@/pages/Register";
 import Demo from "@/pages/Demo";
 
@@ -28,6 +29,7 @@ function Router() {
       <Route path="/landing" component={Landing} />
       <Route path="/embed" component={Embed} />
       <Route path="/pricing" component={Pricing} />
+      <Route path="/simple-pricing" component={SimplePricing} />
       <Route path="/register" component={Register} />
       <Route path="/demo" component={Demo} />
       <Route component={NotFound} />
