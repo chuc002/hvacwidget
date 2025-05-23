@@ -1,4 +1,4 @@
-import { SaaSPlans } from '@/lib/saas-plans';
+import { SaaSPlansArray } from '@/lib/pricing-config';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckIcon } from 'lucide-react';
@@ -19,7 +19,7 @@ export default function Pricing() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {SaaSPlans.map((plan) => (
+          {SaaSPlansArray.map((plan) => (
             <Card key={plan.id} className={`relative ${plan.popular ? 'border-primary shadow-lg' : ''}`}>
               {plan.popular && (
                 <div className="absolute -top-3 inset-x-0 flex justify-center">

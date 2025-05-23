@@ -166,7 +166,7 @@ export default function Landing() {
               <div className="inline-block bg-blue-100 text-blue-800 px-4 py-1 rounded-full mb-4 font-medium">
                 ServicePlan Pro
               </div>
-              <h3 className="text-4xl font-bold mb-2">$200<span className="text-xl text-gray-600 font-normal">/month</span></h3>
+              <h3 className="text-4xl font-bold mb-2">Starting at $399<span className="text-xl text-gray-600 font-normal">/month</span></h3>
               <p className="text-gray-600 mb-8">Everything you need to sell service plans online</p>
               
               <Separator className="my-6" />
