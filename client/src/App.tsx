@@ -10,6 +10,7 @@ import Widget from "@/pages/Widget";
 import Success from "@/pages/Success";
 import Cancel from "@/pages/Cancel";
 import Landing from "@/pages/Landing";
+import Embed from "@/pages/Embed";
 import Layout from "@/components/Layout";
 
 function Router() {
@@ -22,6 +23,7 @@ function Router() {
       <Route path="/success" component={Success} />
       <Route path="/cancel" component={Cancel} />
       <Route path="/landing" component={Landing} />
+      <Route path="/embed" component={Embed} />
       <Route component={NotFound} />
     </Switch>
   );

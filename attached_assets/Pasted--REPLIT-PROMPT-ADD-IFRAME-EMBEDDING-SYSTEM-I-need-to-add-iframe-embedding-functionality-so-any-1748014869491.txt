@@ -1,0 +1,291 @@
+**REPLIT PROMPT - ADD IFRAME EMBEDDING SYSTEM**
+
+I need to add iframe embedding functionality so any home service company can embed my ServicePlan Pro widget on their website with just a simple iframe code.
+
+**IMPLEMENTATION NEEDED:**
+
+**1. Create Embeddable Widget Route**
+Create a new route `/embed` that renders just the widget without navigation/layout:
+
+```typescript
+// client/src/pages/Embed.tsx
+import SubscriptionWidget from "@/components/SubscriptionWidget";
+import { useSearch } from "wouter";
+
+export default function Embed() {
+  const search = useSearch();
+  const params = new URLSearchParams(search);
+  
+  const companyName = params.get('company') || 'Premium Home Services';
+  const customerId = params.get('customer_id');
+  const preselectedPlanId = params.get('plan_id');
+  
+  return (
+    <div className="min-h-screen bg-white">
+      <SubscriptionWidget 
+        companyName={companyName}
+        customerId={customerId}
+        preselectedPlanId={preselectedPlanId ? parseInt(preselectedPlanId) : undefined}
+      />
+    </div>
+  );
+}
+```
+
+**2. Add Embed Route to App.tsx**
+```typescript
+// Add this route to your existing routes:
+<Route path="/embed" component={Embed} />
+```
+
+**3. Create Embed Code Generator in Admin**
+Add new component for generating embed codes:
+
+```typescript
+// client/src/components/admin/EmbedGenerator.tsx
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+
+export default function EmbedGenerator() {
+  const [companyName, setCompanyName] = useState('Premium Home Services');
+  const [width, setWidth] = useState('100%');
+  const [height, setHeight] = useState('800px');
+  
+  const baseUrl = window.location.origin;
+  const embedUrl = `${baseUrl}/embed?company=${encodeURIComponent(companyName)}`;
+  
+  const iframeCode = `<iframe 
+  src="${embedUrl}" 
+  width="${width}" 
+  height="${height}" 
+  frameborder="0"
+  style="border: none; border-radius: 8px;">
+</iframe>`;
+
+  const scriptCode = `<div id="serviceplan-widget"></div>
+<script>
+  (function() {
+    var iframe = document.createElement('iframe');
+    iframe.src = '${embedUrl}';
+    iframe.width = '${width}';
+    iframe.height = '${height}';
+    iframe.frameBorder = '0';
+    iframe.style.border = 'none';
+    iframe.style.borderRadius = '8px';
+    document.getElementById('serviceplan-widget').appendChild(iframe);
+  })();
+</script>`;
+
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Widget Customization</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label htmlFor="companyName">Company Name</Label>
+            <Input
+              id="companyName"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              placeholder="Your Company Name"
+            />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="width">Width</Label>
+              <Input
+                id="width"
+                value={width}
+                onChange={(e) => setWidth(e.target.value)}
+                placeholder="100%"
+              />
+            </div>
+            <div>
+              <Label htmlFor="height">Height</Label>
+              <Input
+                id="height"
+                value={height}
+                onChange={(e) => setHeight(e.target.value)}
+                placeholder="800px"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Embed Code (Recommended)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Textarea
+            value={iframeCode}
+            readOnly
+            rows={6}
+            className="font-mono text-sm"
+          />
+          <Button 
+            onClick={() => navigator.clipboard.writeText(iframeCode)}
+            className="mt-2"
+          >
+            Copy Iframe Code
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>JavaScript Embed (Alternative)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Textarea
+            value={scriptCode}
+            readOnly
+            rows={8}
+            className="font-mono text-sm"
+          />
+          <Button 
+            onClick={() => navigator.clipboard.writeText(scriptCode)}
+            className="mt-2"
+          >
+            Copy JavaScript Code
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Preview</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="border rounded-lg p-4">
+            <iframe
+              src={embedUrl}
+              width={width}
+              height="400px"
+              frameBorder="0"
+              style={{ border: 'none', borderRadius: '8px' }}
+            />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+```
+
+**4. Add Embed Generator to Admin Dashboard**
+Update AdminDashboard.tsx to include new tab:
+
+```typescript
+// Add to TabsList:
+<TabsTrigger value="embed">Embed Widget</TabsTrigger>
+
+// Add to TabsContent:
+<TabsContent value="embed">
+  <EmbedGenerator />
+</TabsContent>
+```
+
+**5. Create Standalone Embed HTML File**
+Create `client/public/embed.html` for non-React embedding:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServicePlan Pro Widget</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        .widget-container { min-height: 100vh; background: white; }
+    </style>
+</head>
+<body>
+    <div id="serviceplan-widget" class="widget-container">
+        <!-- Widget loads here -->
+    </div>
+    
+    <script>
+        // Parse URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const companyName = urlParams.get('company') || 'Premium Home Services';
+        
+        // Load the widget (this would load your compiled React component)
+        fetch('/widget-data')
+            .then(response => response.json())
+            .then(data => {
+                // Initialize widget with company data
+                initializeWidget(companyName, data);
+            });
+            
+        function initializeWidget(company, data) {
+            document.getElementById('serviceplan-widget').innerHTML = `
+                <div style="padding: 20px;">
+                    <h2>${company} Service Plans</h2>
+                    <p>Loading subscription options...</p>
+                </div>
+            `;
+            
+            // Here you would actually load your React component
+            // This is a simplified version for the example
+        }
+    </script>
+</body>
+</html>
+```
+
+**6. Add CORS Headers for Embedding**
+Update server to allow iframe embedding:
+
+```typescript
+// server/index.ts - add these headers
+app.use((req, res, next) => {
+  // Allow iframe embedding from any domain
+  res.setHeader('X-Frame-Options', 'ALLOWALL');
+  res.setHeader('Content-Security-Policy', "frame-ancestors *");
+  next();
+});
+```
+
+**CUSTOMER IMPLEMENTATION:**
+
+**Option 1: Simple Iframe (Recommended)**
+```html
+<iframe 
+  src="https://serviceplanpro.com/embed?company=ABC%20Pest%20Control" 
+  width="100%" 
+  height="800px" 
+  frameborder="0"
+  style="border: none; border-radius: 8px;">
+</iframe>
+```
+
+**Option 2: JavaScript Embed**
+```html
+<div id="serviceplan-widget"></div>
+<script src="https://serviceplanpro.com/embed.js?company=ABC%20Pest%20Control"></script>
+```
+
+**Option 3: WordPress Shortcode** (Future)
+```php
+[serviceplan_widget company="ABC Pest Control" width="100%" height="800px"]
+```
+
+**EXPECTED RESULT:**
+- Admin can generate custom embed codes for each customer
+- Any website can embed the widget with simple iframe or JavaScript
+- Widget inherits company branding from URL parameters
+- Mobile-responsive and works on all website platforms
+
+Implement this complete iframe embedding system so customers can easily add ServicePlan Pro to their websites.

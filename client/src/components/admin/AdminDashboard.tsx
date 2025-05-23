@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SubscriptionsTable from "@/components/admin/SubscriptionsTable";
 import CustomersTable from "@/components/admin/CustomersTable";
 import GenerateLinks from "@/components/admin/GenerateLinks";
+import EmbedGenerator from "@/components/admin/EmbedGenerator";
 import { Button } from "@/components/ui/button";
 
 interface AdminDashboardProps {
@@ -32,10 +33,11 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
         onValueChange={setActiveTab}
         className="w-full"
       >
-        <TabsList className="grid w-full grid-cols-3 mb-6">
+        <TabsList className="grid w-full grid-cols-4 mb-6">
           <TabsTrigger value="subscriptions">Subscriptions</TabsTrigger>
           <TabsTrigger value="customers">Customers</TabsTrigger>
           <TabsTrigger value="generate-links">Generate Links</TabsTrigger>
+          <TabsTrigger value="embed">Embed Widget</TabsTrigger>
         </TabsList>
         
         <TabsContent value="subscriptions">
@@ -48,6 +50,10 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
         
         <TabsContent value="generate-links">
           <GenerateLinks />
+        </TabsContent>
+        
+        <TabsContent value="embed">
+          <EmbedGenerator />
         </TabsContent>
       </Tabs>
     </div>
