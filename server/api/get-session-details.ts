@@ -45,12 +45,25 @@ router.get('/get-session-details', async (req: Request, res: Response) => {
       planName = product.name || planName;
     }
 
+    // Determine if this is a monthly subscription
+    let interval = 'one-time';
+    if (session.mode === 'subscription') {
+      // Check if the plan ID indicates a monthly plan
+      const planId = session.metadata?.plan_id || '';
+      interval = planId.includes('monthly') ? 'month' : 'year';
+      
+      // Also check the line items for recurring interval
+      if (lineItems.length > 0 && lineItems[0].price?.recurring?.interval) {
+        interval = lineItems[0].price.recurring.interval;
+      }
+    }
+    
     // Format the response
     const subscriptionData = {
       planName,
       amount: session.amount_total ? (session.amount_total / 100).toFixed(2) : "0.00",
       currency: session.currency?.toUpperCase() || 'USD',
-      interval: session.mode === 'subscription' ? 'year' : 'one-time',
+      interval: interval,
       customerEmail: session.customer_details?.email || session.customer_email,
       customerName: session.customer_details?.name || session.metadata?.customer_name,
       startDate: new Date().toISOString(),

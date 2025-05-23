@@ -78,6 +78,11 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
       'price_5': 'price_1RRfoZGdBJ6HrZFi1tlrrdUS', // Premium monthly
       'price_6': 'price_1RRfowGdBJ6HrZFiOeOXyO5P', // Ultimate monthly
       
+      // Direct price ID mapping
+      'price_monthly_basic': 'price_1RRfoCGdBJ6HrZFiH1nNPJ2n',     // Basic monthly ($17.99/month)
+      'price_monthly_premium': 'price_1RRfoZGdBJ6HrZFi1tlrrdUS',   // Premium monthly ($24.99/month) 
+      'price_monthly_ultimate': 'price_1RRfowGdBJ6HrZFiOeOXyO5P',  // Ultimate monthly ($34.99/month)
+      
       // Test mode fallbacks
       'price_test_basic': 'price_test_basic',
       'price_test_premium': 'price_test_premium',
@@ -92,11 +97,26 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
 
     // Skip price validation in test mode - just use a dummy price for demo
     if (process.env.NODE_ENV === 'development') {
-      // Use any valid test price ID or create session without line_items for demo
+      // Check if the plan is a monthly plan
+      const isMonthlyPlan = planId.includes('monthly');
+      
+      // Set appropriate mode and pricing based on plan type
+      const mode = isMonthlyPlan ? 'subscription' : 'payment';
+      
+      // Get the monthly price in cents based on the plan
+      let unit_amount = 1799; // Default to Basic monthly ($17.99)
+      
+      if (planId.includes('premium')) {
+        unit_amount = 2499; // Premium monthly ($24.99)
+      } else if (planId.includes('ultimate')) {
+        unit_amount = 3499; // Ultimate monthly ($34.99)
+      }
+      
+      // Use recurring pricing for monthly plans
       session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         customer_email: customerEmail,
-        mode: 'payment', // Use payment mode for test demos
+        mode: mode, // Use subscription mode for monthly plans
         success_url: `${req.protocol}://${req.get('host')}/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.protocol}://${req.get('host')}/cancel`,
         metadata: {
@@ -111,7 +131,7 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
           plan_id: planId,
           business_id: 'demo-hvac-company', // Will be dynamic in a real app
         },
-        // Create a custom amount for demo
+        // Create appropriate line items based on the plan type
         line_items: [
           {
             price_data: {
@@ -119,7 +139,8 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
               product_data: {
                 name: `HVAC Maintenance Plan - ${planId}`,
               },
-              unit_amount: planId === 'price_3' ? 34999 : (planId === 'price_2' ? 24999 : 14999), // Amount in cents
+              unit_amount: unit_amount,
+              ...(isMonthlyPlan ? { recurring: { interval: 'month' } } : {})
             },
             quantity: 1,
           },

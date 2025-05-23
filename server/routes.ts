@@ -32,6 +32,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use('/api', webhookRoutes);
   app.use('/api', sessionDetailsRoutes);
   app.use('/api', enhancedCheckoutRoutes);
+  
+  // Register SaaS billing routes for B2B subscription management
+  import saasBillingRoutes from './api/saas-billing';
+  app.use('/api/billing', saasBillingRoutes);
   // API endpoint to get all plans
   app.get("/api/plans", async (req, res) => {
     try {
