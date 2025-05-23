@@ -5,11 +5,62 @@ import cookieParser from "cookie-parser";
 import csrf from "csurf";
 import session from "express-session";
 import createMemoryStore from "memorystore";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 
 const app = express();
 
 // Enable trust proxy for secure cookies behind reverse proxy
 app.set('trust proxy', 1);
+
+// ==== SECURITY MIDDLEWARE ====
+
+// Helmet middleware for security headers
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:", "blob:"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://js.stripe.com"],
+      connectSrc: ["'self'", "https://api.stripe.com", "https://api.zippopotam.us"],
+      frameSrc: ["'self'", "https://js.stripe.com", "https://hooks.stripe.com"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: []
+    }
+  },
+  crossOriginEmbedderPolicy: false, // Allow embedding for widget functionality
+  frameguard: {
+    action: 'sameorigin' // Changed from ALLOWALL to SAMEORIGIN for security
+  }
+}));
+
+// Rate limiting: 100 requests per 5 minutes per IP
+const limiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: {
+    error: 'Too many requests from this IP, please try again in 5 minutes.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  // Skip rate limiting for webhook endpoints (they have their own verification)
+  skip: (req) => req.path.startsWith('/api/webhook')
+});
+
+app.use(limiter);
+
+// Stricter rate limiting for authentication endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // limit each IP to 10 auth attempts per windowMs
+  message: {
+    error: 'Too many authentication attempts, please try again in 15 minutes.'
+  }
+});
+
+app.use('/api/auth', authLimiter);
 
 // Cookie parser middleware (required for CSRF)
 app.use(cookieParser());
@@ -43,6 +94,22 @@ const csrfProtection = csrf({
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict'
   }
+});
+
+// Apply CSRF protection to all routes except webhooks and specific API endpoints
+app.use((req, res, next) => {
+  // Skip CSRF for Stripe webhooks (they use signature verification)
+  if (req.path.startsWith('/api/webhook')) {
+    return next();
+  }
+  
+  // Skip CSRF for GET requests to API endpoints (read-only operations)
+  if (req.method === 'GET' && req.path.startsWith('/api/')) {
+    return next();
+  }
+  
+  // Apply CSRF protection to all other requests
+  csrfProtection(req, res, next);
 });
 
 // Add security headers
