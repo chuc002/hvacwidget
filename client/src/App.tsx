@@ -21,6 +21,7 @@ import HowItWorks from "@/pages/HowItWorks";
 import CustomerJourney from "@/pages/CustomerJourney";
 import TrialRegistration from "@/pages/TrialRegistration";
 import WelcomeFlow from "@/pages/WelcomeFlow";
+import EnhancedWidgetDemo from "@/pages/EnhancedWidgetDemo";
 
 function Router() {
   return (

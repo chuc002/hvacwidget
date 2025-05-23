@@ -1,0 +1,731 @@
+// REPLIT PROMPT - ADD MULTI-REVENUE WIDGET SYSTEM
+// Transform ServicePlan Pro from maintenance-only to complete revenue platform.
+// Add: Subscription Plans, Product Sales, Invoice Payments in one unified widget.
+
+// ============= ENHANCED WIDGET TYPES =============
+// types/widget.ts
+interface WidgetConfig {
+  customerId: string;
+  companyName: string;
+  
+  // Widget Display Options
+  displayMode: 'subscriptions-only' | 'products-only' | 'invoices-only' | 'all-in-one' | 'custom';
+  
+  // Subscription Plans
+  subscriptionPlans: SubscriptionPlan[];
+  
+  // Product Catalog
+  products: Product[];
+  
+  // Invoice Payment
+  invoicePayment: {
+    enabled: boolean;
+    customMessage?: string;
+  };
+  
+  // UI Configuration
+  layout: 'tabs' | 'sections' | 'dropdown';
+  defaultTab: 'subscriptions' | 'products' | 'invoices';
+}
+
+interface SubscriptionPlan {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  interval: 'month' | 'quarter' | 'year';
+  features: string[];
+  stripePriceId: string;
+  category: 'maintenance' | 'protection' | 'premium';
+  isPopular?: boolean;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: 'equipment' | 'supplies' | 'add-ons' | 'emergency';
+  image?: string;
+  stripePriceId: string;
+  inStock: boolean;
+  
+  // Product Options
+  variants?: ProductVariant[];
+  requiresScheduling?: boolean;
+  estimatedDelivery?: string;
+}
+
+interface ProductVariant {
+  id: string;
+  name: string;
+  price: number;
+  stripePriceId: string;
+}
+
+// ============= ENHANCED SUBSCRIPTION WIDGET =============
+// components/EnhancedSubscriptionWidget.tsx
+import { useState, useEffect } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { ShoppingCart, Calendar, FileText, CreditCard, Plus, Minus } from 'lucide-react';
+
+export default function EnhancedSubscriptionWidget({ config }: { config: WidgetConfig }) {
+  const [activeTab, setActiveTab] = useState(config.defaultTab || 'subscriptions');
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null);
+  const [invoiceNumber, setInvoiceNumber] = useState('');
+  const [customerInfo, setCustomerInfo] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: ''
+  });
+
+  const addToCart = (item: CartItem) => {
+    setCart(prevCart => {
+      const existingItem = prevCart.find(cartItem => 
+        cartItem.id === item.id && cartItem.type === item.type
+      );
+      
+      if (existingItem) {
+        return prevCart.map(cartItem =>
+          cartItem.id === item.id && cartItem.type === item.type
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            : cartItem
+        );
+      }
+      
+      return [...prevCart, { ...item, quantity: 1 }];
+    });
+  };
+
+  const removeFromCart = (itemId: string, type: 'product' | 'service') => {
+    setCart(prevCart => prevCart.filter(item => !(item.id === itemId && item.type === type)));
+  };
+
+  const updateQuantity = (itemId: string, type: 'product' | 'service', quantity: number) => {
+    if (quantity === 0) {
+      removeFromCart(itemId, type);
+      return;
+    }
+    
+    setCart(prevCart =>
+      prevCart.map(item =>
+        item.id === itemId && item.type === type
+          ? { ...item, quantity }
+          : item
+      )
+    );
+  };
+
+  const getTotalAmount = () => {
+    const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    const planTotal = selectedPlan ? selectedPlan.price : 0;
+    return cartTotal + planTotal;
+  };
+
+  const handleCheckout = async () => {
+    const checkoutData = {
+      subscription: selectedPlan,
+      products: cart.filter(item => item.type === 'product'),
+      services: cart.filter(item => item.type === 'service'),
+      invoiceNumber: invoiceNumber,
+      customerInfo,
+      totalAmount: getTotalAmount()
+    };
+
+    try {
+      const response = await fetch('/api/create-enhanced-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(checkoutData)
+      });
+
+      const { url } = await response.json();
+      window.location.href = url;
+    } catch (error) {
+      console.error('Checkout failed:', error);
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold mb-2">{config.companyName}</h1>
+        <p className="text-gray-600">Choose from our services, products, and payment options</p>
+      </div>
+
+      {/* Main Widget Content */}
+      {config.displayMode === 'all-in-one' ? (
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="subscriptions" className="flex items-center">
+              <Calendar className="w-4 h-4 mr-2" />
+              Service Plans
+            </TabsTrigger>
+            <TabsTrigger value="products" className="flex items-center">
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              Products
+            </TabsTrigger>
+            <TabsTrigger value="services" className="flex items-center">
+              <CreditCard className="w-4 h-4 mr-2" />
+              One-Time Services
+            </TabsTrigger>
+            <TabsTrigger value="invoices" className="flex items-center">
+              <FileText className="w-4 h-4 mr-2" />
+              Pay Invoice
+            </TabsTrigger>
+          </TabsList>
+
+          {/* SUBSCRIPTION PLANS TAB */}
+          <TabsContent value="subscriptions" className="mt-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold mb-4">Recurring Service Plans</h2>
+              <p className="text-gray-600">Save money with our regular maintenance and protection plans</p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {config.subscriptionPlans.map((plan) => (
+                <Card 
+                  key={plan.id} 
+                  className={`cursor-pointer transition-all ${
+                    selectedPlan?.id === plan.id 
+                      ? 'ring-2 ring-blue-500 bg-blue-50' 
+                      : 'hover:shadow-md'
+                  } ${plan.isPopular ? 'ring-2 ring-green-500' : ''}`}
+                  onClick={() => setSelectedPlan(plan)}
+                >
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <CardTitle className="text-lg">{plan.name}</CardTitle>
+                      {plan.isPopular && (
+                        <Badge className="bg-green-500">Most Popular</Badge>
+                      )}
+                    </div>
+                    <p className="text-gray-600 text-sm">{plan.description}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center mb-4">
+                      <div className="text-3xl font-bold text-blue-600">
+                        ${plan.price}
+                        <span className="text-sm text-gray-500">/{plan.interval}</span>
+                      </div>
+                    </div>
+                    
+                    <ul className="space-y-2 mb-4">
+                      {plan.features.map((feature, index) => (
+                        <li key={index} className="flex items-center text-sm">
+                          <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    <Button 
+                      className={`w-full ${
+                        selectedPlan?.id === plan.id 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {selectedPlan?.id === plan.id ? 'Selected' : 'Select Plan'}
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* PRODUCTS TAB */}
+          <TabsContent value="products" className="mt-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold mb-4">Products & Equipment</h2>
+              <p className="text-gray-600">Professional-grade products delivered to your door</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {config.products.map((product) => (
+                <Card key={product.id} className="hover:shadow-md transition-shadow">
+                  <CardHeader>
+                    {product.image && (
+                      <img 
+                        src={product.image} 
+                        alt={product.name}
+                        className="w-full h-32 object-cover rounded-md mb-3"
+                      />
+                    )}
+                    <CardTitle className="text-lg">{product.name}</CardTitle>
+                    <p className="text-gray-600 text-sm">{product.description}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex justify-between items-center mb-4">
+                      <div className="text-2xl font-bold text-green-600">
+                        ${product.price}
+                      </div>
+                      <Badge variant={product.inStock ? 'default' : 'secondary'}>
+                        {product.inStock ? 'In Stock' : 'Out of Stock'}
+                      </Badge>
+                    </div>
+                    
+                    {product.estimatedDelivery && (
+                      <p className="text-sm text-gray-500 mb-3">
+                        🚚 Delivery: {product.estimatedDelivery}
+                      </p>
+                    )}
+                    
+                    <Button 
+                      className="w-full"
+                      disabled={!product.inStock}
+                      onClick={() => addToCart({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        type: 'product',
+                        stripePriceId: product.stripePriceId
+                      })}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add to Cart
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* ONE-TIME SERVICES TAB */}
+          <TabsContent value="services" className="mt-6">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold mb-4">One-Time Services</h2>
+              <p className="text-gray-600">Emergency repairs, inspections, and specialty services</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {[
+                {
+                  id: 'emergency-service',
+                  name: 'Emergency Service Call',
+                  description: 'Same-day emergency service for urgent issues',
+                  price: 149,
+                  features: ['Same-day service', 'After-hours available', 'Expert diagnosis']
+                },
+                {
+                  id: 'deep-inspection',
+                  name: 'Comprehensive Inspection',
+                  description: 'Detailed system inspection with full report',
+                  price: 99,
+                  features: ['Full system check', 'Written report', 'Recommendations']
+                },
+                {
+                  id: 'system-upgrade',
+                  name: 'System Upgrade Consultation',
+                  description: 'Expert advice on system improvements',
+                  price: 199,
+                  features: ['Expert consultation', 'Upgrade recommendations', 'Cost estimates']
+                }
+              ].map((service) => (
+                <Card key={service.id} className="hover:shadow-md transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="text-lg">{service.name}</CardTitle>
+                    <p className="text-gray-600 text-sm">{service.description}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-purple-600 mb-4">
+                      ${service.price}
+                    </div>
+                    
+                    <ul className="space-y-2 mb-4">
+                      {service.features.map((feature, index) => (
+                        <li key={index} className="flex items-center text-sm">
+                          <div className="w-2 h-2 bg-purple-500 rounded-full mr-2"></div>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    <Button 
+                      className="w-full bg-purple-600 hover:bg-purple-700"
+                      onClick={() => addToCart({
+                        id: service.id,
+                        name: service.name,
+                        price: service.price,
+                        type: 'service',
+                        stripePriceId: `price_service_${service.id}`
+                      })}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Service
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* INVOICE PAYMENT TAB */}
+          <TabsContent value="invoices" className="mt-6">
+            <div className="max-w-2xl mx-auto">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold mb-4">Pay Your Invoice</h2>
+                <p className="text-gray-600">Enter your invoice number to make a secure payment</p>
+              </div>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <FileText className="w-5 h-5 mr-2" />
+                    Invoice Payment
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Invoice Number</label>
+                    <Input
+                      value={invoiceNumber}
+                      onChange={(e) => setInvoiceNumber(e.target.value)}
+                      placeholder="Enter invoice number (e.g., INV-001234)"
+                      className="text-lg"
+                    />
+                  </div>
+                  
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <h4 className="font-semibold mb-2">How to find your invoice number:</h4>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Check your email for the invoice</li>
+                      <li>• Look at the top-right of your paper invoice</li>
+                      <li>• Format: INV-XXXXXX or similar</li>
+                    </ul>
+                  </div>
+                  
+                  <Button 
+                    className="w-full bg-green-600 hover:bg-green-700"
+                    disabled={!invoiceNumber.trim()}
+                    onClick={() => {
+                      // Validate invoice and proceed to payment
+                      handleInvoicePayment(invoiceNumber);
+                    }}
+                  >
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    Pay Invoice
+                  </Button>
+                  
+                  <div className="text-center text-sm text-gray-500">
+                    Secure payment powered by Stripe
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
+      ) : (
+        // Single-mode displays (subscriptions-only, products-only, etc.)
+        <div>
+          {config.displayMode === 'subscriptions-only' && (
+            <SubscriptionsOnlyView plans={config.subscriptionPlans} />
+          )}
+          {config.displayMode === 'products-only' && (
+            <ProductsOnlyView products={config.products} />
+          )}
+          {config.displayMode === 'invoices-only' && (
+            <InvoicesOnlyView />
+          )}
+        </div>
+      )}
+
+      {/* Shopping Cart Sidebar */}
+      {(cart.length > 0 || selectedPlan) && (
+        <div className="mt-8 border-t pt-6">
+          <h3 className="text-xl font-bold mb-4">Your Order Summary</h3>
+          
+          <div className="space-y-4">
+            {/* Selected Subscription Plan */}
+            {selectedPlan && (
+              <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                <div>
+                  <div className="font-semibold">{selectedPlan.name}</div>
+                  <div className="text-sm text-gray-600">Recurring {selectedPlan.interval}ly</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-bold text-blue-600">${selectedPlan.price}/{selectedPlan.interval}</div>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => setSelectedPlan(null)}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Cart Items */}
+            {cart.map((item) => (
+              <div key={`${item.type}-${item.id}`} className="flex justify-between items-center p-3 border rounded-lg">
+                <div>
+                  <div className="font-semibold">{item.name}</div>
+                  <div className="text-sm text-gray-600 capitalize">{item.type}</div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => updateQuantity(item.id, item.type, item.quantity - 1)}
+                  >
+                    <Minus className="w-3 h-3" />
+                  </Button>
+                  <span className="w-8 text-center">{item.quantity}</span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => updateQuantity(item.id, item.type, item.quantity + 1)}
+                  >
+                    <Plus className="w-3 h-3" />
+                  </Button>
+                  <div className="ml-4 font-bold">${(item.price * item.quantity).toFixed(2)}</div>
+                </div>
+              </div>
+            ))}
+
+            {/* Total */}
+            <div className="border-t pt-4">
+              <div className="flex justify-between items-center text-xl font-bold">
+                <span>Total:</span>
+                <span className="text-green-600">${getTotalAmount().toFixed(2)}</span>
+              </div>
+              {selectedPlan && (
+                <div className="text-sm text-gray-600 mt-1">
+                  Plus ${selectedPlan.price} recurring {selectedPlan.interval}ly
+                </div>
+              )}
+            </div>
+
+            {/* Checkout Button */}
+            <Button 
+              className="w-full bg-green-600 hover:bg-green-700 text-lg py-3"
+              onClick={handleCheckout}
+            >
+              <CreditCard className="w-5 h-5 mr-2" />
+              Proceed to Checkout
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Customer Information Form */}
+      {(cart.length > 0 || selectedPlan) && (
+        <div className="mt-6 border-t pt-6">
+          <h3 className="text-lg font-bold mb-4">Contact Information</h3>
+          <div className="grid md:grid-cols-2 gap-4">
+            <Input
+              placeholder="Full Name"
+              value={customerInfo.name}
+              onChange={(e) => setCustomerInfo({...customerInfo, name: e.target.value})}
+            />
+            <Input
+              placeholder="Email Address"
+              type="email"
+              value={customerInfo.email}
+              onChange={(e) => setCustomerInfo({...customerInfo, email: e.target.value})}
+            />
+            <Input
+              placeholder="Phone Number"
+              type="tel"
+              value={customerInfo.phone}
+              onChange={(e) => setCustomerInfo({...customerInfo, phone: e.target.value})}
+            />
+            <Input
+              placeholder="Service Address"
+              value={customerInfo.address}
+              onChange={(e) => setCustomerInfo({...customerInfo, address: e.target.value})}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============= ENHANCED API ROUTES =============
+// server/api/create-enhanced-checkout-session.ts
+import express from 'express';
+import Stripe from 'stripe';
+
+const router = express.Router();
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2024-11-20.acacia',
+});
+
+router.post('/create-enhanced-checkout-session', async (req, res) => {
+  try {
+    const { subscription, products, services, invoiceNumber, customerInfo, totalAmount } = req.body;
+
+    let line_items = [];
+
+    // Add subscription if selected
+    if (subscription) {
+      line_items.push({
+        price: subscription.stripePriceId,
+        quantity: 1,
+      });
+    }
+
+    // Add products
+    products.forEach(product => {
+      line_items.push({
+        price: product.stripePriceId,
+        quantity: product.quantity,
+      });
+    });
+
+    // Add one-time services
+    services.forEach(service => {
+      line_items.push({
+        price: service.stripePriceId,
+        quantity: service.quantity,
+      });
+    });
+
+    // Handle invoice payment
+    if (invoiceNumber) {
+      // Validate invoice exists and get amount
+      const invoice = await validateInvoice(invoiceNumber);
+      if (!invoice) {
+        return res.status(400).json({ error: 'Invalid invoice number' });
+      }
+      
+      line_items.push({
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: `Invoice Payment - ${invoiceNumber}`,
+          },
+          unit_amount: invoice.amount * 100, // Amount in cents
+        },
+        quantity: 1,
+      });
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      customer_email: customerInfo.email,
+      line_items,
+      mode: subscription ? 'subscription' : 'payment',
+      success_url: `${req.protocol}://${req.get('host')}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${req.protocol}://${req.get('host')}/cancel`,
+      metadata: {
+        customer_name: customerInfo.name,
+        phone: customerInfo.phone,
+        address: customerInfo.address,
+        invoice_number: invoiceNumber || '',
+        order_type: subscription ? 'subscription_and_products' : 'products_only',
+      },
+    });
+
+    res.json({ url: session.url });
+  } catch (error) {
+    console.error('Enhanced checkout error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+async function validateInvoice(invoiceNumber: string) {
+  // Implement invoice validation logic
+  // Check if invoice exists in your system
+  // Return invoice details including amount
+  return {
+    number: invoiceNumber,
+    amount: 299.99, // Example amount
+    valid: true
+  };
+}
+
+export default router;
+
+// ============= WIDGET CONFIGURATION OPTIONS =============
+// components/admin/WidgetModeSelector.tsx
+export default function WidgetModeSelector({ config, onChange }) {
+  const modes = [
+    {
+      id: 'subscriptions-only',
+      name: 'Subscriptions Only',
+      description: 'Just recurring service plans',
+      icon: '📅',
+      pricing: 'Current pricing'
+    },
+    {
+      id: 'all-in-one',
+      name: 'Complete Revenue Platform',
+      description: 'Subscriptions + Products + Invoice Payments',
+      icon: '🏪',
+      pricing: '+$200/month',
+      popular: true
+    },
+    {
+      id: 'products-only',
+      name: 'Product Store',
+      description: 'Equipment and supply sales',
+      icon: '🛍️',
+      pricing: '+$100/month'
+    },
+    {
+      id: 'invoices-only',
+      name: 'Invoice Payments',
+      description: 'Customer payment portal',
+      icon: '💳',
+      pricing: '+$50/month'
+    }
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-xl font-bold mb-4">Choose Your Widget Type</h3>
+        <p className="text-gray-600">Select what revenue streams you want to enable</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        {modes.map(mode => (
+          <Card 
+            key={mode.id}
+            className={`cursor-pointer transition-all ${
+              config.displayMode === mode.id 
+                ? 'ring-2 ring-blue-500 bg-blue-50' 
+                : 'hover:shadow-md'
+            } ${mode.popular ? 'ring-2 ring-green-500' : ''}`}
+            onClick={() => onChange({ ...config, displayMode: mode.id })}
+          >
+            <CardHeader>
+              <div className="flex justify-between items-start">
+                <div className="text-3xl">{mode.icon}</div>
+                {mode.popular && (
+                  <Badge className="bg-green-500">Recommended</Badge>
+                )}
+              </div>
+              <CardTitle>{mode.name}</CardTitle>
+              <p className="text-gray-600">{mode.description}</p>
+            </CardHeader>
+            <CardContent>
+              <div className="text-lg font-semibold text-green-600">
+                {mode.pricing}
+              </div>
+              <Button 
+                className={`w-full mt-4 ${
+                  config.displayMode === mode.id 
+                    ? 'bg-blue-600' 
+                    : 'bg-gray-200 text-gray-700'
+                }`}
+              >
+                {config.displayMode === mode.id ? 'Selected' : 'Select'}
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}

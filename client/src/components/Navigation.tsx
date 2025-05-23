@@ -20,6 +20,7 @@ export default function Navigation() {
     { name: 'Features', path: '/features' },
     { name: 'How It Works', path: '/how-it-works' },
     { name: 'Live Demo', path: '/demo' },
+    { name: 'Enhanced Widget Demo', path: '/enhanced-widget-demo' },
     { name: 'Pricing', path: '/simple-pricing' },
     { name: 'Start Free Trial', path: '/trial-registration' },
     { name: 'Onboarding Wizard', path: '/welcome-flow' },
