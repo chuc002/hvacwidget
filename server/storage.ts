@@ -110,7 +110,7 @@ export class MemStorage implements IStorage {
         ],
         isPopular: true,
         order: 2,
-        stripePriceId: "price_professional_monthly_699"
+        stripePriceId: "price_1RS13iGdBJ6HrZFifmYmquFe"
       },
       {
         name: "Enterprise",
@@ -128,7 +128,7 @@ export class MemStorage implements IStorage {
         ],
         isPopular: false,
         order: 3,
-        stripePriceId: "price_enterprise_monthly_999"
+        stripePriceId: "price_1RS142GdBJ6HrZFiszeryhra"
       }
     ];
 

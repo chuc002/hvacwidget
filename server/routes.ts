@@ -66,7 +66,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             ],
             isPopular: false,
             order: 1,
-            stripePriceId: "price_starter_monthly_399"
+            stripePriceId: "price_1RS13JGdBJ6HrZFiK5NRUrCs"
           },
           {
             id: 2,
@@ -85,7 +85,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             ],
             isPopular: true,
             order: 2,
-            stripePriceId: "price_professional_monthly_699"
+            stripePriceId: "price_1RS13iGdBJ6HrZFifmYmquFe"
           },
           {
             id: 3,
@@ -104,7 +104,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             ],
             isPopular: false,
             order: 3,
-            stripePriceId: "price_enterprise_monthly_999"
+            stripePriceId: "price_1RS142GdBJ6HrZFiszeryhra"
           }
         ];
         res.status(200).json(fallbackPlans);
