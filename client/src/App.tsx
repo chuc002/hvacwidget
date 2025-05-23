@@ -43,6 +43,7 @@ function Router() {
       <Route path="/customer-journey" component={CustomerJourney} />
       <Route path="/trial-registration" component={TrialRegistration} />
       <Route path="/welcome-flow" component={WelcomeFlow} />
+      <Route path="/enhanced-widget-demo" component={EnhancedWidgetDemo} />
       <Route component={NotFound} />
     </Switch>
   );
