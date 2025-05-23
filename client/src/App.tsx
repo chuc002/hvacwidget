@@ -16,6 +16,7 @@ import Pricing from "@/pages/Pricing";
 import SimplePricing from "@/pages/SimplePricing";
 import Register from "@/pages/Register";
 import Demo from "@/pages/Demo";
+import Analytics from "@/pages/Analytics";
 
 function Router() {
   return (
@@ -32,6 +33,7 @@ function Router() {
       <Route path="/simple-pricing" component={SimplePricing} />
       <Route path="/register" component={Register} />
       <Route path="/demo" component={Demo} />
+      <Route path="/analytics" component={Analytics} />
       <Route component={NotFound} />
     </Switch>
   );
