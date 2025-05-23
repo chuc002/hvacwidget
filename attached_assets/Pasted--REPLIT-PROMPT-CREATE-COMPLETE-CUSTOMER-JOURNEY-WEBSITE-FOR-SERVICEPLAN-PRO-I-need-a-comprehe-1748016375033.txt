@@ -1,0 +1,1222 @@
+// REPLIT PROMPT - CREATE COMPLETE CUSTOMER JOURNEY WEBSITE FOR SERVICEPLAN PRO
+// I need a comprehensive website that guides potential customers through the entire evaluation and purchase process
+// with clear navigation, logical flow, and all necessary information to make a buying decision.
+
+// ============= NAVIGATION COMPONENT =============
+// components/Navigation.tsx
+import { useState } from 'react';
+import { Link } from 'wouter';
+import { Button } from '@/components/ui/button';
+import { Menu, X, ChevronDown, Phone, Calendar } from 'lucide-react';
+
+export default function Navigation() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isIndustriesOpen, setIsIndustriesOpen] = useState(false);
+
+  return (
+    <>
+      {/* Top Bar with Contact Info */}
+      <div className="bg-blue-600 text-white text-sm">
+        <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center">
+              <Phone className="h-4 w-4 mr-1" />
+              (555) 123-4567
+            </div>
+            <div>Free 14-day trial • No credit card required</div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Link href="/book-demo" className="flex items-center hover:underline">
+              <Calendar className="h-4 w-4 mr-1" />
+              Book Demo
+            </Link>
+            <Link href="/login" className="hover:underline">Login</Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Navigation */}
+      <nav className="bg-white shadow-md sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <Link href="/" className="flex items-center">
+              <div className="text-2xl font-bold text-blue-600">ServicePlan Pro</div>
+              <div className="ml-2 text-sm text-gray-500 hidden sm:block">Turn Services Into Subscriptions</div>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center space-x-8">
+              {/* How It Works */}
+              <Link href="/how-it-works" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                How It Works
+              </Link>
+
+              {/* Industries Dropdown */}
+              <div className="relative group">
+                <button className="flex items-center text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                  Industries
+                  <ChevronDown className="ml-1 h-4 w-4" />
+                </button>
+                <div className="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div className="py-2">
+                    <Link href="/industries/pest-control" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🐛 Pest Control</Link>
+                    <Link href="/industries/lawn-care" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🌱 Lawn Care</Link>
+                    <Link href="/industries/hvac" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🏠 HVAC Services</Link>
+                    <Link href="/industries/pool-service" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🏊 Pool Service</Link>
+                    <Link href="/industries/cleaning" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🧹 Cleaning Services</Link>
+                    <Link href="/industries" className="block px-4 py-2 text-sm text-blue-600 font-medium border-t">View All Industries →</Link>
+                  </div>
+                </div>
+              </div>
+
+              <Link href="/features" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                Features
+              </Link>
+              
+              <Link href="/pricing" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                Pricing
+              </Link>
+
+              <Link href="/demo" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                Live Demo
+              </Link>
+
+              <Link href="/case-studies" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                Case Studies
+              </Link>
+
+              <Link href="/support" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                Support
+              </Link>
+              
+              {/* CTA Buttons */}
+              <Link href="/book-demo">
+                <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+                  Book Demo
+                </Button>
+              </Link>
+              <Link href="/register">
+                <Button className="bg-blue-600 hover:bg-blue-700">
+                  Start Free Trial
+                </Button>
+              </Link>
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="lg:hidden">
+              <Button variant="ghost" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                {isMenuOpen ? <X /> : <Menu />}
+              </Button>
+            </div>
+          </div>
+
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <div className="lg:hidden py-4 border-t">
+              <div className="flex flex-col space-y-4">
+                <Link href="/how-it-works" className="text-gray-700 font-medium">How It Works</Link>
+                <Link href="/industries" className="text-gray-700 font-medium">Industries</Link>
+                <Link href="/features" className="text-gray-700 font-medium">Features</Link>
+                <Link href="/pricing" className="text-gray-700 font-medium">Pricing</Link>
+                <Link href="/demo" className="text-gray-700 font-medium">Live Demo</Link>
+                <Link href="/case-studies" className="text-gray-700 font-medium">Case Studies</Link>
+                <Link href="/support" className="text-gray-700 font-medium">Support</Link>
+                <div className="pt-4 space-y-2">
+                  <Link href="/book-demo">
+                    <Button variant="outline" className="w-full">Book Demo</Button>
+                  </Link>
+                  <Link href="/register">
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700">Start Free Trial</Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </nav>
+    </>
+  );
+}
+
+// ============= MAIN LANDING PAGE =============
+// pages/Home.tsx
+import { Link } from 'wouter';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Check, Star, ArrowRight, Play, Users, TrendingUp, Zap, Shield } from 'lucide-react';
+
+export default function Home() {
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 text-white py-20 lg:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="mb-6">
+              <span className="bg-yellow-400 text-blue-900 px-4 py-2 rounded-full text-sm font-semibold">
+                🚀 Trusted by 500+ Home Service Businesses
+              </span>
+            </div>
+            
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+              Turn Your Home Services Into
+              <span className="text-yellow-300 block">Recurring Revenue</span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-4xl mx-auto">
+              Professional subscription widgets for pest control, lawn care, HVAC, pool services, and more. 
+              Get customers to subscribe online in minutes - <strong>65% cheaper than Contractor Commerce</strong>.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-12">
+              <Link href="/register">
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-4 shadow-lg">
+                  Start Free Trial
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="/demo">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-4">
+                  <Play className="mr-2 h-5 w-5" />
+                  Watch Demo
+                </Button>
+              </Link>
+              <Link href="/book-demo">
+                <Button size="lg" variant="ghost" className="text-white border border-white/30 hover:bg-white hover:text-blue-600 text-lg px-8 py-4">
+                  Book Personal Demo
+                </Button>
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-blue-100 max-w-2xl mx-auto">
+              <div className="flex items-center justify-center">
+                <Check className="h-5 w-5 mr-2" />
+                14-day free trial
+              </div>
+              <div className="flex items-center justify-center">
+                <Check className="h-5 w-5 mr-2" />
+                No credit card required
+              </div>
+              <div className="flex items-center justify-center">
+                <Check className="h-5 w-5 mr-2" />
+                5-minute setup
+              </div>
+              <div className="flex items-center justify-center">
+                <Check className="h-5 w-5 mr-2" />
+                Cancel anytime
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof Numbers */}
+      <section className="py-12 bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">500+</div>
+              <div className="text-gray-600">Active Businesses</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">$2.5M+</div>
+              <div className="text-gray-600">Revenue Generated</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">300%</div>
+              <div className="text-gray-600">Avg. Subscription Increase</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">5 min</div>
+              <div className="text-gray-600">Average Setup Time</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Problem Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Stop Losing Customers to Manual Processes
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Most home service companies lose 70% of potential recurring customers because they can't sign up online. 
+              Don't let outdated processes cost you revenue.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <Card className="p-6 text-center border-2 border-red-200">
+              <CardContent>
+                <div className="text-4xl mb-4">📞</div>
+                <h3 className="text-xl font-semibold mb-3 text-red-600">Manual Sign-ups Only</h3>
+                <p className="text-gray-600">
+                  Customers have to call during business hours or wait for callbacks to start service plans
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="p-6 text-center border-2 border-red-200">
+              <CardContent>
+                <div className="text-4xl mb-4">💸</div>
+                <h3 className="text-xl font-semibold mb-3 text-red-600">Lost Revenue</h3>
+                <p className="text-gray-600">
+                  70% of customers who want recurring services never actually sign up due to friction
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="p-6 text-center border-2 border-red-200">
+              <CardContent>
+                <div className="text-4xl mb-4">⏰</div>
+                <h3 className="text-xl font-semibold mb-3 text-red-600">Time Wasted</h3>
+                <p className="text-gray-600">
+                  Staff spend hours processing subscriptions instead of focusing on service delivery
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center">
+            <Link href="/how-it-works">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                See How We Solve This
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Solution Overview */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              The Simple Alternative to Contractor Commerce
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Get the same results at 65% lower cost. No annual contracts, no complex setup, no enterprise overhead.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div>
+              <h3 className="text-2xl font-bold mb-6">Professional Subscription Widgets That Convert</h3>
+              
+              <div className="space-y-6">
+                <div className="flex items-start">
+                  <div className="bg-blue-100 p-2 rounded-lg mr-4">
+                    <Zap className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg mb-2">5-Minute Setup</h4>
+                    <p className="text-gray-600">Add one line of code to your website and start collecting subscriptions immediately</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="bg-green-100 p-2 rounded-lg mr-4">
+                    <TrendingUp className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg mb-2">300% More Subscriptions</h4>
+                    <p className="text-gray-600">Average customer sees 3x increase in recurring revenue within 6 months</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="bg-purple-100 p-2 rounded-lg mr-4">
+                    <Shield className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg mb-2">Enterprise Security</h4>
+                    <p className="text-gray-600">Powered by Stripe with bank-level security and PCI compliance</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 space-x-4">
+                <Link href="/features">
+                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                    See All Features
+                  </Button>
+                </Link>
+                <Link href="/demo">
+                  <Button size="lg" variant="outline">
+                    Try Demo
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            
+            <div className="bg-gray-100 rounded-xl p-8">
+              <div className="bg-white rounded-lg shadow-xl p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold">ABC Pest Control Plans</h3>
+                  <span className="text-sm text-gray-500">Powered by ServicePlan Pro</span>
+                </div>
+                <div className="space-y-4">
+                  <div className="border rounded-lg p-4 hover:border-blue-300 transition-colors">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="font-medium">Monthly Treatment</span>
+                      <span className="font-bold text-blue-600">$49/month</span>
+                    </div>
+                    <p className="text-sm text-gray-600">Regular pest control with quarterly inspections</p>
+                  </div>
+                  <div className="border-2 border-blue-500 rounded-lg p-4 bg-blue-50">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="font-medium">Quarterly Plan</span>
+                      <span className="font-bold text-blue-600">$129/quarter</span>
+                    </div>
+                    <p className="text-sm text-gray-600">Comprehensive protection with premium features</p>
+                    <div className="text-sm text-blue-600 font-medium mt-1">⭐ Most Popular</div>
+                  </div>
+                  <div className="border rounded-lg p-4 hover:border-blue-300 transition-colors">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="font-medium">Annual Protection</span>
+                      <span className="font-bold text-blue-600">$399/year</span>
+                    </div>
+                    <p className="text-sm text-gray-600">Best value with priority service</p>
+                  </div>
+                </div>
+                <Button className="w-full mt-6 bg-blue-600 hover:bg-blue-700">
+                  Choose Your Plan
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Navigation to Key Pages */}
+          <div className="grid md:grid-cols-3 gap-6">
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow">
+              <CardContent>
+                <div className="text-3xl mb-4">🔍</div>
+                <h3 className="text-xl font-semibold mb-3">See How It Works</h3>
+                <p className="text-gray-600 mb-4">Step-by-step process from setup to first customer</p>
+                <Link href="/how-it-works">
+                  <Button variant="outline" className="w-full">Learn More</Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow">
+              <CardContent>
+                <div className="text-3xl mb-4">💰</div>
+                <h3 className="text-xl font-semibold mb-3">View Pricing</h3>
+                <p className="text-gray-600 mb-4">Simple, transparent pricing that grows with you</p>
+                <Link href="/pricing">
+                  <Button variant="outline" className="w-full">See Pricing</Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow">
+              <CardContent>
+                <div className="text-3xl mb-4">📞</div>
+                <h3 className="text-xl font-semibold mb-3">Book a Demo</h3>
+                <p className="text-gray-600 mb-4">Personal walkthrough with our team</p>
+                <Link href="/book-demo">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700">Book Now</Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Industries Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Perfect for Any Home Service Business
+            </h2>
+            <p className="text-xl text-gray-600">
+              From pest control to pool maintenance, our platform works for any recurring service
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-6 mb-12">
+            {[
+              { icon: '🐛', name: 'Pest Control', desc: 'Monthly treatments & inspections', link: '/industries/pest-control' },
+              { icon: '🌱', name: 'Lawn Care', desc: 'Seasonal packages & maintenance', link: '/industries/lawn-care' },
+              { icon: '🏠', name: 'HVAC Services', desc: 'Maintenance plans & tune-ups', link: '/industries/hvac' },
+              { icon: '🏊', name: 'Pool Service', desc: 'Weekly cleaning & maintenance', link: '/industries/pool-service' },
+              { icon: '🧹', name: 'Cleaning', desc: 'Weekly, bi-weekly, monthly', link: '/industries/cleaning' },
+              { icon: '🔒', name: 'Security', desc: 'Monitoring & maintenance plans', link: '/industries/security' },
+              { icon: '🔧', name: 'Handyman', desc: 'Regular maintenance packages', link: '/industries/handyman' },
+              { icon: '🚗', name: 'Auto Care', desc: 'Oil changes & service packages', link: '/industries/auto-care' }
+            ].map((industry, index) => (
+              <Link key={index} href={industry.link}>
+                <Card className="p-6 text-center hover:shadow-lg transition-all hover:scale-105">
+                  <CardContent>
+                    <div className="text-3xl mb-3">{industry.icon}</div>
+                    <h3 className="font-semibold mb-2">{industry.name}</h3>
+                    <p className="text-sm text-gray-600">{industry.desc}</p>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link href="/industries">
+              <Button size="lg" variant="outline">
+                View All Industries
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof & Testimonials */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Trusted by Growing Service Businesses
+            </h2>
+            <div className="flex justify-center items-center space-x-2 mb-6">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="h-6 w-6 fill-yellow-400 text-yellow-400" />
+              ))}
+              <span className="text-xl font-semibold ml-2">4.9/5 from 500+ businesses</span>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {[
+              {
+                company: "ABC Pest Control",
+                owner: "Mike Johnson",
+                location: "Kansas City, MO",
+                quote: "We went from 50 to 300 maintenance customers in 6 months. The widget pays for itself in the first week.",
+                increase: "+500% customers",
+                revenue: "$45K monthly recurring"
+              },
+              {
+                company: "GreenScape Lawn Care", 
+                owner: "Sarah Chen",
+                location: "Austin, TX",
+                quote: "Our customers love being able to sign up online. We've eliminated 90% of our phone tag for new subscriptions.",
+                increase: "+$25K monthly",
+                revenue: "300% conversion increase"
+              },
+              {
+                company: "Crystal Pool Service",
+                owner: "David Rodriguez", 
+                location: "Phoenix, AZ",
+                quote: "Setup took 10 minutes. We got our first online subscription within 2 hours of going live.",
+                increase: "200+ new customers",
+                revenue: "$18K first month"
+              }
+            ].map((testimonial, index) => (
+              <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
+                <CardContent>
+                  <div className="flex items-center mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="text-gray-700 mb-6 italic text-lg">"{testimonial.quote}"</p>
+                  <div className="border-t pt-4">
+                    <div className="font-semibold text-lg">{testimonial.owner}</div>
+                    <div className="text-gray-600">{testimonial.company}</div>
+                    <div className="text-sm text-gray-500">{testimonial.location}</div>
+                    <div className="mt-3 space-y-1">
+                      <div className="text-sm font-semibold text-green-600">{testimonial.increase}</div>
+                      <div className="text-sm font-semibold text-blue-600">{testimonial.revenue}</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link href="/case-studies">
+              <Button size="lg" variant="outline">
+                Read More Success Stories
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Competitive Comparison */}
+      <section className="py-20 bg-blue-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Why Choose ServicePlan Pro Over Contractor Commerce?
+            </h2>
+            <p className="text-xl text-gray-600">
+              Get the same results at a fraction of the cost and complexity
+            </p>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x">
+              <div className="p-8 text-center">
+                <h3 className="text-xl font-bold mb-4 text-gray-600">Contractor Commerce</h3>
+                <div className="space-y-4 text-sm">
+                  <div className="flex items-center justify-center text-red-600">
+                    <X className="h-4 w-4 mr-2" />
+                    $500-1500/month
+                  </div>
+                  <div className="flex items-center justify-center text-red-600">
+                    <X className="h-4 w-4 mr-2" />
+                    $1,250 setup fee
+                  </div>
+                  <div className="flex items-center justify-center text-red-600">
+                    <X className="h-4 w-4 mr-2" />
+                    12-month contracts
+                  </div>
+                  <div className="flex items-center justify-center text-red-600">
+                    <X className="h-4 w-4 mr-2" />
+                    Complex setup process
+                  </div>
+                  <div className="flex items-center justify-center text-red-600">
+                    <X className="h-4 w-4 mr-2" />
+                    Transaction fees (1-3%)
+                  </div>
+                </div>
+              </div>
+              
+              <div className="p-8 text-center bg-blue-600 text-white">
+                <h3 className="text-xl font-bold mb-4">ServicePlan Pro</h3>
+                <div className="space-y-4 text-sm">
+                  <div className="flex items-center justify-center">
+                    <Check className="h-4 w-4 mr-2" />
+                    $399-999/month
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <Check className="h-4 w-4 mr-2" />
+                    $0 setup fee
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <Check className="h-4 w-4 mr-2" />
+                    Month-to-month
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <Check className="h-4 w-4 mr-2" />
+                    5-minute setup
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <Check className="h-4 w-4 mr-2" />
+                    No transaction fees
+                  </div>
+                </div>
+              </div>
+              
+              <div className="p-8 text-center">
+                <h3 className="text-xl font-bold mb-4 text-gray-400">Other Solutions</h3>
+                <div className="space-y-4 text-sm text-gray-500">
+                  <div>Custom development: $50K+</div>
+                  <div>6-12 month timeline</div>
+                  <div>Ongoing maintenance costs</div>
+                  <div>Technical expertise required</div>
+                  <div>No proven templates</div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-green-50 p-6 text-center border-t">
+              <div className="text-2xl font-bold text-green-600 mb-2">Save $4,000-$10,000+ annually</div>
+              <p className="text-gray-600">Plus get faster setup and better support</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xl text-gray-600">
+              Everything you need to know about ServicePlan Pro
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            {[
+              {
+                question: "How quickly can I start collecting subscriptions?",
+                answer: "Most customers are live within 24 hours. Setup takes 5 minutes - just add our embed code to your website and customize your plans."
+              },
+              {
+                question: "Do you take a percentage of my revenue?",
+                answer: "No! Unlike other platforms, we don't take transaction fees. You pay a flat monthly rate and keep 100% of your customer payments."
+              },
+              {
+                question: "What if I'm already using Contractor Commerce?",
+                answer: "We make switching easy. Our team will help migrate your existing plans and customers at no extra cost during your free trial."
+              },
+              {
+                question: "Can I customize the widget to match my brand?",
+                answer: "Absolutely! Change colors, fonts, logos, messaging, and even add custom CSS. Your customers will never know it's a third-party widget."
+              },
+              {
+                question: "What payment methods do you support?",
+                answer: "All major credit cards, debit cards, and ACH transfers through Stripe. Your customers can also save payment methods for easy renewals."
+              },
+              {
+                question: "How does billing work?",
+                answer: "Simple monthly billing. No setup fees, no contracts. Start with our 14-day free trial, then pay monthly. Upgrade or downgrade anytime."
+              }
+            ].map((faq, index) => (
+              <Card key={index} className="p-6">
+                <CardContent>
+                  <h3 className="text-lg font-semibold mb-3">{faq.question}</h3>
+                  <p className="text-gray-600">{faq.answer}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link href="/support">
+              <Button size="lg" variant="outline">
+                View All FAQs
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            Ready to Turn Visitors Into Subscribers?
+          </h2>
+          <p className="text-xl mb-8 text-blue-100">
+            Join 500+ home service businesses already using ServicePlan Pro to grow their recurring revenue.
+            Start your free trial today - no credit card required.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
+            <Link href="/register">
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-4 shadow-lg">
+                Start Your Free Trial
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link href="/book-demo">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-4">
+                Book Personal Demo
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-blue-100 max-w-2xl mx-auto">
+            <div className="flex items-center justify-center">
+              <Check className="h-5 w-5 mr-2" />
+              14-day free trial
+            </div>
+            <div className="flex items-center justify-center">
+              <Check className="h-5 w-5 mr-2" />
+              No contracts
+            </div>
+            <div className="flex items-center justify-center">
+              <Check className="h-5 w-5 mr-2" />
+              No setup fees
+            </div>
+            <div className="flex items-center justify-center">
+              <Check className="h-5 w-5 mr-2" />
+              Cancel anytime
+            </div>
+          </div>
+
+          <div className="mt-8 text-sm text-blue-200">
+            Questions? Call us at (555) 123-4567 or email hello@serviceplanpro.com
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ============= HOW IT WORKS PAGE =============
+// pages/HowItWorks.tsx
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'wouter';
+import { ArrowRight, CheckCircle } from 'lucide-react';
+
+export default function HowItWorks() {
+  return (
+    <div className="py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h1 className="text-4xl font-bold mb-6">How ServicePlan Pro Works</h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            From signup to first customer in under 24 hours. Here's exactly how we help you turn website visitors into recurring subscribers.
+          </p>
+        </div>
+
+        {/* Step-by-step process */}
+        <div className="space-y-16">
+          {[
+            {
+              step: 1,
+              title: "Sign Up & Customize",
+              time: "5 minutes",
+              description: "Create your account, set your pricing, and customize your widget to match your brand",
+              details: [
+                "Choose your service plans and pricing",
+                "Upload your logo and set brand colors", 
+                "Configure what customer information to collect",
+                "Preview your widget before going live"
+              ],
+              image: "🎨"
+            },
+            {
+              step: 2, 
+              title: "Add to Your Website",
+              time: "2 minutes",
+              description: "Copy one line of code and paste it anywhere on your website",
+              details: [
+                "Get your unique embed code",
+                "Add to any page on your website",
+                "Works with WordPress, Squarespace, Wix, or custom sites",
+                "Mobile-responsive automatically"
+              ],
+              image: "💻"
+            },
+            {
+              step: 3,
+              title: "Connect Your Stripe",
+              time: "3 minutes", 
+              description: "Link your Stripe account so payments go directly to you",
+              details: [
+                "One-click Stripe integration",
+                "All payments go directly to your account",
+                "No transaction fees from us",
+                "Automatic invoicing and receipts"
+              ],
+              image: "💳"
+            },
+            {
+              step: 4,
+              title: "Start Getting Customers",
+              time: "Immediate",
+              description: "Customers can now subscribe to your services 24/7",
+              details: [
+                "Customers sign up instantly",
+                "Automatic email notifications to you",
+                "Customer data sent to your CRM",
+                "Dashboard to track all subscriptions"
+              ],
+              image: "🚀"
+            }
+          ].map((step, index) => (
+            <div key={index} className={`flex flex-col lg:flex-row items-center gap-12 ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
+              <div className="lg:w-1/2">
+                <div className="flex items-center mb-4">
+                  <div className="bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold mr-4">
+                    {step.step}
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold">{step.title}</h3>
+                    <div className="text-blue-600 font-semibold">{step.time}</div>
+                  </div>
+                </div>
+                <p className="text-xl text-gray-600 mb-6">{step.description}</p>
+                <ul className="space-y-3">
+                  {step.details.map((detail, i) => (
+                    <li key={i} className="flex items-center">
+                      <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                      <span>{detail}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="lg:w-1/2">
+                <Card className="p-12 text-center">
+                  <CardContent>
+                    <div className="text-8xl mb-4">{step.image}</div>
+                    <div className="text-lg font-semibold text-gray-600">Step {step.step}</div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center mt-16">
+          <h2 className="text-3xl font-bold mb-6">Ready to Get Started?</h2>
+          <div className="space-x-4">
+            <Link href="/register">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                Start Free Trial
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link href="/demo">
+              <Button size="lg" variant="outline">
+                See Demo First
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============= PRICING PAGE =============
+// pages/Pricing.tsx
+import { Check, X } from 'lucide-react';
+
+export default function Pricing() {
+  const plans = [
+    {
+      name: "Starter",
+      price: 399,
+      description: "Perfect for small businesses getting started",
+      features: [
+        "Embedded subscription widget",
+        "Up to 3 service plans",
+        "Basic customization",
+        "Email notifications",
+        "Stripe integration",
+        "Mobile responsive",
+        "Basic analytics",
+        "Email support"
+      ],
+      limitations: [
+        "Up to 100 subscribers/month",
+        "Basic branding options",
+        "Standard templates only"
+      ],
+      cta: "Start Free Trial",
+      popular: false
+    },
+    {
+      name: "Professional", 
+      price: 699,
+      description: "Most popular for growing businesses",
+      features: [
+        "Everything in Starter",
+        "Unlimited service plans",
+        "Full brand customization", 
+        "Advanced analytics",
+        "CRM integrations",
+        "Custom domain",
+        "Priority support",
+        "A/B testing",
+        "Custom CSS"
+      ],
+      limitations: [
+        "Up to 500 subscribers/month",
+        "Advanced features included"
+      ],
+      cta: "Start Free Trial",
+      popular: true
+    },
+    {
+      name: "Enterprise",
+      price: 999, 
+      description: "For established businesses at scale",
+      features: [
+        "Everything in Professional",
+        "Unlimited subscribers",
+        "Multi-location support",
+        "API access",
+        "White-label solution",
+        "Dedicated account manager",
+        "Custom integrations",
+        "SLA guarantee",
+        "Phone support"
+      ],
+      limitations: [],
+      cta: "Contact Sales",
+      popular: false
+    }
+  ];
+
+  return (
+    <div className="py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h1 className="text-4xl font-bold mb-6">Simple, Transparent Pricing</h1>
+          <p className="text-xl text-gray-600 mb-8">
+            Choose the plan that fits your business. Start with 14 days free, then pay monthly with no contracts.
+          </p>
+          
+          {/* Comparison with Contractor Commerce */}
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 max-w-2xl mx-auto">
+            <div className="text-green-800 font-semibold">💰 Save $4,000-$10,000+ annually vs Contractor Commerce</div>
+            <div className="text-green-600 text-sm mt-1">No setup fees • No contracts • No transaction fees</div>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          {plans.map((plan, index) => (
+            <Card key={index} className={`p-8 relative ${plan.popular ? 'ring-2 ring-blue-500 scale-105' : ''}`}>
+              {plan.popular && (
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                    Most Popular
+                  </span>
+                </div>
+              )}
+              
+              <CardContent>
+                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
+                <p className="text-gray-600 mb-6">{plan.description}</p>
+                
+                <div className="mb-6">
+                  <span className="text-4xl font-bold">${plan.price}</span>
+                  <span className="text-gray-600">/month</span>
+                </div>
+                
+                <ul className="space-y-3 mb-8">
+                  {plan.features.map((feature, i) => (
+                    <li key={i} className="flex items-center">
+                      <Check className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
+                      <span className="text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                
+                {plan.limitations.length > 0 && (
+                  <ul className="space-y-2 mb-8">
+                    {plan.limitations.map((limitation, i) => (
+                      <li key={i} className="flex items-center text-sm text-gray-500">
+                        <div className="w-5 h-5 mr-3 flex-shrink-0">•</div>
+                        <span>{limitation}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                
+                <Link href={plan.name === "Enterprise" ? "/contact" : "/register"}>
+                  <Button 
+                    className={`w-full ${plan.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
+                    variant={plan.popular ? 'default' : 'outline'}
+                  >
+                    {plan.cta}
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Comparison Table */}
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-16">
+          <div className="p-6 bg-gray-50 border-b">
+            <h3 className="text-2xl font-bold text-center">ServicePlan Pro vs Contractor Commerce</h3>
+          </div>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b">
+                  <th className="text-left p-4 font-semibold">Feature</th>
+                  <th className="text-center p-4 font-semibold text-blue-600">ServicePlan Pro</th>
+                  <th className="text-center p-4 font-semibold text-gray-600">Contractor Commerce</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["Monthly Pricing", "$399-999", "$500-1500"],
+                  ["Setup Fee", "$0", "$1,250"],
+                  ["Transaction Fees", "0%", "1-3%"],
+                  ["Contract Length", "Month-to-month", "12 months"],
+                  ["Setup Time", "5 minutes", "Hours/Days"],
+                  ["Custom Branding", "✓", "✓"],
+                  ["Mobile Responsive", "✓", "✓"],
+                  ["No Transaction Fees", "✓", "✗"],
+                  ["No Contracts", "✓", "✗"],
+                  ["Instant Setup", "✓", "✗"]
+                ].map(([feature, ours, theirs], index) => (
+                  <tr key={index} className="border-b hover:bg-gray-50">
+                    <td className="p-4 font-medium">{feature}</td>
+                    <td className="p-4 text-center text-green-600 font-semibold">{ours}</td>
+                    <td className="p-4 text-center text-red-600">{theirs}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* FAQ for Pricing */}
+        <div className="max-w-4xl mx-auto">
+          <h3 className="text-2xl font-bold text-center mb-8">Pricing Questions</h3>
+          <div className="space-y-6">
+            {[
+              {
+                q: "Can I change plans anytime?",
+                a: "Yes! Upgrade or downgrade anytime. Changes take effect immediately and you're only billed for what you use."
+              },
+              {
+                q: "What happens after my free trial?",
+                a: "After 14 days, you'll be charged for your selected plan. Cancel anytime during the trial with no charges."
+              },
+              {
+                q: "Do you really not charge transaction fees?",
+                a: "Correct! We charge a flat monthly rate and you keep 100% of your customer payments. No hidden fees."
+              },
+              {
+                q: "What if I need to cancel?",
+                a: "Cancel anytime with no penalties. Your service continues until the end of your current billing period."
+              }
+            ].map((faq, index) => (
+              <Card key={index} className="p-6">
+                <CardContent>
+                  <h4 className="font-semibold mb-2">{faq.q}</h4>
+                  <p className="text-gray-600">{faq.a}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        <div className="text-center mt-16">
+          <h2 className="text-3xl font-bold mb-6">Ready to Start Your Free Trial?</h2>
+          <Link href="/register">
+            <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+              Start 14-Day Free Trial
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
+          <p className="text-gray-600 mt-4">No credit card required • Setup in 5 minutes • Cancel anytime</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============= FOOTER COMPONENT =============
+// components/Footer.tsx
+export default function Footer() {
+  return (
+    <footer className="bg-gray-900 text-white py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid md:grid-cols-4 gap-8">
+          {/* Company Info */}
+          <div>
+            <div className="text-2xl font-bold text-blue-400 mb-4">ServicePlan Pro</div>
+            <p className="text-gray-400 mb-4">
+              Turn your home service business into a recurring revenue machine. 
+              Trusted by 500+ businesses nationwide.
+            </p>
+            <div className="text-gray-400">
+              <div>📞 (555) 123-4567</div>
+              <div>✉️ hello@serviceplanpro.com</div>
+            </div>
+          </div>
+
+          {/* Product */}
+          <div>
+            <h4 className="font-semibold mb-4">Product</h4>
+            <ul className="space-y-2 text-gray-400">
+              <li><Link href="/features">Features</Link></li>
+              <li><Link href="/pricing">Pricing</Link></li>
+              <li><Link href="/demo">Live Demo</Link></li>
+              <li><Link href="/integrations">Integrations</Link></li>
+              <li><Link href="/security">Security</Link></li>
+            </ul>
+          </div>
+
+          {/* Industries */}
+          <div>
+            <h4 className="font-semibold mb-4">Industries</h4>
+            <ul className="space-y-2 text-gray-400">
+              <li><Link href="/industries/pest-control">Pest Control</Link></li>
+              <li><Link href="/industries/lawn-care">Lawn Care</Link></li>
+              <li><Link href="/industries/hvac">HVAC Services</Link></li>
+              <li><Link href="/industries/pool-service">Pool Service</Link></li>
+              <li><Link href="/industries">View All →</Link></li>
+            </ul>
+          </div>
+
+          {/* Support */}
+          <div>
+            <h4 className="font-semibold mb-4">Support</h4>
+            <ul className="space-y-2 text-gray-400">
+              <li><Link href="/support">Help Center</Link></li>
+              <li><Link href="/api-docs">API Documentation</Link></li>
+              <li><Link href="/contact">Contact Us</Link></li>
+              <li><Link href="/book-demo">Book Demo</Link></li>
+              <li><Link href="/status">System Status</Link></li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="text-gray-400 text-sm">
+            © 2025 ServicePlan Pro. All rights reserved.
+          </div>
+          <div className="flex space-x-6 text-sm text-gray-400 mt-4 md:mt-0">
+            <Link href="/privacy">Privacy Policy</Link>
+            <Link href="/terms">Terms of Service</Link>
+            <Link href="/cookies">Cookie Policy</Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ============= APP ROUTES UPDATE =============
+// Update App.tsx to include all new routes
+import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <div className="min-h-screen flex flex-col">
+          <Navigation />
+          <main className="flex-1">
+            <Router />
+          </main>
+          <Footer />
+        </div>
+        <Toaster />
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
+
+function Router() {
+  return (
+    <Switch>
+      <Route path="/" component={Home} />
+      <Route path="/how-it-works" component={HowItWorks} />
+      <Route path="/features" component={Features} />
+      <Route path="/pricing" component={Pricing} />
+      <Route path="/demo" component={Demo} />
+      <Route path="/industries" component={Industries} />
+      <Route path="/industries/:industry" component={IndustryDetail} />
+      <Route path="/case-studies" component={CaseStudies} />
+      <Route path="/support" component={Support} />
+      <Route path="/book-demo" component={BookDemo} />
+      <Route path="/register" component={Register} />
+      <Route path="/login" component={Login} />
+      <Route path="/dashboard" component={CustomerDashboard} />
+      <Route path="/admin" component={Admin} />
+      <Route path="/widget" component={Widget} />
+      <Route path="/embed/:customerId" component={EmbedWidget} />
+      <Route path="/success" component={Success} />
+      <Route path="/cancel" component={Cancel} />
+      <Route component={NotFound} />
+    </Switch>
+  );
+}
