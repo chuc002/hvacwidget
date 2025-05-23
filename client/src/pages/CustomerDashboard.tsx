@@ -31,7 +31,7 @@ import {
 } from 'recharts';
 import { 
   BarChart3, 
-  users,
+  Users,
   DollarSign,
   UserRound,
   ArrowUpRight,
@@ -50,7 +50,8 @@ import {
   FileBarChart,
   Calculator,
   History,
-  Inbox
+  Inbox,
+  CalendarIcon
 } from 'lucide-react';
 
 // Types for the CustomerDashboard
@@ -385,7 +386,7 @@ export default function CustomerDashboard() {
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm text-gray-500 flex items-center gap-2">
-                  <users className="w-4 h-4" /> Total Subscriptions
+                  <Users className="w-4 h-4" /> Total Subscriptions
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -526,7 +527,7 @@ export default function CustomerDashboard() {
                 
                 <div className="flex items-start">
                   <div className="bg-yellow-100 p-2 rounded-full mr-4">
-                    <users className="h-5 w-5 text-yellow-600" />
+                    <Users className="h-5 w-5 text-yellow-600" />
                   </div>
                   <div>
                     <p className="font-medium">Jessica Taylor upgraded from Basic to Premium Plan</p>
@@ -851,7 +852,7 @@ export default function CustomerDashboard() {
                     <CardHeader className="pb-2">
                       <div className="flex justify-between items-center">
                         <CardTitle className="text-lg flex items-center gap-2">
-                          <Calendar className="h-5 w-5 text-blue-600" />
+                          <CalendarIcon className="h-5 w-5 text-blue-600" />
                           Subscription Plans
                         </CardTitle>
                         <Switch 

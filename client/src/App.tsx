@@ -22,6 +22,7 @@ import CustomerJourney from "@/pages/CustomerJourney";
 import TrialRegistration from "@/pages/TrialRegistration";
 import WelcomeFlow from "@/pages/WelcomeFlow";
 import EnhancedWidgetDemo from "@/pages/EnhancedWidgetDemo";
+import CustomerDashboard from "@/pages/CustomerDashboard";
 
 function Router() {
   return (
@@ -44,6 +45,7 @@ function Router() {
       <Route path="/trial-registration" component={TrialRegistration} />
       <Route path="/welcome-flow" component={WelcomeFlow} />
       <Route path="/enhanced-widget-demo" component={EnhancedWidgetDemo} />
+      <Route path="/customer-dashboard" component={CustomerDashboard} />
       <Route component={NotFound} />
     </Switch>
   );
