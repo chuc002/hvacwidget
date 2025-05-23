@@ -47,6 +47,7 @@ function Router() {
       <Route path="/welcome-flow" component={WelcomeFlow} />
       <Route path="/enhanced-widget-demo" component={EnhancedWidgetDemo} />
       <Route path="/customer-dashboard" component={CustomerDashboard} />
+      <Route path="/dashboard" component={CustomerDashboard} />
       <Route path="/welcome" component={Welcome} />
       <Route component={NotFound} />
     </Switch>
