@@ -27,7 +27,7 @@ interface SubscriptionWidgetProps {
 }
 
 export default function SubscriptionWidget({ 
-  companyName = "Comfort Air Solutions", 
+  companyName = "Premium Home Services", 
   customerId,
   preselectedPlanId
 }: SubscriptionWidgetProps) {
@@ -191,10 +191,10 @@ export default function SubscriptionWidget({
   return (
     <div className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold text-center mb-8">
-        {companyName} Maintenance Plans
+        {companyName} Service Subscription Plans
       </h1>
       <h2 className="text-xl text-center mb-6 text-muted-foreground">
-        Choose the perfect maintenance plan for your HVAC system
+        Choose the perfect service plan for your home
       </h2>
       
       {/* Billing toggle */}

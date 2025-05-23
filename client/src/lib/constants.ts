@@ -4,14 +4,14 @@ export const PlanDetails = [
   {
     id: 1,
     name: "Basic",
-    description: "Essential maintenance with annual billing",
+    description: "Essential service plan with annual billing",
     price: "149.99",
     interval: "year",
     features: [
-      "Annual tune-up", 
-      "Filter replacement", 
+      "Annual service visit", 
+      "Equipment check-up", 
       "Priority scheduling", 
-      "10% discount on repairs"
+      "10% discount on services"
     ],
     isPopular: false,
     order: 1,
@@ -21,14 +21,14 @@ export const PlanDetails = [
   {
     id: 2,
     name: "Premium",
-    description: "Comprehensive maintenance with annual billing",
+    description: "Comprehensive service plan with annual billing",
     price: "249.99",
     interval: "year",
     features: [
-      "Semi-annual tune-ups", 
-      "Filter replacements", 
+      "Semi-annual service visits", 
+      "Preventative maintenance", 
       "Priority scheduling", 
-      "15% discount on repairs", 
+      "15% discount on services", 
       "No overtime charges"
     ],
     isPopular: true,
@@ -43,10 +43,10 @@ export const PlanDetails = [
     price: "349.99",
     interval: "year",
     features: [
-      "Quarterly tune-ups", 
-      "Filter replacements", 
+      "Quarterly service visits", 
+      "Comprehensive inspections", 
       "Same-day service", 
-      "20% discount on repairs", 
+      "20% discount on services", 
       "No overtime charges", 
       "Free diagnostic visits"
     ],
@@ -60,14 +60,14 @@ export const PlanDetails = [
   {
     id: 4,
     name: "Basic Monthly",
-    description: "Essential maintenance with monthly billing",
+    description: "Essential service plan with monthly billing",
     price: "17.99",
     interval: "month",
     features: [
-      "Annual tune-up", 
-      "Filter replacement", 
+      "Annual service visit", 
+      "Equipment check-up", 
       "Priority scheduling", 
-      "10% discount on repairs"
+      "10% discount on services"
     ],
     isPopular: false,
     order: 4,
@@ -77,14 +77,14 @@ export const PlanDetails = [
   {
     id: 5, 
     name: "Premium Monthly",
-    description: "Comprehensive maintenance with monthly billing",
+    description: "Comprehensive service plan with monthly billing",
     price: "24.99", 
     interval: "month",
     features: [
-      "Semi-annual tune-ups", 
-      "Filter replacements", 
+      "Semi-annual service visits", 
+      "Preventative maintenance", 
       "Priority scheduling", 
-      "15% discount on repairs", 
+      "15% discount on services", 
       "No overtime charges"
     ],
     isPopular: true,
@@ -95,14 +95,14 @@ export const PlanDetails = [
   {
     id: 6,
     name: "Ultimate Monthly", 
-    description: "Complete care with monthly billing",
+    description: "Complete protection with monthly billing",
     price: "34.99",
     interval: "month", 
     features: [
-      "Quarterly tune-ups", 
-      "Filter replacements", 
+      "Quarterly service visits", 
+      "Comprehensive inspections", 
       "Same-day service", 
-      "20% discount on repairs", 
+      "20% discount on services", 
       "No overtime charges", 
       "Free diagnostic visits"
     ],
@@ -116,13 +116,13 @@ export const PlanDetails = [
 // Testimonials for the widget
 export const Testimonials = [
   {
-    text: "The Standard Plan has been a great investment. Their technicians are always on time and very thorough with maintenance checks.",
+    text: "The Basic Plan has been a great investment. Their service professionals are always on time and very thorough with their work.",
     author: "Michael R., Austin",
     rating: 5,
     timeAgo: "1 month ago"
   },
   {
-    text: "Premium Plan saved us during a summer heatwave! The 24/7 emergency service is worth every penny. Highly recommend!",
+    text: "Premium Plan saved us during an emergency! The 24/7 priority service is worth every penny. Highly recommend!",
     author: "Sarah T., Austin",
     rating: 5,
     timeAgo: "2 weeks ago"
@@ -132,43 +132,43 @@ export const Testimonials = [
 // FAQs for the widget
 export const FAQs = [
   {
-    question: "What's included in a maintenance visit?",
-    answer: "Our maintenance visits include a comprehensive system check, cleaning of key components, filter replacement, lubrication of moving parts, calibration of thermostat, and a safety inspection to ensure everything is working efficiently."
+    question: "What's included in a service visit?",
+    answer: "Our service visits include a comprehensive inspection, preventative maintenance, necessary adjustments, and a safety check to ensure your home systems are working efficiently and reliably."
   },
   {
-    question: "How often should I schedule maintenance?",
-    answer: "We recommend scheduling maintenance twice a year - once in spring for your AC system and once in fall for your heating system. This ensures your HVAC system is ready before extreme weather seasons."
+    question: "How often should I schedule service?",
+    answer: "We recommend scheduling service based on your specific plan. Basic plans include annual visits, while Premium and Ultimate plans include more frequent service to ensure optimal performance year-round."
   },
   {
     question: "Can I cancel or change my plan?",
     answer: "Yes, you can cancel or change your plan at any time. Monthly plans can be canceled with 30 days notice. Annual plans are non-refundable but can be transferred to a new homeowner if you move."
   },
   {
-    question: "What are the repair discounts?",
-    answer: "Standard Plan members receive 15% off all repairs and parts. Premium Plan members receive 25% off all repairs and parts. These discounts apply to both emergency services and scheduled repairs."
+    question: "What are the service discounts?",
+    answer: "Basic Plan members receive 10% off all services and parts. Premium Plan members receive 15% off, and Ultimate Plan members receive 20% off. These discounts apply to both emergency services and scheduled work."
   }
 ];
 
 // Benefits for the widget
 export const Benefits = [
   {
-    title: "Energy Savings",
-    description: "Reduce utility bills by up to 15%",
+    title: "Cost Savings",
+    description: "Reduce unexpected expenses & repairs",
     icon: "bolt"
   },
   {
     title: "Extended Equipment Life",
-    description: "Regular maintenance prolongs system life",
+    description: "Regular service prolongs system lifespan",
     icon: "shield"
   },
   {
-    title: "Repair Discounts",
-    description: "Save on services and parts",
+    title: "Service Discounts",
+    description: "Save on additional services & parts",
     icon: "dollar"
   },
   {
     title: "Peace of Mind",
-    description: "Priority service during peak seasons",
+    description: "Priority service when you need it most",
     icon: "heart"
   }
 ];

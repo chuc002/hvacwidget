@@ -1,0 +1,95 @@
+**REPLIT PROMPT - REBRAND TO SERVICEPLAN PRO (UNIVERSAL HOME SERVICES)**
+
+I need to rebrand my HVAC-specific widget to "ServicePlan Pro" - a universal home services subscription platform. I just bought serviceplanpro.com and need to update all branding and copy to be industry-agnostic for pest control, lawn care, HVAC, pool services, etc.
+
+**DOMAIN:** serviceplanpro.com
+
+**GLOBAL CHANGES NEEDED:**
+
+1. **Update All Company/Product Names:**
+   - Change "HVAC Widget Pro" → "ServicePlan Pro"
+   - Change "hvacwidgetpro" → "serviceplanpro" 
+   - Change "HVAC Maintenance Plans" → "Service Subscription Plans"
+
+2. **Make All Copy Industry-Agnostic:**
+   - Remove HVAC-specific terminology
+   - Use generic "service plans" language
+   - Make features applicable to all home services
+
+3. **Update Default Company Name:**
+   - Change "Comfort Air Solutions" → "Premium Home Services"
+
+**SPECIFIC FILE UPDATES:**
+
+**Package.json:**
+```json
+{
+  "name": "serviceplan-pro",
+  "description": "Universal home services subscription widget platform"
+}
+```
+
+**Key Components to Update:**
+
+**SubscriptionWidget.tsx:**
+- Change default companyName from "Comfort Air Solutions" to "Premium Home Services"
+- Update title: "Service Subscription Plans" instead of "HVAC Maintenance Plans"
+- Update subtitle: "Choose the perfect service plan for your home" instead of HVAC-specific copy
+
+**Plan Features (make generic):**
+Instead of:
+- "Annual tune-up and priority service"
+- "HVAC system maintenance"
+- "Filter replacement"
+
+Use:
+- "Regular service visits and priority scheduling" 
+- "Professional maintenance and inspections"
+- "Equipment care and replacement parts"
+
+**Success Page:**
+- Update contact info from HVAC company to generic home services
+- Change "HVAC Maintenance Plan" to "Service Plan"
+
+**Admin Dashboard:**
+- Update all labels to be service-agnostic
+- Change "HVAC companies" to "service companies"
+
+**Meta Tags & SEO:**
+- Update page titles and descriptions
+- Change keywords from HVAC to home services
+
+**Email Templates:**
+- Remove HVAC-specific language
+- Use generic service terminology
+
+**EXAMPLE TRANSFORMATIONS:**
+
+**Before (HVAC-specific):**
+```
+"HVAC Maintenance Plans"
+"Annual tune-up with filter replacement"
+"Keep your HVAC system running efficiently"
+"Priority HVAC service scheduling"
+```
+
+**After (Universal):**
+```
+"Service Subscription Plans" 
+"Regular service visits with equipment care"
+"Keep your home systems running efficiently"
+"Priority service scheduling"
+```
+
+**BRANDING UPDATES:**
+- Logo/favicons (if any) should be generic
+- Color scheme can stay the same
+- Remove any HVAC-specific imagery
+- Update footer copyright to "ServicePlan Pro"
+
+**EXPECTED RESULT:**
+The entire application will be rebranded as ServicePlan Pro - a universal platform that works for pest control, lawn care, HVAC, pool services, cleaning, and any home service that sells recurring plans.
+
+**PRIORITY:** Update all user-facing text first, then internal references, then technical/backend references.
+
+Execute this complete rebrand to transform from HVAC-specific to universal home services platform.
