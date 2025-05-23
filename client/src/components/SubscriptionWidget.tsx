@@ -104,6 +104,11 @@ export default function SubscriptionWidget({
     
     try {
       // Create a checkout session on the server using our new endpoint
+      // Determine if this is a monthly plan
+      const isMonthlyPlan = planToCheckout.id >= 4 || (planToCheckout.stripePriceId && planToCheckout.stripePriceId.includes('monthly'));
+      const billingCycle = isMonthlyPlan ? 'monthly' : 'annual';
+      
+      // Include appropriate billing cycle information
       console.log('Sending checkout request with data:', {
         planId: planToCheckout.stripePriceId || `price_${planToCheckout.id}`,
         customerEmail: customerInfo.email,
@@ -114,7 +119,8 @@ export default function SubscriptionWidget({
         state: customerInfo.state,
         zipCode: customerInfo.zipCode,
         propertyType: customerInfo.propertyType,
-        preferredContactTime: customerInfo.preferredContactTime
+        preferredContactTime: customerInfo.preferredContactTime,
+        billingCycle: billingCycle
       });
       
       const response = await fetch('/api/create-checkout-session', {
@@ -132,7 +138,8 @@ export default function SubscriptionWidget({
           state: customerInfo.state,
           zipCode: customerInfo.zipCode,
           propertyType: customerInfo.propertyType,
-          preferredContactTime: customerInfo.preferredContactTime
+          preferredContactTime: customerInfo.preferredContactTime,
+          billingCycle: billingCycle
         }),
       });
       

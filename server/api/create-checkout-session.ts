@@ -33,7 +33,8 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
     state,
     zipCode,
     propertyType,
-    preferredContactTime
+    preferredContactTime,
+    billingCycle = 'monthly' // Default to monthly if not specified
   } = req.body;
 
   // DEBUG: Log the entire request body
@@ -97,26 +98,30 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
 
     // Skip price validation in test mode - just use a dummy price for demo
     if (process.env.NODE_ENV === 'development') {
-      // Check if the plan is a monthly plan
-      const isMonthlyPlan = planId.includes('monthly');
+      // Determine billing type and interval
+      const isMonthlyPlan = billingCycle === 'monthly' || planId.includes('monthly');
       
-      // Set appropriate mode and pricing based on plan type
-      const mode = isMonthlyPlan ? 'subscription' : 'payment';
+      // Set appropriate mode and pricing based on billing cycle
+      const mode = 'subscription'; // Always use subscription mode for proper recurring billing
       
-      // Get the monthly price in cents based on the plan
-      let unit_amount = 1799; // Default to Basic monthly ($17.99)
+      // Get the price in cents based on the plan and billing cycle
+      let unit_amount;
+      let interval = isMonthlyPlan ? 'month' : 'year';
       
-      if (planId.includes('premium')) {
-        unit_amount = 2499; // Premium monthly ($24.99)
-      } else if (planId.includes('ultimate')) {
-        unit_amount = 3499; // Ultimate monthly ($34.99)
+      if (planId.includes('premium') || planId === '2' || planId === 'price_2' || planId === 'price_5') {
+        unit_amount = isMonthlyPlan ? 2499 : 24999; // $24.99/month or $249.99/year
+      } else if (planId.includes('ultimate') || planId === '3' || planId === 'price_3' || planId === 'price_6') {
+        unit_amount = isMonthlyPlan ? 3499 : 34999; // $34.99/month or $349.99/year
+      } else {
+        // Default to Basic plan pricing
+        unit_amount = isMonthlyPlan ? 1799 : 14999; // $17.99/month or $149.99/year
       }
       
-      // Use recurring pricing for monthly plans
+      // Use recurring pricing with proper interval
       session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         customer_email: customerEmail,
-        mode: mode, // Use subscription mode for monthly plans
+        mode: mode,
         success_url: `${req.protocol}://${req.get('host')}/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.protocol}://${req.get('host')}/cancel`,
         metadata: {
@@ -129,18 +134,22 @@ router.post('/create-checkout-session', async (req: Request, res: Response) => {
           property_type: propertyType || '',
           preferred_contact_time: preferredContactTime || '',
           plan_id: planId,
+          billing_cycle: billingCycle,
           business_id: 'demo-hvac-company', // Will be dynamic in a real app
         },
-        // Create appropriate line items based on the plan type
+        // Create appropriate line items with subscription interval
         line_items: [
           {
             price_data: {
               currency: 'usd',
               product_data: {
                 name: `HVAC Maintenance Plan - ${planId}`,
+                description: `${isMonthlyPlan ? 'Monthly' : 'Annual'} service plan`
               },
               unit_amount: unit_amount,
-              ...(isMonthlyPlan ? { recurring: { interval: 'month' } } : {})
+              recurring: { 
+                interval: interval
+              }
             },
             quantity: 1,
           },
