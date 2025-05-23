@@ -78,49 +78,57 @@ export class MemStorage implements IStorage {
   private initializePlans() {
     const plans: InsertPlan[] = [
       {
-        name: "Basic",
-        description: "Basic maintenance plan with per-visit pricing",
-        price: "129",
-        interval: "one-time",
+        name: "Starter",
+        description: "Perfect for new home service businesses",
+        price: "399",
+        interval: "month",
         features: [
-          "Comprehensive system check",
-          "Filter replacement (standard)",
-          "System cleaning"
+          "Up to 100 customers/month",
+          "Basic subscription widget",
+          "Email support",
+          "Mobile-optimized checkout",
+          "Stripe payment processing",
+          "Basic analytics"
         ],
         isPopular: false,
         order: 1,
-        stripePriceId: "price_1RRcnlGxl1XxufT4i2vJmX0m"
+        stripePriceId: "price_starter_monthly_399"
       },
       {
-        name: "Standard",
-        description: "Annual maintenance plan with two visits per year",
-        price: "225",
-        interval: "year",
+        name: "Professional",
+        description: "Most popular for growing home service companies",
+        price: "699",
+        interval: "month",
         features: [
-          "Two maintenance visits per year",
-          "Priority scheduling",
-          "15% discount on repairs",
-          "Filter subscription (4 filters/year)"
+          "Up to 500 customers/month",
+          "Advanced subscription widget",
+          "Product catalog & sales",
+          "Custom branding",
+          "Priority support",
+          "Advanced analytics dashboard",
+          "API access"
         ],
         isPopular: true,
         order: 2,
-        stripePriceId: "price_1RRcoYGxl1XxufT4KFZbeJsn"
+        stripePriceId: "price_professional_monthly_699"
       },
       {
-        name: "Premium",
-        description: "Premium monthly maintenance plan with 24/7 support",
-        price: "20",
+        name: "Enterprise",
+        description: "For established home service companies",
+        price: "999",
         interval: "month",
         features: [
-          "Two maintenance visits per year",
-          "24/7 emergency service",
-          "25% discount on repairs",
-          "Premium filter subscription",
-          "Extended parts warranty"
+          "Unlimited customers",
+          "Full multi-revenue widget",
+          "Invoice payment processing",
+          "Multi-location support",
+          "Dedicated account manager",
+          "White-label solution",
+          "Custom integrations"
         ],
         isPopular: false,
         order: 3,
-        stripePriceId: "price_1RRcp8Gxl1XxufT4oYuK4HG5"
+        stripePriceId: "price_enterprise_monthly_999"
       }
     ];
 
