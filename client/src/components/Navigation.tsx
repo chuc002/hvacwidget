@@ -63,10 +63,11 @@ export default function Navigation() {
             {/* Tagline */}
             <div className="text-sm text-gray-500">Turn Services Into Subscriptions</div>
             
-            {/* Mobile menu button */}
-            <div className="lg:hidden">
-              <Button variant="ghost" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                {isMenuOpen ? <X /> : <Menu />}
+            {/* Menu Button - Made more prominent */}
+            <div className="z-50 fixed right-4 top-20 sm:relative sm:right-0 sm:top-0">
+              <Button variant="outline" className="border-2 border-blue-500 shadow-md p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                {isMenuOpen ? <X className="h-6 w-6 text-blue-600" /> : <Menu className="h-6 w-6 text-blue-600" />}
+                <span className="ml-2">Menu</span>
               </Button>
             </div>
 
@@ -135,10 +136,10 @@ export default function Navigation() {
             </div>
           </div>
 
-          {/* Mobile Navigation Menu */}
+          {/* Mobile Navigation Menu - Made more visible for all screens */}
           {isMenuOpen && (
-            <div className="lg:hidden py-4 border-t">
-              <div className="flex flex-col space-y-4">
+            <div className="py-4 border-t bg-white shadow-lg fixed inset-0 pt-20 pb-16 overflow-y-auto z-40">
+              <div className="flex flex-col space-y-4 max-w-md mx-auto px-6">
                 <Link href="/" className="text-gray-700 font-medium">Home</Link>
                 <Link href="/customer-journey" className="text-gray-700 font-medium">Customer Journey</Link>
                 <Link href="/analytics" className="text-gray-700 font-medium">Analytics</Link>
