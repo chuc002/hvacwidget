@@ -8,6 +8,7 @@ export const customers = pgTable("customers", {
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   phone: text("phone"),
+  password: text("password"), // For customer authentication
   createdAt: timestamp("created_at").defaultNow().notNull(),
   stripeCustomerId: text("stripe_customer_id").unique(),
 });
