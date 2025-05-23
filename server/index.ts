@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import csrf from "csurf";
 import session from "express-session";
 import createMemoryStore from "memorystore";
+import connectPgSimple from "connect-pg-simple";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 
@@ -36,10 +37,10 @@ app.use(helmet({
   }
 }));
 
-// Rate limiting: 100 requests per 5 minutes per IP
+// Rate limiting: 100 requests per 5 minutes per IP (relaxed in development)
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: process.env.NODE_ENV === 'development' ? 500 : 100, // Higher limit in development
   message: {
     error: 'Too many requests from this IP, please try again in 5 minutes.'
   },
@@ -66,13 +67,26 @@ app.use('/api/auth', authLimiter);
 app.use(cookieParser());
 
 // Configure session management with memory store
-const MemoryStore = createMemoryStore(session);
+// Configure session store - PostgreSQL for production, Memory for development
+const sessionStore = (() => {
+  if (process.env.NODE_ENV === 'production' && process.env.DATABASE_URL) {
+    const PgSession = connectPgSimple(session);
+    return new PgSession({
+      conString: process.env.DATABASE_URL,
+      tableName: 'session',
+      createTableIfMissing: true,
+    });
+  } else {
+    const MemoryStore = createMemoryStore(session);
+    return new MemoryStore({
+      checkPeriod: 86400000, // prune expired entries every 24h
+    });
+  }
+})();
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
-  store: new MemoryStore({
-    checkPeriod: 86400000 // Prune expired entries every 24h
-  }),
+  store: sessionStore,
+  secret: process.env.SESSION_SECRET || 'dev-secret-change-in-production',
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -80,7 +94,8 @@ app.use(session({
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     sameSite: 'strict'
-  }
+  },
+  name: 'serviceplan.sid' // Custom session name for branding
 }));
 
 // Body parsing middleware

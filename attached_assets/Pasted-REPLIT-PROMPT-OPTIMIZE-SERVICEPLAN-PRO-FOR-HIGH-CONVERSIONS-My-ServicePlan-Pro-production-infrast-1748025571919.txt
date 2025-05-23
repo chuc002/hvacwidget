@@ -1,0 +1,63 @@
+REPLIT PROMPT - OPTIMIZE SERVICEPLAN PRO FOR HIGH CONVERSIONS
+
+My ServicePlan Pro production infrastructure is ready. Now I need to optimize conversion rates and ensure professional polish before launching to HVAC companies.
+
+CONVERSION OPTIMIZATION FOCUS:
+
+1. MOBILE UX VERIFICATION & POLISH:
+- Test widget at 375px width and ensure no overflow
+- Verify all buttons/touch targets are ≥44px minimum
+- Ensure plan cards stack properly in single column on mobile
+- Add proper hover states and elevation to plan cards (4dp shadow)
+- Test complete mobile signup flow on actual device
+
+2. CHECKOUT FLOW ENHANCEMENT:
+- Add progress indicator: "Step 1 of 2" → "Step 2 of 2" 
+- Show loading spinner/skeleton during Stripe session creation
+- Disable payment buttons during processing to prevent double-clicks
+- Add clear success/error messaging throughout flow
+- Test and optimize checkout abandonment points
+
+3. FORM UX IMPROVEMENTS:
+- Implement real-time inline validation (as user types)
+- Add phone number auto-formatting: (xxx) xxx-xxxx
+- Auto-suggest city/state from ZIP code entry
+- Prevent form submission until all fields are valid
+- Clear, helpful error messages
+
+4. FINAL MESSAGING AUDIT:
+- Search codebase for any pricing inconsistencies (must be $399/$699/$999 everywhere)
+- Remove any remaining B2C language ("for your home", "subscribe now")
+- Ensure all CTAs target business owners ("Start Free Trial", "Get More Customers")
+- Verify competitive positioning vs Contractor Commerce is clear
+
+5. PROFESSIONAL POLISH:
+- Test all navigation links work properly
+- Ensure consistent styling across all pages
+- Verify customer dashboard has all promised features
+- Test complete customer journey: signup → customize → embed → test
+- Check that embed codes generate correctly and work on external sites
+
+6. CONVERSION RATE TESTING:
+- Complete test signup as HVAC business owner
+- Time the entire onboarding process (should be <10 minutes)
+- Verify widget customization tools work intuitively
+- Test mobile and desktop conversion flows
+- Ensure pricing comparison vs Contractor Commerce is compelling
+
+EXPECTED RESULT:
+A conversion-optimized platform that:
+- Converts 40%+ of mobile visitors (vs industry average 15%)
+- Has <20% checkout abandonment (vs typical 40%)
+- Looks more professional than Contractor Commerce
+- Provides smooth 5-minute setup experience
+- Justifies premium pricing with superior UX
+
+SUCCESS METRICS:
+- Mobile usability score >90%
+- Form completion rate >80%
+- Checkout conversion rate >60%
+- Professional appearance that builds trust
+- Clear competitive advantage over Contractor Commerce
+
+This optimization should result in 3-5x higher conversion rates, making the difference between a struggling startup and a successful SaaS business.
