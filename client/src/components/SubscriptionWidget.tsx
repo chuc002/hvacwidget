@@ -49,6 +49,9 @@ export default function SubscriptionWidget({
     preferredContactTime: "morning"
   });
   const [loading, setLoading] = useState(false);
+  const [checkoutStep, setCheckoutStep] = useState(1);
+  const [processingPayment, setProcessingPayment] = useState(false);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   // Fetch plans from the API
   const { data: plans, isLoading: plansLoading, error: plansError } = useQuery({
@@ -88,19 +91,40 @@ export default function SubscriptionWidget({
     setCustomerInfo(prev => ({ ...prev, [name]: value }));
   };
 
+  const validateForm = () => {
+    const errors: Record<string, string> = {};
+    
+    if (!customerInfo.name.trim()) errors.name = "Name is required";
+    if (!customerInfo.email.trim()) errors.email = "Email is required";
+    if (!customerInfo.email.includes('@')) errors.email = "Valid email is required";
+    if (!customerInfo.phone.trim()) errors.phone = "Phone number is required";
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleCheckout = async (planToCheckout = selectedPlan) => {
     if (!planToCheckout) return;
     
-    // DEBUG: Log the plan object
-    console.log('=== PLAN DEBUG ===');
-    console.log('Full plan object:', planToCheckout);
-    console.log('planToCheckout.stripePriceId:', planToCheckout.stripePriceId);
-    console.log('planToCheckout.id:', planToCheckout.id);
-    console.log('Available plan properties:', Object.keys(planToCheckout));
-    console.log('=== END PLAN DEBUG ===');
+    // Validate form before proceeding
+    if (!validateForm()) {
+      toast({
+        title: "Please complete all required fields",
+        description: "Check the form for missing information",
+        variant: "destructive",
+      });
+      return;
+    }
     
+    setProcessingPayment(true);
+    setCheckoutStep(2);
     setLoading(true);
-    console.log('Starting checkout process...', planToCheckout);
+    
+    // Show progress message
+    toast({
+      title: "Step 2 of 2: Setting up secure payment...",
+      description: "Please wait while we prepare your checkout",
+    });
     
     try {
       // Create a checkout session on the server using our new endpoint
@@ -158,36 +182,31 @@ export default function SubscriptionWidget({
       if (data.url) {
         console.log('Redirecting to Stripe:', data.url);
         
-        // Show toast with payment link button
+        // Show success message before redirect
         toast({
-          title: "Checkout Ready",
-          description: "Click the button below to complete your payment",
-          action: (
-            <button 
-              className="bg-primary text-white px-4 py-2 rounded mt-2"
-              onClick={() => window.open(data.url, '_blank')}
-            >
-              Go to Payment
-            </button>
-          ),
-          duration: 10000,
+          title: "✓ Payment page ready!",
+          description: "Redirecting you to secure checkout...",
         });
         
-        // Try to open the payment page automatically
-        window.open(data.url, '_blank');
+        // Redirect to Stripe Checkout
+        setTimeout(() => {
+          window.location.href = data.url;
+        }, 1000);
       } else {
         console.error('No checkout URL returned in response:', data);
         throw new Error("No checkout URL returned");
       }
     } catch (error) {
       console.error("Error creating subscription:", error);
+      setCheckoutStep(1);
       toast({
-        title: "Checkout Failed",
-        description: "There was a problem setting up the checkout. Please try again.",
+        title: "Payment Setup Failed",
+        description: "Unable to create secure checkout. Please try again.",
         variant: "destructive",
       });
     } finally {
       setLoading(false);
+      setProcessingPayment(false);
       setCheckoutOpen(false);
     }
   };
@@ -282,7 +301,33 @@ export default function SubscriptionWidget({
       <Dialog open={checkoutOpen} onOpenChange={setCheckoutOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Complete Your Information</DialogTitle>
+            {/* Progress Indicator */}
+            <div className="mb-4">
+              <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+                <span className={checkoutStep === 1 ? "font-semibold text-blue-600" : "text-gray-400"}>
+                  Step 1: Your Information
+                </span>
+                <span className={checkoutStep === 2 ? "font-semibold text-blue-600" : "text-gray-400"}>
+                  Step 2: Secure Payment
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
+                  style={{ width: checkoutStep === 1 ? '50%' : '100%' }}
+                />
+              </div>
+              {processingPayment && (
+                <div className="flex items-center justify-center mt-3 text-blue-600">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                  <span className="text-sm">Setting up secure payment...</span>
+                </div>
+              )}
+            </div>
+            
+            <DialogTitle>
+              {checkoutStep === 1 ? 'Complete Your Information' : 'Payment Processing...'}
+            </DialogTitle>
           </DialogHeader>
           <form onSubmit={submitCheckout}>
             <div className="grid gap-4 py-4">
@@ -375,11 +420,28 @@ export default function SubscriptionWidget({
                 type="button"
                 variant="outline"
                 onClick={() => setCheckoutOpen(false)}
+                disabled={processingPayment}
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={loading}>
-                {loading ? "Processing..." : "Continue to Checkout"}
+              <Button 
+                type="submit" 
+                disabled={loading || processingPayment}
+                className="min-w-[160px]"
+              >
+                {processingPayment ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Processing...
+                  </div>
+                ) : loading ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Loading...
+                  </div>
+                ) : (
+                  "Continue to Payment"
+                )}
               </Button>
             </DialogFooter>
           </form>
