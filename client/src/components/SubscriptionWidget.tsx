@@ -48,10 +48,12 @@ export default function SubscriptionWidget({
     propertyType: "single-family",
     preferredContactTime: "morning"
   });
-  const [loading, setLoading] = useState(false);
+  
+  // Conversion optimization states
+  const [isProcessing, setIsProcessing] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState(1);
-  const [processingPayment, setProcessingPayment] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [formTouched, setFormTouched] = useState<Record<string, boolean>>({});
 
   // Fetch plans from the API
   const { data: plans, isLoading: plansLoading, error: plansError } = useQuery({

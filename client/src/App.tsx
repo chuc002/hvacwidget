@@ -28,6 +28,7 @@ import Welcome from "@/pages/Welcome";
 import { useState, useEffect } from 'react';
 import Login from "@/pages/Login";
 import LoginPage from "@/pages/LoginPage";
+import ConversionOptimized from "@/pages/ConversionOptimized";
 import { Loader2 } from 'lucide-react';
 
 // Import the new pages
@@ -71,6 +72,7 @@ function Router() {
       <Route path="/welcome" component={Welcome} />
       <Route path="/login" component={Login} />
       <Route path="/customer-login" component={LoginPage} />
+      <Route path="/conversion-optimized" component={ConversionOptimized} />
       
       {/* Protected Routes */}
       <Route path="/admin" component={ProtectedAdmin} />
