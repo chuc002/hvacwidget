@@ -30,7 +30,8 @@ interface SubscriptionWidgetProps {
 export default function SubscriptionWidget({ 
   companyName = "Premium Home Services", 
   customerId,
-  preselectedPlanId
+  preselectedPlanId,
+  isDemo = false
 }: SubscriptionWidgetProps) {
   const { toast } = useToast();
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
