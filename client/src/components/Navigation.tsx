@@ -72,10 +72,33 @@ export default function Navigation() {
 
             {/* Desktop Navigation Links */}
             <div className="hidden lg:flex items-center space-x-6">
-              <Link href="/how-it-works" className={`transition-colors font-medium ${location === '/how-it-works' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}>
-                How It Works
+              <Link href="/" className={`transition-colors font-medium ${location === '/' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}>
+                Home
+              </Link>
+              
+              <Link href="/customer-journey" className={`transition-colors font-medium ${location === '/customer-journey' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}>
+                Customer Journey
               </Link>
 
+              <Link href="/analytics" className={`transition-colors font-medium ${location === '/analytics' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}>
+                Analytics
+              </Link>
+
+              <div className="relative group">
+                <button className="flex items-center text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                  Features
+                  <ChevronDown className="ml-1 h-4 w-4" />
+                </button>
+                <div className="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div className="py-2">
+                    <Link href="/features" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">All Features</Link>
+                    <Link href="/how-it-works" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">How It Works</Link>
+                    <Link href="/demo" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Live Demo</Link>
+                    <Link href="/case-studies" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Case Studies</Link>
+                  </div>
+                </div>
+              </div>
+              
               <div className="relative group">
                 <button className="flex items-center text-gray-700 hover:text-blue-600 transition-colors font-medium">
                   Industries
@@ -83,30 +106,32 @@ export default function Navigation() {
                 </button>
                 <div className="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                   <div className="py-2">
+                    <Link href="/industries/hvac" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🏠 HVAC Services</Link>
                     <Link href="/industries/pest-control" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🐛 Pest Control</Link>
                     <Link href="/industries/lawn-care" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🌱 Lawn Care</Link>
-                    <Link href="/industries/hvac" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🏠 HVAC Services</Link>
                     <Link href="/industries/pool-service" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🏊 Pool Service</Link>
                     <Link href="/industries/cleaning" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🧹 Cleaning Services</Link>
                   </div>
                 </div>
               </div>
-
-              <Link href="/features" className={`transition-colors font-medium ${location === '/features' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}>
-                Features
-              </Link>
               
-              <Link href="/pricing" className={`transition-colors font-medium ${location === '/pricing' || location === '/simple-pricing' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}>
+              <Link href="/simple-pricing" className={`transition-colors font-medium ${location === '/pricing' || location === '/simple-pricing' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}>
                 Pricing
               </Link>
 
-              <Link href="/demo" className={`transition-colors font-medium ${location === '/demo' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}>
-                Demo
-              </Link>
-
-              <Link href="/case-studies" className={`transition-colors font-medium ${location === '/case-studies' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}>
-                Case Studies
-              </Link>
+              <div className="relative group">
+                <button className="flex items-center text-gray-700 hover:text-blue-600 transition-colors font-medium">
+                  Get Started
+                  <ChevronDown className="ml-1 h-4 w-4" />
+                </button>
+                <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div className="py-2">
+                    <Link href="/trial-registration" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Start Free Trial</Link>
+                    <Link href="/welcome-flow" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">Onboarding Wizard</Link>
+                    <Link href="/book-demo" className="block px-4 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-50">Book a Demo</Link>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -114,38 +139,43 @@ export default function Navigation() {
           {isMenuOpen && (
             <div className="lg:hidden py-4 border-t">
               <div className="flex flex-col space-y-4">
-                <Link href="/how-it-works" className="text-gray-700 font-medium">How It Works</Link>
+                <Link href="/" className="text-gray-700 font-medium">Home</Link>
+                <Link href="/customer-journey" className="text-gray-700 font-medium">Customer Journey</Link>
+                <Link href="/analytics" className="text-gray-700 font-medium">Analytics</Link>
+                <Link href="/simple-pricing" className="text-gray-700 font-medium">Pricing</Link>
                 
+                {/* Features Section */}
                 <button 
                   onClick={() => setIsIndustriesOpen(!isIndustriesOpen)}
                   className="text-left flex items-center justify-between text-gray-700 font-medium"
                 >
-                  Industries
+                  Features
                   <ChevronDown className={`h-4 w-4 transition-transform ${isIndustriesOpen ? 'rotate-180' : ''}`} />
                 </button>
                 
                 {isIndustriesOpen && (
                   <div className="pl-4 space-y-2 mb-2">
-                    <Link href="/industries/pest-control" className="block text-sm text-gray-600 py-1">🐛 Pest Control</Link>
-                    <Link href="/industries/lawn-care" className="block text-sm text-gray-600 py-1">🌱 Lawn Care</Link>
-                    <Link href="/industries/hvac" className="block text-sm text-gray-600 py-1">🏠 HVAC Services</Link>
-                    <Link href="/industries/pool-service" className="block text-sm text-gray-600 py-1">🏊 Pool Service</Link>
-                    <Link href="/industries/cleaning" className="block text-sm text-gray-600 py-1">🧹 Cleaning Services</Link>
+                    <Link href="/features" className="block text-sm text-gray-600 py-1">All Features</Link>
+                    <Link href="/how-it-works" className="block text-sm text-gray-600 py-1">How It Works</Link>
+                    <Link href="/demo" className="block text-sm text-gray-600 py-1">Live Demo</Link>
+                    <Link href="/case-studies" className="block text-sm text-gray-600 py-1">Case Studies</Link>
                   </div>
                 )}
                 
-                <Link href="/features" className="text-gray-700 font-medium">Features</Link>
-                <Link href="/pricing" className="text-gray-700 font-medium">Pricing</Link>
-                <Link href="/demo" className="text-gray-700 font-medium">Demo</Link>
-                <Link href="/case-studies" className="text-gray-700 font-medium">Case Studies</Link>
-                
-                <div className="pt-4 space-y-2">
-                  <Link href="/book-demo">
-                    <Button variant="outline" className="w-full">Book Demo</Button>
-                  </Link>
-                  <Link href="/trial-registration">
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700">Start Free Trial</Button>
-                  </Link>
+                {/* Get Started Section */}
+                <div className="border-t pt-4 mt-2">
+                  <div className="text-gray-500 font-medium text-sm mb-2">Get Started:</div>
+                  <div className="space-y-2">
+                    <Link href="/trial-registration">
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700">Start Free Trial</Button>
+                    </Link>
+                    <Link href="/welcome-flow">
+                      <Button variant="outline" className="w-full">Onboarding Wizard</Button>
+                    </Link>
+                    <Link href="/book-demo">
+                      <Button variant="outline" className="w-full">Book Demo</Button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
