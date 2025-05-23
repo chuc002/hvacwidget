@@ -1,95 +1,65 @@
-# ServicePlan Pro Security Implementation
+# Security Policy for ServicePlan Pro
 
-## Bank-Level Security Features
+## Production Security Measures
 
-Your ServicePlan Pro platform now implements enterprise-grade security measures suitable for handling sensitive HVAC customer data and payment information.
+ServicePlan Pro implements the following security measures to protect your data and ensure secure operations:
 
-### 🛡️ Security Headers (Helmet)
-- **Content Security Policy (CSP)**: Prevents XSS attacks by restricting resource loading
-- **X-Frame-Options**: Set to SAMEORIGIN to prevent clickjacking attacks
-- **X-Content-Type-Options**: Prevents MIME type sniffing
-- **Referrer Policy**: Controls referrer information sent with requests
-- **HTTP Strict Transport Security**: Forces HTTPS connections
+### API and Web Security
 
-### ⚡ Rate Limiting
-- **General API**: 100 requests per 5 minutes per IP address
-- **Authentication**: 10 login attempts per 15 minutes per IP address
-- **Webhook Exclusion**: Stripe webhooks bypass rate limiting (use signature verification)
+- **HTTP Security Headers**: Comprehensive security headers via Helmet.js including Content-Security-Policy, X-XSS-Protection, X-Content-Type-Options, etc.
+- **CSRF Protection**: Cross-Site Request Forgery protection for all non-webhook routes
+- **Rate Limiting**: Request rate limiting to prevent abuse and DDoS attacks
+- **Secure Cookies**: HTTP-only, Secure, and SameSite cookies for session management
+- **Input Validation**: Strict request validation using Zod schemas
+- **XSS Prevention**: Content Security Policy and output encoding to prevent Cross-Site Scripting
 
-### 🔒 CSRF Protection
-- **Token-based protection** for all form submissions
-- **Automatic exemptions** for:
-  - Stripe webhook endpoints (use signature verification instead)
-  - GET requests to API endpoints (read-only operations)
-- **Secure cookie settings**: httpOnly, secure (in production), sameSite: 'strict'
+### Authentication and Authorization
 
-### 🔐 Session Security
-- **Secure session management** with MemoryStore
-- **7-day session expiration** with automatic cleanup
-- **Production-ready cookies**: secure, httpOnly, sameSite: 'strict'
-- **Session secret rotation**: Use strong random secrets in production
+- **Password Security**: Secure password hashing using scrypt with salt
+- **Session Management**: Secure session handling with proper expiration and rotation
+- **Permission Controls**: Role-based access controls for admin features
 
-### ✅ Stripe Security
-- **Webhook signature verification**: All Stripe webhooks verified with secret
-- **Latest API version**: Updated to 2024-12-18.acacia
-- **Secure payment processing**: PCI DSS compliant through Stripe
-- **Environment separation**: Test/live keys properly configured
+### Data Protection
 
-### 🚫 Input Validation
-- **Request size limits**: 10MB max for uploads
-- **URL encoding protection**: Extended mode disabled for security
-- **Content type validation**: Proper parsing of JSON and form data
+- **Database Security**: Parameterized queries to prevent SQL injection
+- **TLS Encryption**: All data transmitted over HTTPS
+- **Environment Variables**: Secure configuration management with environment variables
+- **Error Handling**: Production-safe error responses that don't leak implementation details
 
-## Environment Variables Required
+### Payment Processing
 
-```bash
-# Security Configuration
-SESSION_SECRET=your_super_secure_random_session_secret_here
-STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
+- **Stripe Integration**: PCI-compliant payment processing via Stripe
+- **Webhook Signatures**: Verification of Stripe webhook signatures
+- **Secure API Keys**: Strict management of API keys with proper permissions
 
-# Database
-DATABASE_URL=your_production_database_url
+## Security Best Practices for Customers
 
-# Stripe Configuration
-STRIPE_SECRET_KEY=sk_live_your_production_key
-VITE_STRIPE_PUBLIC_KEY=pk_live_your_production_key
+### Embedding the Widget
 
-# Server Configuration
-NODE_ENV=production
-```
+When embedding the ServicePlan Pro widget in your website:
 
-## Security Best Practices
+1. Only embed the widget on pages served over HTTPS
+2. Ensure your website has appropriate Content Security Policy settings
+3. Register your domain in your ServicePlan Pro account settings for proper CORS and framing permissions
 
-### For Production Deployment:
-1. **Use HTTPS everywhere** - no HTTP in production
-2. **Strong session secrets** - minimum 32 random characters
-3. **Database encryption** at rest and in transit
-4. **Regular security updates** - keep dependencies current
-5. **Monitoring & logging** - track security events
-6. **Backup strategy** - secure, encrypted backups
+### API Keys and Secrets
 
-### For HVAC Enterprise Customers:
-- **Customer data isolation** - each customer's data is separate
-- **Audit logging** - track all customer data access
-- **Data retention policies** - comply with local regulations
-- **Secure API access** - authenticated and rate-limited
-- **Payment data protection** - never store card details (Stripe handles this)
+1. Store API keys securely; never expose them in client-side code
+2. Rotate API keys periodically (recommended every 90 days)
+3. Use environment-specific API keys (test vs. production)
 
-## Compliance & Standards
+## Vulnerability Reporting
 
-✅ **PCI DSS Compliant** - Through Stripe integration  
-✅ **OWASP Security Guidelines** - Implemented top 10 protections  
-✅ **SOC 2 Ready** - Security controls in place  
-✅ **GDPR Considerations** - Data protection by design  
+If you discover a security vulnerability within ServicePlan Pro:
 
-## Security Testing
+1. Email security@serviceplanpro.com with details
+2. Do not disclose the issue publicly until it has been addressed
+3. Provide sufficient information to reproduce the issue
 
-To verify security implementation:
+## Security Updates
 
-1. **Test rate limiting**: Make >100 requests in 5 minutes
-2. **Verify CSRF protection**: Try POST without token
-3. **Check webhook signatures**: Invalid signatures should be rejected
-4. **Test session security**: Verify secure cookies in production
-5. **Validate headers**: Check CSP and security headers
+ServicePlan Pro routinely monitors dependencies for security issues and applies patches as needed. The application is built with the latest secure versions of all dependencies.
 
-Your ServicePlan Pro platform is now ready for enterprise HVAC customers with bank-level security! 🚀
+## Compliance
+
+The ServicePlan Pro platform is designed with privacy and security regulations in mind, helping your business maintain compliance with industry standards.
