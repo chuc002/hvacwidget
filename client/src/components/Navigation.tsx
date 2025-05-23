@@ -15,8 +15,29 @@ export default function Navigation() {
 
   return (
     <>
-      {/* Top Bar with Contact Info */}
-      <div className="bg-blue-600 text-white text-sm">
+      {/* Top Blue Header with Logo and Main Navigation */}
+      <div className="bg-blue-600 text-white">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+          <Link href="/" className="flex items-center">
+            <svg
+              className="w-8 h-8 text-white"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+            </svg>
+            <span className="ml-2 text-2xl font-bold text-white">ServicePlan Pro</span>
+          </Link>
+          
+          <div className="hidden md:flex items-center space-x-6">
+            <Link href="/" className="text-white font-medium hover:text-blue-100">Home</Link>
+            <Link href="/admin" className="text-white font-medium hover:text-blue-100">Admin</Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Secondary Bar with Phone and Free Trial */}
+      <div className="bg-blue-500 text-white text-sm">
         <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
           <div className="flex items-center space-x-6">
             <div className="flex items-center">
@@ -35,24 +56,26 @@ export default function Navigation() {
         </div>
       </div>
 
-      {/* Main Navigation */}
-      <nav className="bg-white shadow-md sticky top-0 z-50">
+      {/* Main Navigation Bar */}
+      <div className="bg-white shadow-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo */}
-            <Link href="/" className="flex items-center">
-              <div className="text-2xl font-bold text-blue-600">ServicePlan Pro</div>
-              <div className="ml-2 text-sm text-gray-500 hidden sm:block">Turn Services Into Subscriptions</div>
-            </Link>
+          <div className="flex justify-between items-center h-14">
+            {/* Tagline */}
+            <div className="text-sm text-gray-500">Turn Services Into Subscriptions</div>
+            
+            {/* Mobile menu button */}
+            <div className="lg:hidden">
+              <Button variant="ghost" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                {isMenuOpen ? <X /> : <Menu />}
+              </Button>
+            </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-8">
-              {/* How It Works */}
+            {/* Desktop Navigation Links */}
+            <div className="hidden lg:flex items-center space-x-6">
               <Link href="/how-it-works" className={`transition-colors font-medium ${location === '/how-it-works' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}>
                 How It Works
               </Link>
 
-              {/* Industries Dropdown */}
               <div className="relative group">
                 <button className="flex items-center text-gray-700 hover:text-blue-600 transition-colors font-medium">
                   Industries
@@ -65,7 +88,6 @@ export default function Navigation() {
                     <Link href="/industries/hvac" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🏠 HVAC Services</Link>
                     <Link href="/industries/pool-service" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🏊 Pool Service</Link>
                     <Link href="/industries/cleaning" className="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50">🧹 Cleaning Services</Link>
-                    <Link href="/industries" className="block px-4 py-2 text-sm text-blue-600 font-medium border-t">View All Industries →</Link>
                   </div>
                 </div>
               </div>
@@ -79,39 +101,16 @@ export default function Navigation() {
               </Link>
 
               <Link href="/demo" className={`transition-colors font-medium ${location === '/demo' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}>
-                Live Demo
+                Demo
               </Link>
 
               <Link href="/case-studies" className={`transition-colors font-medium ${location === '/case-studies' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}>
                 Case Studies
               </Link>
-
-              <Link href="/analytics" className={`transition-colors font-medium ${location === '/analytics' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}>
-                Analytics
-              </Link>
-              
-              {/* CTA Buttons */}
-              <Link href="/book-demo">
-                <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
-                  Book Demo
-                </Button>
-              </Link>
-              <Link href="/trial-registration">
-                <Button className="bg-blue-600 hover:bg-blue-700">
-                  Start Free Trial
-                </Button>
-              </Link>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="lg:hidden">
-              <Button variant="ghost" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                {isMenuOpen ? <X /> : <Menu />}
-              </Button>
             </div>
           </div>
 
-          {/* Mobile Navigation */}
+          {/* Mobile Navigation Menu */}
           {isMenuOpen && (
             <div className="lg:hidden py-4 border-t">
               <div className="flex flex-col space-y-4">
@@ -132,15 +131,13 @@ export default function Navigation() {
                     <Link href="/industries/hvac" className="block text-sm text-gray-600 py-1">🏠 HVAC Services</Link>
                     <Link href="/industries/pool-service" className="block text-sm text-gray-600 py-1">🏊 Pool Service</Link>
                     <Link href="/industries/cleaning" className="block text-sm text-gray-600 py-1">🧹 Cleaning Services</Link>
-                    <Link href="/industries" className="block text-sm text-blue-600 font-medium py-1">View All Industries →</Link>
                   </div>
                 )}
                 
                 <Link href="/features" className="text-gray-700 font-medium">Features</Link>
                 <Link href="/pricing" className="text-gray-700 font-medium">Pricing</Link>
-                <Link href="/demo" className="text-gray-700 font-medium">Live Demo</Link>
+                <Link href="/demo" className="text-gray-700 font-medium">Demo</Link>
                 <Link href="/case-studies" className="text-gray-700 font-medium">Case Studies</Link>
-                <Link href="/analytics" className="text-gray-700 font-medium">Analytics</Link>
                 
                 <div className="pt-4 space-y-2">
                   <Link href="/book-demo">
@@ -154,7 +151,7 @@ export default function Navigation() {
             </div>
           )}
         </div>
-      </nav>
+      </div>
     </>
   );
 }
