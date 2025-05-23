@@ -54,7 +54,7 @@ export default function Pricing() {
                 <Button 
                   className="w-full" 
                   variant={plan.popular ? 'default' : 'outline'}
-                  onClick={() => navigate('/register')}
+                  onClick={() => setLocation('/register')}
                 >
                   Start Free Trial
                 </Button>
@@ -91,7 +91,7 @@ export default function Pricing() {
           <Button 
             className="mt-8" 
             size="lg" 
-            onClick={() => navigate('/register')}
+            onClick={() => setLocation('/register')}
           >
             Get Started Today
           </Button>

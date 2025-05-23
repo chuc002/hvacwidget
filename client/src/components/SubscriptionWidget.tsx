@@ -24,6 +24,7 @@ interface SubscriptionWidgetProps {
   companyName?: string;
   customerId?: number;
   preselectedPlanId?: number;
+  isDemo?: boolean;
 }
 
 export default function SubscriptionWidget({ 
