@@ -71,15 +71,16 @@ export default function HighConversionWidget({
               "Basic subscription widget",
               "Email support",
               "Mobile-optimized checkout",
-              "Stripe payment processing"
+              "Stripe payment processing",
+              "Basic analytics"
             ],
             isPopular: false,
-            stripePriceId: "price_starter_399"
+            stripePriceId: "price_starter_monthly_399"
           },
           {
             id: 2,
             name: "Professional",
-            description: "Most popular choice for growing HVAC companies",
+            description: "Most popular for growing home service companies",
             price: "699",
             interval: "month",
             features: [
@@ -88,10 +89,11 @@ export default function HighConversionWidget({
               "Product catalog & sales",
               "Custom branding",
               "Priority support",
-              "Analytics dashboard"
+              "Advanced analytics dashboard",
+              "API access"
             ],
             isPopular: true,
-            stripePriceId: "price_professional_699"
+            stripePriceId: "price_professional_monthly_699"
           },
           {
             id: 3,
@@ -105,10 +107,11 @@ export default function HighConversionWidget({
               "Invoice payment processing",
               "Multi-location support",
               "Dedicated account manager",
-              "White-label solution"
+              "White-label solution",
+              "Custom integrations"
             ],
             isPopular: false,
-            stripePriceId: "price_enterprise_999"
+            stripePriceId: "price_enterprise_monthly_999"
           }
         ];
       }
