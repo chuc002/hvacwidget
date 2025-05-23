@@ -28,8 +28,11 @@ import Welcome from "@/pages/Welcome";
 import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 
-// Import the new dashboard pages
+// Import the new pages
 import DashboardOverview from "@/pages/DashboardOverview";
+import Features from "@/pages/Features";
+import CaseStudies from "@/pages/CaseStudies";
+import Industries from "@/pages/Industries";
 
 // Protect dashboard and authenticated-only routes
 const ProtectedDashboardOverview = withAuth(DashboardOverview);
@@ -153,6 +156,9 @@ function Router() {
       <Route path="/register" component={Register} />
       <Route path="/demo" component={Demo} />
       <Route path="/how-it-works" component={HowItWorks} />
+      <Route path="/features" component={Features} />
+      <Route path="/industries" component={Industries} />
+      <Route path="/case-studies" component={CaseStudies} />
       <Route path="/customer-journey" component={CustomerJourney} />
       <Route path="/trial-registration" component={TrialRegistration} />
       <Route path="/welcome-flow" component={WelcomeFlow} />
