@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServicePlan Pro Widget</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        .widget-container { min-height: 100vh; background: white; }
+    </style>
+</head>
+<body>
+    <div id="serviceplan-widget" class="widget-container">
+        <!-- Widget loads here -->
+    </div>
+    
+    <script>
+        // Parse URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const companyName = urlParams.get('company') || 'Premium Home Services';
+        
+        // Create iframe to embed the widget
+        (function() {
+            const iframe = document.createElement('iframe');
+            const baseUrl = window.location.origin;
+            
+            // Build the embed URL with parameters
+            const embedUrl = `${baseUrl}/embed?company=${encodeURIComponent(companyName)}`;
+            
+            iframe.src = embedUrl;
+            iframe.width = '100%';
+            iframe.height = '800px';
+            iframe.frameBorder = '0';
+            iframe.style.border = 'none';
+            iframe.style.borderRadius = '8px';
+            
+            // Add the iframe to the container
+            document.getElementById('serviceplan-widget').appendChild(iframe);
+        })();
+    </script>
+</body>
+</html>

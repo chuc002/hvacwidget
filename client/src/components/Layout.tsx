@@ -8,8 +8,8 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [location] = useLocation();
   
-  // Don't show navigation on the widget page since it will be embedded
-  const isWidget = location === '/widget' || location.startsWith('/subscribe/');
+  // Don't show navigation on the widget page or embed route since they'll be embedded
+  const isWidget = location === '/widget' || location.startsWith('/subscribe/') || location === '/embed';
   
   if (isWidget) {
     return <main>{children}</main>;
