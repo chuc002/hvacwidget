@@ -217,32 +217,36 @@ export default function EnhancedSubscriptionWidget({ config }: { config: WidgetC
   const hasSelectedItems = hasCartItems || selectedPlan !== null;
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="w-full max-w-[420px] sm:max-w-4xl mx-auto p-3 sm:p-6 bg-white rounded-lg shadow-lg">
       {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold mb-2">{config.companyName}</h1>
-        <p className="text-gray-600">Choose from our services, products, and payment options</p>
+      <div className="text-center mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">{config.companyName}</h1>
+        <p className="text-sm sm:text-base text-gray-600">Choose from our services, products, and payment options</p>
       </div>
 
       {/* Main Widget Content */}
       {config.displayMode === 'all-in-one' ? (
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="subscriptions" className="flex items-center">
-              <Calendar className="w-4 h-4 mr-2" />
-              Service Plans
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto">
+            <TabsTrigger value="subscriptions" className="flex flex-col sm:flex-row items-center h-12 sm:h-10 text-xs sm:text-sm p-1 sm:p-2">
+              <Calendar className="w-4 h-4 mb-1 sm:mb-0 sm:mr-2" />
+              <span className="hidden sm:inline">Service Plans</span>
+              <span className="sm:hidden">Plans</span>
             </TabsTrigger>
-            <TabsTrigger value="products" className="flex items-center">
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              Products
+            <TabsTrigger value="products" className="flex flex-col sm:flex-row items-center h-12 sm:h-10 text-xs sm:text-sm p-1 sm:p-2">
+              <ShoppingCart className="w-4 h-4 mb-1 sm:mb-0 sm:mr-2" />
+              <span className="hidden sm:inline">Products</span>
+              <span className="sm:hidden">Shop</span>
             </TabsTrigger>
-            <TabsTrigger value="services" className="flex items-center">
-              <CreditCard className="w-4 h-4 mr-2" />
-              One-Time Services
+            <TabsTrigger value="services" className="flex flex-col sm:flex-row items-center h-12 sm:h-10 text-xs sm:text-sm p-1 sm:p-2">
+              <CreditCard className="w-4 h-4 mb-1 sm:mb-0 sm:mr-2" />
+              <span className="hidden sm:inline">One-Time Services</span>
+              <span className="sm:hidden">Services</span>
             </TabsTrigger>
-            <TabsTrigger value="invoices" className="flex items-center">
-              <FileText className="w-4 h-4 mr-2" />
-              Pay Invoice
+            <TabsTrigger value="invoices" className="flex flex-col sm:flex-row items-center h-12 sm:h-10 text-xs sm:text-sm p-1 sm:p-2">
+              <FileText className="w-4 h-4 mb-1 sm:mb-0 sm:mr-2" />
+              <span className="hidden sm:inline">Pay Invoice</span>
+              <span className="sm:hidden">Invoice</span>
             </TabsTrigger>
           </TabsList>
 
@@ -253,7 +257,7 @@ export default function EnhancedSubscriptionWidget({ config }: { config: WidgetC
               <p className="text-gray-600">Save money with our regular maintenance and protection plans</p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {config.subscriptionPlans.map((plan) => (
                 <Card 
                   key={plan.id} 
@@ -264,34 +268,34 @@ export default function EnhancedSubscriptionWidget({ config }: { config: WidgetC
                   } ${plan.isPopular ? 'ring-2 ring-green-500' : ''}`}
                   onClick={() => setSelectedPlan(plan)}
                 >
-                  <CardHeader>
+                  <CardHeader className="p-4 sm:p-6">
                     <div className="flex justify-between items-start">
-                      <CardTitle className="text-lg">{plan.name}</CardTitle>
+                      <CardTitle className="text-base sm:text-lg">{plan.name}</CardTitle>
                       {plan.isPopular && (
-                        <Badge className="bg-green-500">Most Popular</Badge>
+                        <Badge className="bg-green-500 text-xs">Most Popular</Badge>
                       )}
                     </div>
-                    <p className="text-gray-600 text-sm">{plan.description}</p>
+                    <p className="text-gray-600 text-xs sm:text-sm">{plan.description}</p>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-4 sm:p-6 pt-0">
                     <div className="text-center mb-4">
-                      <div className="text-3xl font-bold text-blue-600">
+                      <div className="text-2xl sm:text-3xl font-bold text-blue-600">
                         ${plan.price}
-                        <span className="text-sm text-gray-500">/{plan.interval}</span>
+                        <span className="text-xs sm:text-sm text-gray-500">/{plan.interval}</span>
                       </div>
                     </div>
                     
                     <ul className="space-y-2 mb-4">
                       {plan.features.map((feature, index) => (
-                        <li key={index} className="flex items-center text-sm">
-                          <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                        <li key={index} className="flex items-center text-xs sm:text-sm">
+                          <div className="w-2 h-2 bg-green-500 rounded-full mr-2 flex-shrink-0"></div>
                           {feature}
                         </li>
                       ))}
                     </ul>
                     
                     <Button 
-                      className={`w-full ${
+                      className={`w-full h-12 text-sm sm:text-base font-medium ${
                         selectedPlan?.id === plan.id 
                           ? 'bg-blue-600 text-white' 
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
