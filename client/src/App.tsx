@@ -27,6 +27,7 @@ import CustomerDashboard from "@/pages/CustomerDashboard";
 import Welcome from "@/pages/Welcome";
 import { useState, useEffect } from 'react';
 import Login from "@/pages/Login";
+import LoginPage from "@/pages/LoginPage";
 import { Loader2 } from 'lucide-react';
 
 // Import the new pages
@@ -69,6 +70,7 @@ function Router() {
       <Route path="/enhanced-widget-demo" component={EnhancedWidgetDemo} />
       <Route path="/welcome" component={Welcome} />
       <Route path="/login" component={Login} />
+      <Route path="/customer-login" component={LoginPage} />
       
       {/* Protected Routes */}
       <Route path="/admin" component={ProtectedAdmin} />
