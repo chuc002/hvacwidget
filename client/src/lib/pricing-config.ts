@@ -44,6 +44,7 @@ export const SaaSPlans = {
     interval: "month",
     stripePriceId: 'price_1RRcoYGxl1XxufT4KFZbeJsn', // Monthly Stripe Price ID
     annualStripePriceId: 'price_1RRfoZGdBJ6HrZFi1tlrrdUS', // Annual Stripe Price ID
+    popular: true,
     features: [
       'Everything in Starter',
       'Product catalog & equipment sales',
@@ -72,6 +73,7 @@ export const SaaSPlans = {
     interval: "month",
     stripePriceId: 'price_1RRcp8Gxl1XxufT4oYuK4HG5', // Monthly Stripe Price ID
     annualStripePriceId: 'price_1RRfowGdBJ6HrZFiOeOXyO5P', // Annual Stripe Price ID
+    popular: false,
     features: [
       'Everything in Professional',
       'Invoice payments',
