@@ -19,6 +19,8 @@ import Demo from "@/pages/Demo";
 import Analytics from "@/pages/Analytics";
 import HowItWorks from "@/pages/HowItWorks";
 import CustomerJourney from "@/pages/CustomerJourney";
+import TrialRegistration from "@/pages/TrialRegistration";
+import WelcomeFlow from "@/pages/WelcomeFlow";
 
 function Router() {
   return (
@@ -38,6 +40,8 @@ function Router() {
       <Route path="/analytics" component={Analytics} />
       <Route path="/how-it-works" component={HowItWorks} />
       <Route path="/customer-journey" component={CustomerJourney} />
+      <Route path="/trial-registration" component={TrialRegistration} />
+      <Route path="/welcome-flow" component={WelcomeFlow} />
       <Route component={NotFound} />
     </Switch>
   );
