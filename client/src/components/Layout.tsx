@@ -2,6 +2,7 @@ import { useAuth } from '@/lib/authContext';
 import PublicNavigation from './PublicNavigation';
 import { CustomerNavigation } from './CustomerNavigation';
 import { useLocation } from 'wouter';
+import CookieConsent from './CookieConsent';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -39,6 +40,7 @@ export default function Layout({ children }: LayoutProps) {
     <div className="flex min-h-screen flex-col">
       <PublicNavigation isLoggedIn={isAuthenticated} />
       <main className="flex-1">{children}</main>
+      <CookieConsent />
     </div>
   );
 }

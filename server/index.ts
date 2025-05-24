@@ -63,6 +63,29 @@ const authLimiter = rateLimit({
 
 app.use('/api/auth', authLimiter);
 
+// Direct health check endpoint (no rate limiting)
+app.get('/api/healthz', async (req, res) => {
+  try {
+    // Simple health check response
+    const healthData = {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: process.env.NODE_ENV,
+      memory: {
+        rss: Math.round(process.memoryUsage().rss / 1024 / 1024) + 'MB'
+      }
+    };
+    
+    res.status(200).json(healthData);
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error',
+      message: 'Health check failed'
+    });
+  }
+});
+
 // Cookie parser middleware (required for CSRF)
 app.use(cookieParser());
 
