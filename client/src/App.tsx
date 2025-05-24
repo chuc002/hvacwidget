@@ -4,6 +4,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, withAuth, useAuth } from "@/lib/authContext";
+import { initGA } from "./lib/analytics";
+import { useAnalytics } from "./hooks/use-analytics";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import Admin from "@/pages/Admin";
@@ -31,6 +33,12 @@ import LoginPage from "@/pages/LoginPage";
 import ConversionOptimized from "@/pages/ConversionOptimized";
 import { Loader2 } from 'lucide-react';
 
+// Import legal pages
+import LegalHub from "@/pages/legal";
+import PrivacyPolicy from "@/pages/legal/PrivacyPolicy";
+import TermsOfService from "@/pages/legal/TermsOfService";
+import RefundPolicy from "@/pages/legal/RefundPolicy";
+
 // Import the new pages
 import DashboardOverview from "@/pages/DashboardOverview";
 import Features from "@/pages/Features";
@@ -47,6 +55,9 @@ const ProtectedAdmin = withAuth(Admin);
 
 // Router with protected routes
 function Router() {
+  // Track page views when routes change
+  useAnalytics();
+  
   return (
     <Switch>
       {/* Public Routes */}
@@ -74,6 +85,12 @@ function Router() {
       <Route path="/customer-login" component={LoginPage} />
       <Route path="/conversion-optimized" component={ConversionOptimized} />
       
+      {/* Legal Routes */}
+      <Route path="/legal" component={LegalHub} />
+      <Route path="/legal/privacy-policy" component={PrivacyPolicy} />
+      <Route path="/legal/terms-of-service" component={TermsOfService} />
+      <Route path="/legal/refund-policy" component={RefundPolicy} />
+      
       {/* Protected Routes */}
       <Route path="/admin" component={ProtectedAdmin} />
       <Route path="/dashboard" component={ProtectedDashboardOverview} />
@@ -92,6 +109,17 @@ function Router() {
 }
 
 function App() {
+  // Initialize Google Analytics when app loads
+  useEffect(() => {
+    // Verify required environment variable is present
+    if (!import.meta.env.VITE_GA_MEASUREMENT_ID) {
+      console.warn('Missing required Google Analytics key: VITE_GA_MEASUREMENT_ID');
+    } else {
+      initGA();
+      console.log('Google Analytics initialized with ID:', import.meta.env.VITE_GA_MEASUREMENT_ID);
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
