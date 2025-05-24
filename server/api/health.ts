@@ -11,7 +11,7 @@ const router = Router();
  * - uptime: server uptime in seconds
  * - memory: memory usage statistics
  */
-router.get('/api/healthz', async (req, res) => {
+router.get('/health', async (req, res) => {
   const startTime = process.hrtime();
 
   let dbStatus = 'error';
@@ -20,7 +20,7 @@ router.get('/api/healthz', async (req, res) => {
 
   // Check database connection
   try {
-    // Test query via storage layer - this tests the Neon connection
+    // Test query via storage layer - this tests the database connection
     await storage.getPlans();
     dbStatus = 'ok';
   } catch (error: any) {

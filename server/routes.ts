@@ -18,7 +18,7 @@ import webhookRoutes from "./api/webhook";
 import enhancedCheckoutRoutes from "./api/create-enhanced-checkout-session";
 import saasBillingRoutes from "./api/saas-billing";
 import authRoutes from "./api/auth";
-import healthRoutes from "./routes/health";
+import healthRoutes from "./api/health";
 
 // Initialize Stripe with the secret key from environment variables
 if (!process.env.STRIPE_SECRET_KEY) {
@@ -643,6 +643,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Register health check routes for monitoring
+  app.use('/api', healthRoutes);
+  
   const httpServer = createServer(app);
   return httpServer;
 }
