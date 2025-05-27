@@ -2,13 +2,24 @@ import { pgTable, text, serial, integer, boolean, timestamp, varchar, decimal } 
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-// Customer table to store basic customer information
+// Customer table to store basic customer information and widget customization
 export const customers = pgTable("customers", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   phone: text("phone"),
   password: text("password"), // For customer authentication
+  companyName: text("company_name"),
+  companyUrl: text("company_url"),
+  logoUrl: text("logo_url"),
+  primaryColor: text("primary_color").default("#2563eb"),
+  secondaryColor: text("secondary_color"),
+  accentColor: text("accent_color"),
+  textColor: text("text_color"),
+  backgroundColor: text("background_color"),
+  isTrialUser: boolean("is_trial_user").default(true),
+  trialEndsAt: timestamp("trial_ends_at"),
+  onboardingCompleted: boolean("onboarding_completed").default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   stripeCustomerId: text("stripe_customer_id").unique(),
 });

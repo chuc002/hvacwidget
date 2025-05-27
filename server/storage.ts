@@ -20,6 +20,8 @@ export interface IStorage {
   getCustomerByStripeId(stripeCustomerId: string): Promise<Customer | undefined>;
   createCustomer(customer: InsertCustomer): Promise<Customer>;
   updateCustomerStripeId(id: number, stripeCustomerId: string): Promise<Customer>;
+  updateCustomerCustomization(id: number, customization: any): Promise<Customer>;
+  updateCustomerOnboardingStatus(id: number, completed: boolean): Promise<Customer>;
 
   // Plan operations
   getPlans(): Promise<Plan[]>;
