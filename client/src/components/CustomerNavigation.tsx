@@ -55,8 +55,8 @@ export function CustomerNavigation({
     { name: 'Customize Widget', href: '/customize', icon: PenLine },
     { name: 'Revenue Streams', href: '/revenue', icon: BarChart3 },
     { name: 'Customer Management', href: '/customers', icon: Users },
-    { name: 'Analytics', href: '/analytics', icon: BarChart4 },
-    { name: 'Billing & Plan', href: '/billing', icon: CreditCard },
+    { name: 'Payment Setup', href: '/payment-setup', icon: CreditCard },
+    { name: 'Billing & Plan', href: '/billing', icon: Layers },
     { name: 'Support', href: '/support', icon: HelpCircle },
   ];
 

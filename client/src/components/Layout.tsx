@@ -19,7 +19,8 @@ export default function Layout({ children }: LayoutProps) {
                          location.startsWith('/customers') ||
                          location.startsWith('/analytics') ||
                          location.startsWith('/billing') ||
-                         location.startsWith('/support');
+                         location.startsWith('/support') ||
+                         location.startsWith('/payment-setup');
 
   // If user is in the dashboard area, render CustomerNavigation
   if (isAuthenticated && isCustomerRoute) {
