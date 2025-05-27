@@ -8,7 +8,7 @@ export const customers = pgTable("customers", {
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   phone: text("phone"),
-  password: text("password"), // For customer authentication
+  passwordHash: text("password_hash"), // Hashed password for authentication
   companyName: text("company_name"),
   companyUrl: text("company_url"),
   logoUrl: text("logo_url"),

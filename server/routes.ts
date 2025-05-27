@@ -4,12 +4,15 @@ import { storage } from "./storage";
 import Stripe from "stripe";
 import { ZodError } from "zod";
 import { nanoid } from "nanoid";
+import { scrypt, randomBytes, timingSafeEqual } from "crypto";
+import { promisify } from "util";
 import { 
   insertCustomerSchema, 
   insertSubscriptionSchema,
   insertSubscriptionLinkSchema
 } from "@shared/schema";
 import { SaaSPlans, formatPrice, getPlanByTier, isValidStripePriceId, getPlanDetailsFromPriceId } from "@shared/pricing";
+import { requireAuth, requireTenant } from "./middleware/auth";
 import axios from "axios";
 
 // Import API routes
@@ -31,6 +34,22 @@ const stripe = process.env.STRIPE_SECRET_KEY
   ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2024-12-18.acacia" })
   : null;
 
+// Password hashing utilities
+const scryptAsync = promisify(scrypt);
+
+async function hashPassword(password: string): Promise<string> {
+  const salt = randomBytes(16).toString("hex");
+  const buf = (await scryptAsync(password, salt, 64)) as Buffer;
+  return `${buf.toString("hex")}.${salt}`;
+}
+
+async function comparePasswords(supplied: string, stored: string): Promise<boolean> {
+  const [hashed, salt] = stored.split(".");
+  const hashedBuf = Buffer.from(hashed, "hex");
+  const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
+  return timingSafeEqual(hashedBuf, suppliedBuf);
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Register the Stripe and API routes
   app.use('/api', checkoutRoutes);
@@ -46,6 +65,122 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Register customer management routes for onboarding and customization
   app.use('/api/customer', customerRoutes);
+
+  // Authentication Routes
+  app.post('/api/auth/register', async (req, res) => {
+    try {
+      const { companyName, email, password, phone, website, industry, plan = 'starter' } = req.body;
+      
+      if (!companyName || !email || !password) {
+        return res.status(400).json({ error: 'Company name, email, and password are required' });
+      }
+
+      if (password.length < 8) {
+        return res.status(400).json({ error: 'Password must be at least 8 characters long' });
+      }
+
+      // Check if email already exists
+      const existingCustomer = await storage.getCustomerByEmail(email);
+      if (existingCustomer) {
+        return res.status(400).json({ error: 'Email already in use' });
+      }
+
+      // Hash password
+      const passwordHash = await hashPassword(password);
+
+      // Create customer
+      const newCustomer = await storage.createCustomer({
+        companyName,
+        email,
+        phone: phone || '',
+        website: website || '',
+        industry: industry || '',
+        customization: {},
+        passwordHash
+      });
+
+      // Set session
+      req.session!.userId = newCustomer.id;
+      req.session!.userEmail = newCustomer.email;
+      req.session!.tenantId = newCustomer.id;
+      req.session!.userRole = 'customer';
+
+      res.json({
+        success: true,
+        user: {
+          id: newCustomer.id,
+          email: newCustomer.email,
+          companyName: newCustomer.companyName
+        }
+      });
+    } catch (error) {
+      console.error('Registration error:', error);
+      res.status(500).json({ error: 'Registration failed' });
+    }
+  });
+
+  app.post('/api/auth/login', async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      
+      if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
+      }
+
+      // Find customer by email
+      const customer = await storage.getCustomerByEmail(email);
+      if (!customer || !customer.passwordHash) {
+        return res.status(401).json({ error: 'Invalid email or password' });
+      }
+
+      // Check password
+      const passwordMatch = await comparePasswords(password, customer.passwordHash);
+      if (!passwordMatch) {
+        return res.status(401).json({ error: 'Invalid email or password' });
+      }
+
+      // Set session
+      req.session!.userId = customer.id;
+      req.session!.userEmail = customer.email;
+      req.session!.tenantId = customer.id;
+      req.session!.userRole = 'customer';
+
+      res.json({
+        success: true,
+        user: {
+          id: customer.id,
+          email: customer.email,
+          companyName: customer.companyName
+        }
+      });
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ error: 'Authentication failed' });
+    }
+  });
+
+  app.get('/api/auth/session', (req, res) => {
+    if (req.session?.userId) {
+      res.json({
+        authenticated: true,
+        user: {
+          id: req.session.userId,
+          email: req.session.userEmail
+        }
+      });
+    } else {
+      res.json({ authenticated: false });
+    }
+  });
+
+  app.post('/api/auth/logout', (req, res) => {
+    req.session?.destroy((err) => {
+      if (err) {
+        return res.status(500).json({ error: 'Failed to logout' });
+      }
+      res.json({ success: true });
+    });
+  });
   // API endpoint to get all plans
   app.get("/api/plans", async (req, res) => {
     try {

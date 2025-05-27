@@ -1,0 +1,514 @@
+## Step 2: Authentication and Security Implementation
+REPLIT PROMPT - IMPLEMENT AUTHENTICATION AND SECURITY
+I need to add proper authentication, session management, and security to my ServicePlan Pro platform.
+STEPS TO IMPLEMENT:
+
+CREATE middleware/auth.ts file:
+
+typescriptimport { Request, Response, NextFunction } from 'express';
+
+// Middleware to require authentication
+export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.session || !req.session.userId) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+  next();
+};
+
+// Middleware to require tenant access
+export const requireTenant = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.session || !req.session.tenantId) {
+    return res.status(403).json({ error: 'Tenant access required' });
+  }
+  next();
+};
+
+// Middleware for role-based access control
+export const requireRole = (role: string) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!req.session || !req.session.userRole || req.session.userRole !== role) {
+      return res.status(403).json({ error: 'Insufficient permissions' });
+    }
+    next();
+  };
+};
+
+UPDATE server/index.ts to add session management and security:
+
+typescriptimport express from 'express';
+import session from 'express-session';
+import MemoryStore from 'memorystore';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import cors from 'cors';
+import { requireAuth, requireTenant } from './middleware/auth';
+
+const app = express();
+const MemoryStoreSession = MemoryStore(session);
+
+// Security headers
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://js.stripe.com", "https://www.googletagmanager.com"],
+      frameSrc: ["'self'", "https://js.stripe.com"],
+      connectSrc: ["'self'", "https://*.stripe.com", "https://www.google-analytics.com"],
+      imgSrc: ["'self'", "data:", "https://*.stripe.com", "https://www.googletagmanager.com"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      frameAncestors: ["'self'", "https://*.serviceplanpro.com"]
+    }
+  },
+  // Allow iframes for widget embedding
+  frameguard: {
+    action: 'sameorigin'
+  }
+}));
+
+// CORS configuration
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, etc)
+    if (!origin) return callback(null, true);
+    
+    // Allow all origins in development
+    if (process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+    
+    // In production, whitelist specific domains
+    const allowedOrigins = [
+      'https://serviceplanpro.com',
+      /\.serviceplanpro\.com$/,
+      // Allow HVAC company domains for widget embedding
+      // This will need to be dynamically updated based on customer domains
+    ];
+    
+    // Check if origin is allowed
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (typeof allowedOrigin === 'string') {
+        return origin === allowedOrigin;
+      }
+      return allowedOrigin.test(origin);
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Rate limiting
+const apiLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 100, // 100 requests per 5 minutes per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Too many requests, please try again later.'
+});
+
+// Apply rate limiting to API routes
+app.use('/api/', apiLimiter);
+
+// More strict rate limiting for auth endpoints
+const authLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 5, // 5 login attempts per minute
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Too many login attempts, please try again later.'
+});
+
+app.use('/api/login', authLimiter);
+app.use('/api/register', authLimiter);
+
+// Session configuration
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'dev-secret-change-in-production',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // HTTPS in production
+    httpOnly: true, // Prevent client-side JS from reading
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: 'lax' // Prevents CSRF attacks
+  },
+  store: new MemoryStoreSession({
+    checkPeriod: 86400000 // Prune expired entries every 24h
+  })
+}));
+
+// Body parsing middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Route protection
+// Public routes don't need authentication
+app.use('/api/plans', express.json());
+app.use('/api/register', express.json());
+app.use('/api/login', express.json());
+app.use('/api/widget', express.json()); // Widget is publicly accessible
+
+// Protected routes require authentication
+app.use('/api/customers', requireAuth);
+app.use('/api/dashboard', requireAuth);
+app.use('/api/billing', requireAuth);
+
+// Tenant-specific routes require tenant ID
+app.use('/api/widgets', requireAuth, requireTenant);
+
+// Rest of your app setup...
+
+CREATE api/auth/login.ts for user authentication:
+
+typescriptimport express from 'express';
+import { db } from '../../lib/db';
+import bcrypt from 'bcrypt';
+
+const router = express.Router();
+
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+    
+    // Find the user by email
+    const user = await db.customers.findUnique({
+      where: { email }
+    });
+    
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+    
+    // Check password
+    const passwordMatch = await bcrypt.compare(password, user.passwordHash);
+    
+    if (!passwordMatch) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+    
+    // Set session data
+    req.session.userId = user.id;
+    req.session.userEmail = user.email;
+    req.session.tenantId = user.id; // In this model, customer ID is the tenant ID
+    req.session.userRole = user.role || 'customer';
+    
+    // Return success without sensitive data
+    res.json({
+      success: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        companyName: user.companyName,
+        plan: user.plan
+      }
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Authentication failed' });
+  }
+});
+
+router.post('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ error: 'Failed to logout' });
+    }
+    res.json({ success: true });
+  });
+});
+
+export default router;
+
+CREATE api/auth/register.ts for user registration:
+
+typescriptimport express from 'express';
+import { db } from '../../lib/db';
+import bcrypt from 'bcrypt';
+import { z } from 'zod';
+
+const router = express.Router();
+
+// Validation schema
+const registerSchema = z.object({
+  companyName: z.string().min(2, "Company name is required"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  phone: z.string().optional(),
+  website: z.string().optional(),
+  industry: z.string().optional(),
+  plan: z.enum(['starter', 'professional', 'enterprise']).default('starter')
+});
+
+router.post('/register', async (req, res) => {
+  try {
+    // Validate input
+    const validationResult = registerSchema.safeParse(req.body);
+    
+    if (!validationResult.success) {
+      return res.status(400).json({ error: validationResult.error.issues[0].message });
+    }
+    
+    const { companyName, email, password, phone, website, industry, plan } = validationResult.data;
+    
+    // Check if email already exists
+    const existingUser = await db.customers.findUnique({
+      where: { email }
+    });
+    
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email already in use' });
+    }
+    
+    // Hash password
+    const passwordHash = await bcrypt.hash(password, 10);
+    
+    // Create the user
+    const newUser = await db.customers.create({
+      data: {
+        companyName,
+        email,
+        passwordHash,
+        phone,
+        website,
+        industry,
+        plan,
+        role: 'customer',
+        trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14-day trial
+        status: 'trial'
+      }
+    });
+    
+    // Set session data
+    req.session.userId = newUser.id;
+    req.session.userEmail = newUser.email;
+    req.session.tenantId = newUser.id;
+    req.session.userRole = 'customer';
+    
+    // Return success without sensitive data
+    res.json({
+      success: true,
+      user: {
+        id: newUser.id,
+        email: newUser.email,
+        companyName: newUser.companyName,
+        plan: newUser.plan
+      }
+    });
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({ error: 'Registration failed' });
+  }
+});
+
+export default router;
+
+CREATE a useSession hook for client-side authentication:
+
+typescript// hooks/useSession.ts
+import { useState, useEffect } from 'react';
+
+interface User {
+  id: string;
+  email: string;
+  companyName: string;
+  plan: string;
+}
+
+interface SessionState {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  user: User | null;
+  error: string | null;
+}
+
+export function useSession() {
+  const [session, setSession] = useState<SessionState>({
+    isAuthenticated: false,
+    isLoading: true,
+    user: null,
+    error: null
+  });
+
+  useEffect(() => {
+    // Check if user is authenticated
+    async function checkAuth() {
+      try {
+        const response = await fetch('/api/auth/session', {
+          credentials: 'include' // Important for cookies
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch session');
+        }
+        
+        const data = await response.json();
+        
+        if (data.authenticated && data.user) {
+          setSession({
+            isAuthenticated: true,
+            isLoading: false,
+            user: data.user,
+            error: null
+          });
+        } else {
+          setSession({
+            isAuthenticated: false,
+            isLoading: false,
+            user: null,
+            error: null
+          });
+        }
+      } catch (error) {
+        setSession({
+          isAuthenticated: false,
+          isLoading: false,
+          user: null,
+          error: error.message
+        });
+      }
+    }
+    
+    checkAuth();
+  }, []);
+
+  const login = async (email: string, password: string) => {
+    setSession(prev => ({ ...prev, isLoading: true, error: null }));
+    
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Login failed');
+      }
+      
+      const data = await response.json();
+      
+      setSession({
+        isAuthenticated: true,
+        isLoading: false,
+        user: data.user,
+        error: null
+      });
+      
+      return { success: true };
+    } catch (error) {
+      setSession(prev => ({
+        ...prev,
+        isLoading: false,
+        error: error.message
+      }));
+      
+      return { success: false, error: error.message };
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      
+      setSession({
+        isAuthenticated: false,
+        isLoading: false,
+        user: null,
+        error: null
+      });
+      
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  return {
+    ...session,
+    login,
+    logout
+  };
+}
+
+CREATE a protected route component:
+
+typescript// components/ProtectedRoute.tsx
+import { useSession } from '@/hooks/useSession';
+import { Redirect } from 'wouter';
+
+interface ProtectedRouteProps {
+  component: React.ComponentType<any>;
+  [key: string]: any;
+}
+
+export default function ProtectedRoute({ component: Component, ...rest }: ProtectedRouteProps) {
+  const { isAuthenticated, isLoading } = useSession();
+  
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+  
+  if (!isAuthenticated) {
+    const currentPath = window.location.pathname;
+    const redirectUrl = `/login?redirect=${encodeURIComponent(currentPath)}`;
+    return <Redirect to={redirectUrl} />;
+  }
+  
+  return <Component {...rest} />;
+}
+
+ADD Session API route:
+
+typescript// api/auth/session.ts
+import express from 'express';
+
+const router = express.Router();
+
+router.get('/session', (req, res) => {
+  if (req.session && req.session.userId) {
+    res.json({
+      authenticated: true,
+      user: {
+        id: req.session.userId,
+        email: req.session.userEmail,
+        role: req.session.userRole || 'customer'
+      }
+    });
+  } else {
+    res.json({
+      authenticated: false,
+      user: null
+    });
+  }
+});
+
+export default router;
+EXPECTED RESULT:
+
+Secure session management
+Protected API routes
+Authentication middleware
+Rate limiting for security
+Proper CORS and security headers
+Client-side authentication with hooks
+
+This implementation provides a complete authentication system with security best practices for a B2B SaaS platform.
