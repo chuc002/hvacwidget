@@ -142,7 +142,7 @@ app.use((req, res, next) => {
   }
   
   // Skip CSRF for Stripe Connect API routes
-  if (req.path.startsWith('/api/stripe/connect/')) {
+  if (req.path.startsWith('/api/stripe/connect')) {
     return next();
   }
   
@@ -171,14 +171,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Apply CSRF protection to all routes except webhooks
-app.use((req, res, next) => {
-  // Skip CSRF for webhooks and specific API endpoints that need raw body
-  if (req.path.includes('/webhook') || req.path.includes('/api/webhook')) {
-    return next();
-  }
-  return csrfProtection(req, res, next);
-});
+// CSRF protection is already handled above - this duplicate block removed
 
 // CSRF token endpoint
 app.get('/api/csrf-token', (req, res) => {
