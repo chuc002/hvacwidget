@@ -43,6 +43,10 @@ import DashboardOverview from "@/pages/DashboardOverview";
 import Features from "@/pages/Features";
 import Industries from "@/pages/Industries";
 import WidgetCustomizer from "@/pages/WidgetCustomizer";
+import Revenue from "@/pages/Revenue";
+import CustomerManagement from "@/pages/CustomerManagement";
+import Billing from "@/pages/Billing";
+import Support from "@/pages/Support";
 
 // Protect dashboard and authenticated-only routes
 const ProtectedDashboardOverview = withAuth(DashboardOverview);
@@ -90,9 +94,9 @@ function Router() {
       <Route path="/admin" component={ProtectedAdmin} />
       <Route path="/dashboard" component={ProtectedDashboardOverview} />
       <Route path="/customer-dashboard" component={ProtectedDashboardOverview} />
-      <Route path="/customize" component={withAuth(() => <div className="container py-8"><h1 className="text-2xl font-bold">Widget Customization</h1></div>)} />
-      <Route path="/revenue" component={withAuth(() => <div className="container py-8"><h1 className="text-2xl font-bold">Revenue Streams</h1></div>)} />
-      <Route path="/customers" component={withAuth(() => <div className="container py-8"><h1 className="text-2xl font-bold">Customer Management</h1></div>)} />
+      <Route path="/customize" component={withAuth(WidgetCustomizer)} />
+      <Route path="/revenue" component={withAuth(Revenue)} />
+      <Route path="/customers" component={withAuth(CustomerManagement)} />
       <Route path="/billing" component={withAuth(() => <div className="container py-8"><h1 className="text-2xl font-bold">Billing & Plan</h1></div>)} />
       <Route path="/support" component={withAuth(() => <div className="container py-8"><h1 className="text-2xl font-bold">Support Center</h1></div>)} />
       
