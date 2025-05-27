@@ -1,0 +1,86 @@
+
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts
+
+4:26:57 PM [express] serving on port 5000
+Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+4:27:02 PM [express] GET /api/stripe/connect/status 304 in 2ms :: {"connected":false}
+Error creating Stripe Connect account: StripeInvalidRequestError: You can only create new accounts if you've signed up for Connect, which you can learn how to do at https://stripe.com/docs/connect.
+    at generateV1Error (file:///home/runner/workspace/node_modules/stripe/esm/Error.js:8:20)
+    at res.toJSON.then.StripeAPIError.message (file:///home/runner/workspace/node_modules/stripe/esm/RequestSender.js:105:31)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  type: 'StripeInvalidRequestError',
+  raw: {
+    message: "You can only create new accounts if you've signed up for Connect, which you can learn how to do at https://stripe.com/docs/connect.",
+    request_log_url: 'https://dashboard.stripe.com/test/logs/req_6BqgljuRe4JjyE?t=1748363224',
+    type: 'invalid_request_error',
+    headers: {
+      server: 'nginx',
+      date: 'Tue, 27 May 2025 16:27:04 GMT',
+      'content-type': 'application/json',
+      'content-length': '304',
+      connection: 'keep-alive',
+      'access-control-allow-credentials': 'true',
+      'access-control-allow-methods': 'GET, HEAD, PUT, PATCH, POST, DELETE',
+      'access-control-allow-origin': '*',
+      'access-control-expose-headers': 'Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required',
+      'access-control-max-age': '300',
+      'cache-control': 'no-cache, no-store',
+      'content-security-policy': "base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=IWpVvBpoMv4R7zGHlNNrPqTy3dt7WaPtLKJwSnv-f0aStYuUIis-aHxkeDxLCOoge_GLi2WPW5odxIat",
+      'idempotency-key': 'stripe-node-retry-c8cdf403-b688-403a-92b2-1f66946ee384',
+      'original-request': 'req_6BqgljuRe4JjyE',
+      'request-id': 'req_6BqgljuRe4JjyE',
+      'stripe-should-retry': 'false',
+      'stripe-version': '2024-12-18.acacia',
+      vary: 'Origin',
+      'x-stripe-priority-routing-enabled': 'true',
+      'x-stripe-routing-context-priority-tier': 'api-testmode',
+      'x-wc': 'ABGHI',
+      'strict-transport-security': 'max-age=63072000; includeSubDomains; preload'
+    },
+    statusCode: 400,
+    requestId: 'req_6BqgljuRe4JjyE'
+  },
+  rawType: 'invalid_request_error',
+  code: undefined,
+  doc_url: undefined,
+  param: undefined,
+  detail: undefined,
+  headers: {
+    server: 'nginx',
+    date: 'Tue, 27 May 2025 16:27:04 GMT',
+    'content-type': 'application/json',
+    'content-length': '304',
+    connection: 'keep-alive',
+    'access-control-allow-credentials': 'true',
+    'access-control-allow-methods': 'GET, HEAD, PUT, PATCH, POST, DELETE',
+    'access-control-allow-origin': '*',
+    'access-control-expose-headers': 'Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required',
+    'access-control-max-age': '300',
+    'cache-control': 'no-cache, no-store',
+    'content-security-policy': "base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=IWpVvBpoMv4R7zGHlNNrPqTy3dt7WaPtLKJwSnv-f0aStYuUIis-aHxkeDxLCOoge_GLi2WPW5odxIat",
+    'idempotency-key': 'stripe-node-retry-c8cdf403-b688-403a-92b2-1f66946ee384',
+    'original-request': 'req_6BqgljuRe4JjyE',
+    'request-id': 'req_6BqgljuRe4JjyE',
+    'stripe-should-retry': 'false',
+    'stripe-version': '2024-12-18.acacia',
+    vary: 'Origin',
+    'x-stripe-priority-routing-enabled': 'true',
+    'x-stripe-routing-context-priority-tier': 'api-testmode',
+    'x-wc': 'ABGHI',
+    'strict-transport-security': 'max-age=63072000; includeSubDomains; preload'
+  },
+  requestId: 'req_6BqgljuRe4JjyE',
+  statusCode: 400,
+  userMessage: undefined,
+  charge: undefined,
+  decline_code: undefined,
+  payment_intent: undefined,
+  payment_method: undefined,
+  payment_method_type: undefined,
+  setup_intent: undefined,
+  source: undefined
+}
+4:27:04 PM [express] POST /api/stripe/connect/create-account 500 in 174ms :: {"error":"You can only …
