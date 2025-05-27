@@ -97,8 +97,8 @@ function Router() {
       <Route path="/customize" component={withAuth(WidgetCustomizer)} />
       <Route path="/revenue" component={withAuth(Revenue)} />
       <Route path="/customers" component={withAuth(CustomerManagement)} />
-      <Route path="/billing" component={withAuth(() => <div className="container py-8"><h1 className="text-2xl font-bold">Billing & Plan</h1></div>)} />
-      <Route path="/support" component={withAuth(() => <div className="container py-8"><h1 className="text-2xl font-bold">Support Center</h1></div>)} />
+      <Route path="/billing" component={withAuth(Billing)} />
+      <Route path="/support" component={withAuth(Support)} />
       
       {/* 404 Route */}
       <Route component={NotFound} />
