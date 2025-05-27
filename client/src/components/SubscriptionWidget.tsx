@@ -213,9 +213,8 @@ export default function SubscriptionWidget({
       return;
     }
     
-    setProcessingPayment(true);
+    setIsProcessing(true);
     setCheckoutStep(2);
-    setLoading(true);
     
     // Show progress message
     toast({
@@ -302,8 +301,7 @@ export default function SubscriptionWidget({
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
-      setProcessingPayment(false);
+      setIsProcessing(false);
       setCheckoutOpen(false);
     }
   };
@@ -594,21 +592,21 @@ export default function SubscriptionWidget({
                 type="button"
                 variant="outline"
                 onClick={() => setCheckoutOpen(false)}
-                disabled={processingPayment}
+                disabled={isProcessing}
               >
                 Cancel
               </Button>
               <Button 
                 type="submit" 
-                disabled={loading || processingPayment}
+                disabled={isProcessing}
                 className="min-w-[160px]"
               >
-                {processingPayment ? (
+                {isProcessing ? (
                   <div className="flex items-center">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                     Processing...
                   </div>
-                ) : loading ? (
+                ) : plansLoading ? (
                   <div className="flex items-center">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                     Loading...
