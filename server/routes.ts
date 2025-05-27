@@ -9,6 +9,7 @@ import {
   insertSubscriptionSchema,
   insertSubscriptionLinkSchema
 } from "@shared/schema";
+import { SaaSPlans, formatPrice, getPlanByTier, isValidStripePriceId, getPlanDetailsFromPriceId } from "@shared/pricing";
 import axios from "axios";
 
 // Import API routes
@@ -44,129 +45,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // API endpoint to get all plans
   app.get("/api/plans", async (req, res) => {
     try {
-      // Try to get plans from storage
-      const plans = await storage.getPlans();
-      
-      // If no plans returned or there's an issue, fall back to constants
-      if (!plans || plans.length === 0) {
-        // Use fallback plan data from constants
-        const fallbackPlans = [
-          {
-            id: 1,
-            name: "Starter",
-            description: "Perfect for new home service businesses",
-            price: "399",
-            interval: "month",
-            features: [
-              "Up to 100 customers/month",
-              "Basic subscription widget",
-              "Email support",
-              "Mobile-optimized checkout",
-              "Stripe payment processing",
-              "Basic analytics"
-            ],
-            isPopular: false,
-            order: 1,
-            stripePriceId: "price_1RS13JGdBJ6HrZFiK5NRUrCs"
-          },
-          {
-            id: 2,
-            name: "Professional",
-            description: "Most popular for growing home service companies",
-            price: "699",
-            interval: "month",
-            features: [
-              "Up to 500 customers/month",
-              "Advanced subscription widget",
-              "Product catalog & sales",
-              "Custom branding",
-              "Priority support",
-              "Advanced analytics dashboard",
-              "API access"
-            ],
-            isPopular: true,
-            order: 2,
-            stripePriceId: "price_1RS13iGdBJ6HrZFifmYmquFe"
-          },
-          {
-            id: 3,
-            name: "Enterprise",
-            description: "For established home service companies",
-            price: "999",
-            interval: "month",
-            features: [
-              "Unlimited customers",
-              "Full multi-revenue widget",
-              "Invoice payment processing",
-              "Multi-location support",
-              "Dedicated account manager",
-              "White-label solution",
-              "Custom integrations"
-            ],
-            isPopular: false,
-            order: 3,
-            stripePriceId: "price_1RS142GdBJ6HrZFiszeryhra"
-          }
-        ];
-        res.status(200).json(fallbackPlans);
-      } else {
-        res.status(200).json(plans);
-      }
+      // Use centralized pricing system as the definitive source
+      const formattedPlans = SaaSPlans.map((plan, index) => ({
+        id: index + 1,
+        name: plan.name,
+        tier: plan.tier,
+        description: `${plan.name} plan for ${plan.tier === 'starter' ? 'new' : plan.tier === 'professional' ? 'growing' : 'enterprise'} home service businesses`,
+        monthlyCents: plan.monthlyCents,
+        annualCents: plan.annualCents,
+        monthlyPrice: formatPrice(plan.monthlyCents),
+        annualPrice: formatPrice(plan.annualCents),
+        features: plan.features,
+        isPopular: plan.isPopular,
+        order: plan.order,
+        stripeMonthlyId: plan.stripeMonthlyId,
+        stripeAnnualId: plan.stripeAnnualId
+      }));
+
+      res.json(formattedPlans);
     } catch (error) {
-      console.error("Error fetching plans:", error);
-      
-      // Return fallback data on error
-      const fallbackPlans = [
-        {
-          id: 1,
-          name: "Basic",
-          description: "Essential maintenance for residential systems",
-          price: "149.99",
-          interval: "year",
-          features: [
-            "Annual tune-up",
-            "Filter replacement",
-            "Priority scheduling",
-            "10% discount on repairs"
-          ],
-          isPopular: false,
-          order: 1
-        },
-        {
-          id: 2,
-          name: "Premium",
-          description: "Comprehensive coverage for your HVAC system",
-          price: "249.99",
-          interval: "year",
-          features: [
-            "Semi-annual tune-ups",
-            "Filter replacements",
-            "Priority scheduling",
-            "15% discount on repairs",
-            "No overtime charges"
-          ],
-          isPopular: true,
-          order: 2
-        },
-        {
-          id: 3,
-          name: "Ultimate",
-          description: "Complete protection and maximum savings",
-          price: "349.99",
-          interval: "year",
-          features: [
-            "Quarterly tune-ups",
-            "Filter replacements",
-            "Same-day service",
-            "20% discount on repairs",
-            "No overtime charges",
-            "Free diagnostic visits"
-          ],
-          isPopular: false,
-          order: 3
-        }
-      ];
-      res.status(200).json(fallbackPlans);
+      console.error('Error fetching plans:', error);
+      res.status(500).json({ 
+        error: 'Failed to fetch plans',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   });
 
