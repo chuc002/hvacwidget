@@ -1,0 +1,51 @@
+/*  ServicePlan Pro – Onboarding flow + shared pricing refactor
+    1.  Create feature branch `feat/onboarding-wizard`.
+    2.  Generate shared pricing module.
+    3.  Build 5-step Duolingo-style wizard.
+    4.  Gate app routes on onboarding.
+    5.  Update server endpoints & DB.
+    6.  Add e2e tests.
+*/
+
+⬇️  RUN THESE COMMANDS IN THE REPLIT SHELL
+-------------------------------------------------
+git checkout -b feat/onboarding-wizard
+
+# 1️⃣  Shared pricing module
+mkdir -p shared && touch shared/pricing.ts
+cat <<'EOF' > shared/pricing.ts
+export const SaaSPlans = [
+  { tier: 'starter', name: 'Starter', monthlyCents: 39900, annualCents: 399000, stripePriceId: 'price_Starter_M' },
+  { tier: 'pro',     name: 'Pro',     monthlyCents: 79900, annualCents: 799000, stripePriceId: 'price_Pro_M' },
+  { tier: 'scale',   name: 'Scale',   monthlyCents: 149900, annualCents: 1499000, stripePriceId: 'price_Scale_M' }
+] as const;
+export type PlanTier = typeof SaaSPlans[number]['tier'];
+EOF
+
+# Replace hard-coded plan imports
+grep -Rl "monthlyCents" client | xargs sed -i '' -e "s/..\/..\/data\/plans/shared\/pricing/g"
+
+# 2️⃣  DB migration – add has_onboarded & onboarding_step
+npx drizzle-kit generate:pg --name onboarding_flags
+
+# 3️⃣  Wizard pages
+mkdir -p client/src/pages/onboarding
+touch client/src/pages/onboarding/{Password.tsx,BusinessInfo.tsx,Plan.tsx,Payment.tsx,Checklist.tsx,WizardLayout.tsx}
+# (Replit AI: scaffold each file with react-hook-form + zod, minimal Tailwind, single CTA)
+
+# 4️⃣  Auth & route guard
+replit ai "Add a <ProtectedRoute> component that checks supabase.auth.session AND users.has_onboarded; if false => redirect to /onboarding/password"
+
+# 5️⃣  Server endpoints
+replit ai "In server/src/controllers/auth.ts create POST /api/create-password { password } that hashes with scrypt and sets users.onboarding_step='business'"
+
+# 6️⃣  Cypress tests
+npm i -D cypress @testing-library/cypress
+npx cypress open
+replit ai "Write e2e spec 'onboarding.spec.ts' that walks through the five steps using cy.intercept to stub Stripe and Supabase calls"
+
+# 7️⃣  Commit & push
+git add .
+git commit -m 'feat: Duolingo-style onboarding wizard and shared pricing'
+git push origin feat/onboarding-wizard
+-------------------------------------------------
