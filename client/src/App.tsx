@@ -48,6 +48,7 @@ import CustomerManagement from "@/pages/CustomerManagement";
 import Billing from "@/pages/Billing";
 import Support from "@/pages/Support";
 import PaymentSetup from "@/pages/PaymentSetup";
+import OnboardingWizard from "@/pages/onboarding/OnboardingWizard";
 
 // Protect dashboard and authenticated-only routes
 const ProtectedDashboardOverview = withAuth(DashboardOverview);
@@ -84,6 +85,7 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/customer-login" component={LoginPage} />
       <Route path="/conversion-optimized" component={ConversionOptimized} />
+      <Route path="/onboarding" component={OnboardingWizard} />
       
       {/* Legal Routes */}
       <Route path="/legal" component={LegalHub} />

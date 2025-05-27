@@ -791,6 +791,129 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Onboarding API endpoints for the Duolingo-style wizard
+  app.post('/api/onboarding/password', async (req, res) => {
+    try {
+      const { password } = req.body;
+      
+      if (!password || password.length < 8) {
+        return res.status(400).json({ message: 'Password must be at least 8 characters' });
+      }
+      
+      // Hash the password and store it in session for completion
+      const hashedPassword = await hashPassword(password);
+      req.session.onboardingData = { 
+        ...req.session.onboardingData,
+        passwordHash: hashedPassword,
+        onboardingStep: 'business-info'
+      };
+      
+      res.status(200).json({ message: 'Password set successfully' });
+    } catch (error) {
+      console.error('Error setting password:', error);
+      res.status(500).json({ message: 'Failed to set password' });
+    }
+  });
+
+  app.post('/api/onboarding/business-info', async (req, res) => {
+    try {
+      const { companyName, industry, phone, website, address, city, state, zipCode, description } = req.body;
+      
+      if (!companyName || !industry || !phone || !address || !city || !state || !zipCode) {
+        return res.status(400).json({ message: 'Missing required business information' });
+      }
+      
+      // Store business info in session
+      req.session.onboardingData = {
+        ...req.session.onboardingData,
+        companyName,
+        industry,
+        phone,
+        website,
+        address,
+        city,
+        state,
+        zipCode,
+        description,
+        onboardingStep: 'plan-selection'
+      };
+      
+      res.status(200).json({ message: 'Business information saved' });
+    } catch (error) {
+      console.error('Error saving business info:', error);
+      res.status(500).json({ message: 'Failed to save business information' });
+    }
+  });
+
+  app.post('/api/onboarding/complete-payment', async (req, res) => {
+    try {
+      const { planTier, billingInterval, paymentMethodId } = req.body;
+      const onboardingData = req.session.onboardingData || {};
+      
+      if (!planTier || !billingInterval) {
+        return res.status(400).json({ message: 'Missing plan information' });
+      }
+      
+      // Create the customer account with all onboarding data
+      const customer = await storage.createCustomer({
+        name: onboardingData.companyName || 'New Customer',
+        email: req.session.email || 'temp@example.com', // Would come from registration
+        phone: onboardingData.phone,
+        companyName: onboardingData.companyName,
+        companyUrl: onboardingData.website,
+        passwordHash: onboardingData.passwordHash,
+        onboardingCompleted: false // Will be set to true in complete step
+      });
+      
+      // Store customer ID in session for completion
+      req.session.onboardingData = {
+        ...onboardingData,
+        customerId: customer.id,
+        planTier,
+        billingInterval,
+        paymentMethodId,
+        onboardingStep: 'completion'
+      };
+      
+      res.status(200).json({ 
+        message: 'Payment processed successfully',
+        customerId: customer.id 
+      });
+    } catch (error) {
+      console.error('Error processing payment:', error);
+      res.status(500).json({ message: 'Failed to process payment' });
+    }
+  });
+
+  app.post('/api/onboarding/complete', async (req, res) => {
+    try {
+      const onboardingData = req.session.onboardingData;
+      
+      if (!onboardingData || !onboardingData.customerId) {
+        return res.status(400).json({ message: 'Invalid onboarding state' });
+      }
+      
+      // Mark onboarding as complete
+      await storage.updateCustomerOnboardingStatus(onboardingData.customerId, true);
+      
+      // Set up user session for immediate login
+      req.session.userId = onboardingData.customerId;
+      req.session.userEmail = req.session.email;
+      req.session.userRole = 'customer';
+      
+      // Clear onboarding data
+      delete req.session.onboardingData;
+      
+      res.status(200).json({ 
+        message: 'Onboarding completed successfully',
+        customerId: onboardingData.customerId
+      });
+    } catch (error) {
+      console.error('Error completing onboarding:', error);
+      res.status(500).json({ message: 'Failed to complete onboarding' });
+    }
+  });
+
   // Register health check routes for monitoring
   app.use('/api', healthRoutes);
   
