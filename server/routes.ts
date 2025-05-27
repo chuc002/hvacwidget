@@ -20,6 +20,7 @@ import enhancedCheckoutRoutes from "./api/create-enhanced-checkout-session";
 import saasBillingRoutes from "./api/saas-billing";
 import authRoutes from "./api/auth";
 import healthRoutes from "./api/health";
+import customerRoutes from "./api/customer";
 
 // Initialize Stripe with the secret key from environment variables
 if (!process.env.STRIPE_SECRET_KEY) {
@@ -42,6 +43,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Register SaaS billing routes for B2B subscription management
   app.use('/api', saasBillingRoutes);
+  
+  // Register customer management routes for onboarding and customization
+  app.use('/api/customer', customerRoutes);
   // API endpoint to get all plans
   app.get("/api/plans", async (req, res) => {
     try {

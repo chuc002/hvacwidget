@@ -186,6 +186,34 @@ export class MemStorage implements IStorage {
     return updatedCustomer;
   }
 
+  async updateCustomerCustomization(id: number, customization: any): Promise<Customer> {
+    const customer = this.customerMap.get(id);
+    if (!customer) throw new Error(`Customer with ID ${id} not found`);
+    
+    const updatedCustomer: Customer = { 
+      ...customer, 
+      companyName: customization.companyName || customer.companyName,
+      companyUrl: customization.companyUrl || customer.companyUrl,
+      logoUrl: customization.logoUrl || customer.logoUrl,
+      primaryColor: customization.primaryColor || customer.primaryColor,
+      secondaryColor: customization.secondaryColor || customer.secondaryColor,
+      accentColor: customization.accentColor || customer.accentColor,
+      textColor: customization.textColor || customer.textColor,
+      backgroundColor: customization.backgroundColor || customer.backgroundColor,
+    };
+    this.customerMap.set(id, updatedCustomer);
+    return updatedCustomer;
+  }
+
+  async updateCustomerOnboardingStatus(id: number, completed: boolean): Promise<Customer> {
+    const customer = this.customerMap.get(id);
+    if (!customer) throw new Error(`Customer with ID ${id} not found`);
+    
+    const updatedCustomer: Customer = { ...customer, onboardingCompleted: completed };
+    this.customerMap.set(id, updatedCustomer);
+    return updatedCustomer;
+  }
+
   // Plan operations
   async getPlans(): Promise<Plan[]> {
     return Array.from(this.planMap.values()).sort((a, b) => a.order - b.order);
@@ -387,6 +415,33 @@ export class DbStorage implements IStorage {
     const results = await this.db
       .update(customers)
       .set({ stripeCustomerId })
+      .where(eq(customers.id, id))
+      .returning();
+    return results[0];
+  }
+
+  async updateCustomerCustomization(id: number, customization: any): Promise<Customer> {
+    const results = await this.db
+      .update(customers)
+      .set({
+        companyName: customization.companyName,
+        companyUrl: customization.companyUrl,
+        logoUrl: customization.logoUrl,
+        primaryColor: customization.primaryColor,
+        secondaryColor: customization.secondaryColor,
+        accentColor: customization.accentColor,
+        textColor: customization.textColor,
+        backgroundColor: customization.backgroundColor,
+      })
+      .where(eq(customers.id, id))
+      .returning();
+    return results[0];
+  }
+
+  async updateCustomerOnboardingStatus(id: number, completed: boolean): Promise<Customer> {
+    const results = await this.db
+      .update(customers)
+      .set({ onboardingCompleted: completed })
       .where(eq(customers.id, id))
       .returning();
     return results[0];
