@@ -22,6 +22,8 @@ export interface IStorage {
   updateCustomerStripeId(id: number, stripeCustomerId: string): Promise<Customer>;
   updateCustomerCustomization(id: number, customization: any): Promise<Customer>;
   updateCustomerOnboardingStatus(id: number, completed: boolean): Promise<Customer>;
+  updateCustomerStripeConnect(id: number, connectAccountId: string): Promise<Customer>;
+  updateCustomerConnectStatus(id: number, onboardingCompleted: boolean, chargesEnabled: boolean, transfersEnabled: boolean): Promise<Customer>;
 
   // Plan operations
   getPlans(): Promise<Plan[]>;
@@ -210,6 +212,29 @@ export class MemStorage implements IStorage {
     if (!customer) throw new Error(`Customer with ID ${id} not found`);
     
     const updatedCustomer: Customer = { ...customer, onboardingCompleted: completed };
+    this.customerMap.set(id, updatedCustomer);
+    return updatedCustomer;
+  }
+
+  async updateCustomerStripeConnect(id: number, connectAccountId: string): Promise<Customer> {
+    const customer = this.customerMap.get(id);
+    if (!customer) throw new Error(`Customer with ID ${id} not found`);
+    
+    const updatedCustomer: Customer = { ...customer, stripeConnectAccountId: connectAccountId };
+    this.customerMap.set(id, updatedCustomer);
+    return updatedCustomer;
+  }
+
+  async updateCustomerConnectStatus(id: number, onboardingCompleted: boolean, chargesEnabled: boolean, transfersEnabled: boolean): Promise<Customer> {
+    const customer = this.customerMap.get(id);
+    if (!customer) throw new Error(`Customer with ID ${id} not found`);
+    
+    const updatedCustomer: Customer = { 
+      ...customer, 
+      connectOnboardingCompleted: onboardingCompleted,
+      connectChargesEnabled: chargesEnabled,
+      connectTransfersEnabled: transfersEnabled
+    };
     this.customerMap.set(id, updatedCustomer);
     return updatedCustomer;
   }
@@ -442,6 +467,28 @@ export class DbStorage implements IStorage {
     const results = await this.db
       .update(customers)
       .set({ onboardingCompleted: completed })
+      .where(eq(customers.id, id))
+      .returning();
+    return results[0];
+  }
+
+  async updateCustomerStripeConnect(id: number, connectAccountId: string): Promise<Customer> {
+    const results = await this.db
+      .update(customers)
+      .set({ stripeConnectAccountId: connectAccountId })
+      .where(eq(customers.id, id))
+      .returning();
+    return results[0];
+  }
+
+  async updateCustomerConnectStatus(id: number, onboardingCompleted: boolean, chargesEnabled: boolean, transfersEnabled: boolean): Promise<Customer> {
+    const results = await this.db
+      .update(customers)
+      .set({ 
+        connectOnboardingCompleted: onboardingCompleted,
+        connectChargesEnabled: chargesEnabled,
+        connectTransfersEnabled: transfersEnabled
+      })
       .where(eq(customers.id, id))
       .returning();
     return results[0];

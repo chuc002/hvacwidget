@@ -22,6 +22,10 @@ export const customers = pgTable("customers", {
   onboardingCompleted: boolean("onboarding_completed").default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   stripeCustomerId: text("stripe_customer_id").unique(),
+  stripeConnectAccountId: text("stripe_connect_account_id").unique(),
+  connectOnboardingCompleted: boolean("connect_onboarding_completed").default(false),
+  connectChargesEnabled: boolean("connect_charges_enabled").default(false),
+  connectTransfersEnabled: boolean("connect_transfers_enabled").default(false),
 });
 
 // Subscription plans table with pricing information
