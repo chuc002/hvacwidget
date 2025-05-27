@@ -17,7 +17,7 @@ import Embed from "@/pages/Embed";
 import Layout from "@/components/Layout";
 import Pricing from "@/pages/Pricing";
 import Register from "@/pages/Register";
-import Demo from "@/pages/Demo";
+
 import Analytics from "@/pages/Analytics";
 import HowItWorks from "@/pages/HowItWorks";
 import CustomerJourney from "@/pages/CustomerJourney";
@@ -41,7 +41,7 @@ import RefundPolicy from "@/pages/legal/RefundPolicy";
 // Import the new pages
 import DashboardOverview from "@/pages/DashboardOverview";
 import Features from "@/pages/Features";
-import CaseStudies from "@/pages/CaseStudies";
+
 import Industries from "@/pages/Industries";
 
 // Protect dashboard and authenticated-only routes
@@ -69,11 +69,9 @@ function Router() {
       <Route path="/embed" component={Embed} />
       <Route path="/pricing" component={Pricing} />
       <Route path="/register" component={Register} />
-      <Route path="/demo" component={Demo} />
       <Route path="/how-it-works" component={HowItWorks} />
       <Route path="/features" component={Features} />
       <Route path="/industries" component={Industries} />
-      <Route path="/case-studies" component={CaseStudies} />
       <Route path="/customer-journey" component={CustomerJourney} />
       <Route path="/trial-registration" component={TrialRegistration} />
       <Route path="/welcome-flow" component={WelcomeFlow} />
