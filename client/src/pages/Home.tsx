@@ -422,19 +422,19 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 px-8 bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl text-white text-center">
-        <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Boost Your Recurring Revenue?</h2>
-        <p className="text-xl mb-8 max-w-3xl mx-auto">
+      <section className="py-16 px-8 bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl text-white text-center shadow-xl">
+        <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">Ready to Boost Your Recurring Revenue?</h2>
+        <p className="text-xl mb-8 max-w-3xl mx-auto text-blue-100">
           Join hundreds of successful home service businesses that are growing their maintenance plan subscribers with ServicePlan Pro.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Link href="/trial-registration">
-            <Button size="lg" className="bg-white text-blue-700 hover:bg-gray-100 text-lg px-8">
+            <Button size="lg" className="bg-white text-blue-700 hover:bg-gray-100 text-lg px-8 font-semibold shadow-lg">
               Start Free 14-Day Trial
             </Button>
           </Link>
-          <Link href="/simple-pricing">
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-blue-700 text-lg px-8">
+          <Link href="/pricing">
+            <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-blue-700 text-lg px-8 font-semibold shadow-lg">
               View Pricing
             </Button>
           </Link>
