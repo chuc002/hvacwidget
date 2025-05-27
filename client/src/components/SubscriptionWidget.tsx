@@ -414,7 +414,7 @@ export default function SubscriptionWidget({
                   style={{ width: checkoutStep === 1 ? '50%' : '100%' }}
                 />
               </div>
-              {processingPayment && (
+              {isProcessing && (
                 <div className="flex items-center justify-center mt-3 text-blue-600">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
                   <span className="text-sm">Setting up secure payment...</span>

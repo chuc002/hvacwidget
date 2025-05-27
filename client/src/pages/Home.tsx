@@ -213,7 +213,7 @@ export default function Home() {
                   <span>Unlimited plans, customers, and revenue</span>
                 </li>
               </ul>
-              <Link href="/simple-pricing">
+              <Link href="/pricing">
                 <Button className="w-full bg-blue-600 hover:bg-blue-700">See Our Pricing</Button>
               </Link>
             </div>
