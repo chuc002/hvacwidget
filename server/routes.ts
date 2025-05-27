@@ -337,22 +337,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Stripe Connect Routes for HVAC companies to collect payments
-  app.post('/api/stripe/connect/create-account', async (req, res) => {
+  // Enhanced Stripe Connect Routes for HVAC companies to collect payments
+  app.post('/api/stripe/connect/create-account', requireAuth, async (req, res) => {
     try {
       if (!stripe) {
         return res.status(500).json({ error: 'Stripe not configured. Please add your STRIPE_SECRET_KEY to get started.' });
       }
       
-      // For demo purposes - will connect to real authentication later
-      const customer = {
-        id: 1,
-        email: "demo@example.com",
-        name: "Demo User",
-        companyName: "Demo HVAC Company"
-      };
+      const customerId = req.session!.userId;
+      
+      // Get authenticated customer from database
+      const customer = await storage.getCustomerById(customerId);
+      if (!customer) {
+        return res.status(404).json({ error: 'Customer not found' });
+      }
+      
+      // Check if already has Connect account
+      if (customer.stripeConnectAccountId) {
+        // Return existing account link for re-onboarding
+        const accountLink = await stripe.accountLinks.create({
+          account: customer.stripeConnectAccountId,
+          refresh_url: `${req.get('origin')}/payment-setup?refresh=true`,
+          return_url: `${req.get('origin')}/payment-setup?success=true`,
+          type: 'account_onboarding',
+        });
+        
+        return res.json({ 
+          account_id: customer.stripeConnectAccountId,
+          onboarding_url: accountLink.url 
+        });
+      }
 
-      // Create Stripe Connect Express account
+      // Create new Stripe Connect Express account
       const account = await stripe.accounts.create({
         type: 'express',
         country: 'US',
@@ -361,7 +377,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         company: {
           name: customer.companyName || customer.name,
         },
+        capabilities: {
+          card_payments: { requested: true },
+          transfers: { requested: true },
+        },
       });
+
+      // Update customer record with Connect account ID
+      await storage.updateCustomerStripeConnect(customerId, account.id);
 
       // Create onboarding link
       const accountLink = await stripe.accountLinks.create({

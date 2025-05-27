@@ -9,20 +9,20 @@ export default function Home() {
       {/* Hero Section */}
       <section className="text-center py-16 mb-16 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl">
         <h1 className="text-4xl md:text-5xl font-bold text-blue-800 mb-6">
-          Turn Your Home Service Business Into a Recurring Revenue Machine
+          Start Selling Maintenance Plans Online and Grow Recurring Revenue by 300%
         </h1>
         <p className="text-xl text-gray-700 max-w-3xl mx-auto mb-8">
-          Professional subscription widgets that let your customers sign up for maintenance plans online 24/7, boosting your recurring revenue by up to 300%.
+          Professional subscription widgets that embed on your website. Let customers sign up for HVAC, pest control, lawn care, and pool maintenance plans 24/7 - no sales calls required.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           <Link href="/trial-registration">
             <Button size="lg" className="bg-primary hover:bg-primary-dark text-lg px-8">
-              Start Free Trial
+              Start Selling Maintenance Plans
             </Button>
           </Link>
           <Link href="/demo">
             <Button size="lg" variant="outline" className="text-lg px-8">
-              Book Demo
+              See Live Demo
             </Button>
           </Link>
         </div>
