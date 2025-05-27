@@ -21,9 +21,7 @@ export function PublicNavigation({ isLoggedIn }: PublicNavigationProps) {
     { name: 'How It Works', href: '/how-it-works' },
     { name: 'Features', href: '/features' },
     { name: 'Pricing', href: '/pricing' },
-    { name: 'Demo', href: '/demo' },
     { name: 'Industries', href: '/industries' },
-    { name: 'Case Studies', href: '/case-studies' },
   ];
 
   // Check if the current path matches the link

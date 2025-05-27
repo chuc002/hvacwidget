@@ -15,15 +15,11 @@ export default function Navigation() {
   // This contains all our available pages for the menu
   const allPages = [
     { name: 'Home', path: '/' },
-    { name: 'Customer Journey', path: '/customer-journey' },
-    { name: 'Analytics', path: '/analytics' },
-    { name: 'Features', path: '/features' },
     { name: 'How It Works', path: '/how-it-works' },
-    { name: 'Live Demo', path: '/demo' },
-    { name: 'Enhanced Widget Demo', path: '/enhanced-widget-demo' },
-    { name: 'Pricing', path: '/simple-pricing' },
+    { name: 'Features', path: '/features' },
+    { name: 'Pricing', path: '/pricing' },
+    { name: 'Industries', path: '/industries' },
     { name: 'Start Free Trial', path: '/trial-registration' },
-    { name: 'Onboarding Wizard', path: '/welcome-flow' },
   ];
 
   return (
