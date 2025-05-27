@@ -47,6 +47,7 @@ import Revenue from "@/pages/Revenue";
 import CustomerManagement from "@/pages/CustomerManagement";
 import Billing from "@/pages/Billing";
 import Support from "@/pages/Support";
+import PaymentSetup from "@/pages/PaymentSetup";
 
 // Protect dashboard and authenticated-only routes
 const ProtectedDashboardOverview = withAuth(DashboardOverview);
@@ -99,6 +100,7 @@ function Router() {
       <Route path="/customers" component={withAuth(CustomerManagement)} />
       <Route path="/billing" component={withAuth(Billing)} />
       <Route path="/support" component={withAuth(Support)} />
+      <Route path="/payment-setup" component={withAuth(PaymentSetup)} />
       
       {/* 404 Route */}
       <Route component={NotFound} />
