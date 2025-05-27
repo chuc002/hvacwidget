@@ -1,4 +1,4 @@
-import { SaaSPlansArray } from '@/lib/pricing-config';
+import { SaaSPlans, formatPrice, calculateAnnualSavings } from '@shared/pricing';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckIcon } from 'lucide-react';
@@ -19,9 +19,9 @@ export default function Pricing() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {SaaSPlansArray.map((plan) => (
-            <Card key={plan.id} className={`relative ${plan.popular ? 'border-primary shadow-lg' : ''}`}>
-              {plan.popular && (
+          {SaaSPlans.map((plan) => (
+            <Card key={plan.tier} className={`relative ${plan.isPopular ? 'border-primary shadow-lg' : ''}`}>
+              {plan.isPopular && (
                 <div className="absolute -top-3 inset-x-0 flex justify-center">
                   <Badge className="bg-primary px-3 py-1 text-sm">Most Popular</Badge>
                 </div>
@@ -30,14 +30,17 @@ export default function Pricing() {
               <CardHeader>
                 <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
                 <CardDescription>
-                  Perfect for {plan.id === 'starter' ? 'small' : plan.id === 'professional' ? 'growing' : 'large'} home service businesses
+                  Perfect for {plan.tier === 'starter' ? 'small' : plan.tier === 'professional' ? 'growing' : 'large'} home service businesses
                 </CardDescription>
               </CardHeader>
               
               <CardContent>
                 <div className="mb-6">
-                  <p className="text-4xl font-bold">${plan.price}</p>
+                  <p className="text-4xl font-bold">{formatPrice(plan.monthlyCents)}</p>
                   <p className="text-gray-500">/month</p>
+                  <p className="text-sm text-green-600 mt-1">
+                    Annual: {formatPrice(plan.annualCents)} (Save {formatPrice(calculateAnnualSavings(plan.monthlyCents, plan.annualCents))})
+                  </p>
                 </div>
                 
                 <ul className="space-y-3 mb-8">
@@ -53,7 +56,7 @@ export default function Pricing() {
               <CardFooter>
                 <Button 
                   className="w-full" 
-                  variant={plan.popular ? 'default' : 'outline'}
+                  variant={plan.isPopular ? 'default' : 'outline'}
                   onClick={() => setLocation('/register')}
                 >
                   Start Free Trial

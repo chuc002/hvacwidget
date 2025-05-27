@@ -1,0 +1,212 @@
+Step 1: Pricing System Overhaul
+REPLIT PROMPT - IMPLEMENT PRICING SYSTEM OVERHAUL
+
+I need to create a single source of truth for pricing in my ServicePlan Pro platform to replace the inconsistent pricing throughout the app.
+
+STEPS TO IMPLEMENT:
+
+1. CREATE shared/pricing.ts file with this content:
+```typescript
+// The definitive source of truth for all pricing in the application
+export const SaaSPlans = [
+  {
+    tier: 'starter',
+    name: 'Starter',
+    monthlyCents: 39900, // $399
+    annualCents: 399000, // $3,990 (save $1,000)
+    stripeMonthlyId: process.env.STRIPE_STARTER_MONTHLY_ID || 'price_test_starter_monthly',
+    stripeAnnualId: process.env.STRIPE_STARTER_ANNUAL_ID || 'price_test_starter_annual',
+    features: ['Basic subscription widget', 'Up to 100 customers/month', 'Email support'],
+    limits: { monthlyCustomers: 100, customBranding: false, products: false, invoices: false }
+  },
+  {
+    tier: 'professional', 
+    name: 'Professional',
+    monthlyCents: 69900, // $699
+    annualCents: 699000, // $6,990 (save $1,400)
+    stripeMonthlyId: process.env.STRIPE_PROFESSIONAL_MONTHLY_ID || 'price_test_professional_monthly',
+    stripeAnnualId: process.env.STRIPE_PROFESSIONAL_ANNUAL_ID || 'price_test_professional_annual',
+    features: ['Everything in Starter', 'Product catalog', 'Custom branding', 'Up to 500 customers/month', 'Priority support'],
+    limits: { monthlyCustomers: 500, customBranding: true, products: true, invoices: false }
+  },
+  {
+    tier: 'enterprise',
+    name: 'Enterprise', 
+    monthlyCents: 99900, // $999
+    annualCents: 999000, // $9,990 (save $2,000)
+    stripeMonthlyId: process.env.STRIPE_ENTERPRISE_MONTHLY_ID || 'price_test_enterprise_monthly',
+    stripeAnnualId: process.env.STRIPE_ENTERPRISE_ANNUAL_ID || 'price_test_enterprise_annual',
+    features: ['Everything in Professional', 'Invoice payments', 'Multi-location', 'API access', 'Dedicated support'],
+    limits: { monthlyCustomers: -1, customBranding: true, products: true, invoices: true }
+  }
+];
+
+// Helper functions for formatting and calculations
+export const formatPrice = (cents: number): string => {
+  return `$${(cents / 100).toFixed(2)}`;
+};
+
+export const getMonthlyEquivalent = (annualCents: number): string => {
+  return formatPrice((annualCents / 12) / 100);
+};
+
+export const getAnnualSavings = (monthlyCents: number, annualCents: number): string => {
+  const annualIfMonthly = monthlyCents * 12;
+  const savings = annualIfMonthly - annualCents;
+  return formatPrice(savings / 100);
+};
+
+// Functions to get the correct price ID based on billing interval
+export const getPriceId = (tier: string, interval: 'monthly' | 'annual'): string => {
+  const plan = SaaSPlans.find(p => p.tier === tier);
+  if (!plan) return '';
+  
+  return interval === 'monthly' ? plan.stripeMonthlyId : plan.stripeAnnualId;
+};
+
+// Get price in cents
+export const getPriceCents = (tier: string, interval: 'monthly' | 'annual'): number => {
+  const plan = SaaSPlans.find(p => p.tier === tier);
+  if (!plan) return 0;
+  
+  return interval === 'monthly' ? plan.monthlyCents : plan.annualCents;
+};
+
+// Get formatted price string
+export const getFormattedPrice = (tier: string, interval: 'monthly' | 'annual'): string => {
+  const cents = getPriceCents(tier, interval);
+  return formatPrice(cents / 100);
+};
+
+DELETE update_subscription_widget.js completely
+UPDATE the PricingPage component to use the new pricing source:
+
+typescriptimport { SaaSPlans, formatPrice, getMonthlyEquivalent, getAnnualSavings } from '@/shared/pricing';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CheckCircle } from 'lucide-react';
+
+export default function PricingPage() {
+  const [billingInterval, setBillingInterval] = useState<'monthly' | 'annual'>('monthly');
+  
+  const handleIntervalChange = (interval: 'monthly' | 'annual') => {
+    setBillingInterval(interval);
+  };
+
+  return (
+    <div className="py-12 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">Simple, Transparent Pricing</h2>
+          <p className="text-xl text-gray-600">
+            Choose the plan that fits your business size and needs
+          </p>
+          
+          <div className="flex justify-center mt-8 mb-12 bg-gray-100 p-1 rounded-lg inline-flex">
+            <button
+              className={`px-4 py-2 rounded-md ${
+                billingInterval === 'monthly' ? 'bg-white shadow-sm' : ''
+              }`}
+              onClick={() => handleIntervalChange('monthly')}
+            >
+              Monthly
+            </button>
+            <button
+              className={`px-4 py-2 rounded-md ${
+                billingInterval === 'annual' ? 'bg-white shadow-sm' : ''
+              }`}
+              onClick={() => handleIntervalChange('annual')}
+            >
+              Annual (Save 10%)
+            </button>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {SaaSPlans.map((plan) => (
+            <Card key={plan.tier} className={`bg-white rounded-lg shadow-lg overflow-hidden ${
+              plan.tier === 'professional' ? 'ring-2 ring-blue-500' : ''
+            }`}>
+              {plan.tier === 'professional' && (
+                <div className="bg-blue-500 text-white text-center py-1 text-sm font-medium">
+                  Most Popular
+                </div>
+              )}
+              <CardHeader className="pb-0">
+                <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
+                <div className="mt-2">
+                  <span className="text-4xl font-bold">
+                    {billingInterval === 'monthly' 
+                      ? formatPrice(plan.monthlyCents / 100) 
+                      : formatPrice(plan.annualCents / 100)}
+                  </span>
+                  <span className="text-gray-600">
+                    /{billingInterval === 'monthly' ? 'month' : 'year'}
+                  </span>
+                </div>
+                {billingInterval === 'annual' && (
+                  <p className="text-sm text-green-600 mt-1">
+                    Save {getAnnualSavings(plan.monthlyCents, plan.annualCents)} per year
+                  </p>
+                )}
+              </CardHeader>
+              
+              <CardContent className="pt-6">
+                <ul className="space-y-3 mb-8">
+                  {plan.features.map((feature, index) => (
+                    <li key={index} className="flex items-start">
+                      <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                
+                <Button 
+                  className={`w-full ${plan.tier === 'professional' ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
+                  variant={plan.tier === 'professional' ? 'default' : 'outline'}
+                  onClick={() => window.location.href = `/register?plan=${plan.tier}&billing=${billingInterval}`}
+                >
+                  Start Free Trial
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <div className="text-center mt-12">
+          <p className="text-gray-600">
+            All plans include a 14-day free trial. No credit card required to start.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+UPDATE the SubscriptionWidget component to use the pricing source:
+
+typescript// Update the imports
+import { SaaSPlans, formatPrice, getPriceId } from '@/shared/pricing';
+
+// Replace any hardcoded pricing with references to the imported data
+const plans = SaaSPlans.map(plan => ({
+  id: plan.tier,
+  name: plan.name,
+  price: formatPrice(plan.monthlyCents / 100),
+  annualPrice: formatPrice(plan.annualCents / 100),
+  stripePriceId: getPriceId(plan.tier, 'monthly'),
+  stripeAnnualPriceId: getPriceId(plan.tier, 'annual'),
+  features: plan.features
+}));
+
+UPDATE all components that reference pricing to import from shared/pricing.ts
+
+EXPECTED RESULT:
+
+Centralized pricing throughout the application
+Consistent formatting and calculations
+Easy updates through a single file
+No more hardcoded prices across components
+
+This implementation provides a single source of truth for all pricing in the application, making it easy to update and ensuring consistency across all components.
