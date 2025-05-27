@@ -141,8 +141,8 @@ app.use((req, res, next) => {
     return next();
   }
   
-  // Skip CSRF for Stripe Connect API routes
-  if (req.path.startsWith('/api/stripe/connect')) {
+  // Skip CSRF for all Stripe API routes
+  if (req.path.startsWith('/api/stripe')) {
     return next();
   }
   
